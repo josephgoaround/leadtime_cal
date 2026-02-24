@@ -65,6 +65,67 @@ document.addEventListener('DOMContentLoaded', () => {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    const waypoints = {
+        "suez": { name: "Suez Canal", coords: [30.5852, 32.2654] },
+        "panama": { name: "Panama Canal", coords: [9.352, -79.920] },
+        "malacca": { name: "Strait of Malacca", coords: [2.2, 102.2] },
+        "gibraltar": { name: "Strait of Gibraltar", coords: [35.9, -5.5] },
+        "cape": { name: "Cape of Good Hope", coords: [-34.35, 18.47] },
+        "bab_el_mandeb": { name: "Bab-el-Mandeb", coords: [12.6, 43.3] }
+    };
+
+    function getSeaRoute(originHub, destHub) {
+        const path = [originHub.coords];
+        const oLat = originHub.coords[0];
+        const oLon = originHub.coords[1];
+        const dLat = destHub.coords[0];
+        const dLon = destHub.coords[1];
+
+        // Logic to decide waypoints (simplified routing engine)
+        // Asia to Europe
+        if ((oLon > 60 && dLon < 20) || (oLon < 20 && dLon > 60)) {
+            if (oLon > 60) { // East to West
+                path.push(waypoints.malacca.coords);
+                path.push(waypoints.bab_el_mandeb.coords);
+                path.push(waypoints.suez.coords);
+                path.push(waypoints.gibraltar.coords);
+            } else { // West to East
+                path.push(waypoints.gibraltar.coords);
+                path.push(waypoints.suez.coords);
+                path.push(waypoints.bab_el_mandeb.coords);
+                path.push(waypoints.malacca.coords);
+            }
+        }
+        // US East to US West / Asia via Panama
+        else if ((oLon < -40 && oLon > -100 && dLon > 100) || (oLon > 100 && dLon < -40 && dLon > -100)) {
+            path.push(waypoints.panama.coords);
+        }
+        // Europe to US East
+        else if (oLon < 20 && oLon > -10 && dLon < -40) {
+            path.push(waypoints.gibraltar.coords);
+        }
+
+        path.push(destHub.coords);
+        return path;
+    }
+
+    function getAirRoute(originCoords, destCoords) {
+        // Create a curved path (simple arc) to simulate Great Circle
+        const path = [];
+        const steps = 20;
+        for (let i = 0; i <= steps; i++) {
+            const f = i / steps;
+            const lat = originCoords[0] + (destCoords[0] - originCoords[0]) * f;
+            const lon = originCoords[1] + (destCoords[1] - originCoords[1]) * f;
+            
+            // Add a slight arc height based on distance
+            const dist = calculateDistance(originCoords, destCoords);
+            const offset = Math.sin(Math.PI * f) * (dist / 10000) * 10; 
+            path.push([lat + offset, lon]);
+        }
+        return path;
+    }
+
     document.getElementById('shipping-form').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -84,23 +145,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const originHub = hubs[origin.hubs[transportMode]];
         const destHub = hubs[destination.hubs[transportMode]];
 
-        // Calculate distances for each leg
+        // Calculate total distance through waypoints for sea, or curved for air
+        let middleMilePath = [];
+        let middleMileDist = 0;
+
+        if (transportMode === 'sea') {
+            middleMilePath = getSeaRoute(originHub, destHub);
+            for (let i = 0; i < middleMilePath.length - 1; i++) {
+                middleMileDist += calculateDistance(middleMilePath[i], middleMilePath[i+1]);
+            }
+        } else {
+            middleMilePath = getAirRoute(originHub.coords, destHub.coords);
+            middleMileDist = calculateDistance(originHub.coords, destHub.coords);
+        }
+
         const firstMileDist = calculateDistance(origin.coords, originHub.coords);
-        const middleMileDist = calculateDistance(originHub.coords, destHub.coords);
         const lastMileDist = calculateDistance(destHub.coords, destination.coords);
 
         // Calculate lead time based on mode
-        const speeds = { sea: 500, air: 1000, land: 100 }; // km/day
+        const speeds = { sea: 600, air: 20000, land: 500 }; // km/day (adjusted for more realism)
         let leadTime = (firstMileDist / speeds.land) + (middleMileDist / speeds[transportMode]) + (lastMileDist / speeds.land);
 
+        // Add buffer for port/airport handling
+        const handlingTime = { sea: 5, air: 2 }; 
+        leadTime += handlingTime[transportMode];
+
         switch (cargoType) {
-            case 'Refrigerated': leadTime *= 1.2; break;
-            case 'Dangerous Goods': leadTime *= 1.5; break;
+            case 'Refrigerated': leadTime *= 1.1; break;
+            case 'Dangerous Goods': leadTime *= 1.3; break;
         }
 
         resultDiv.innerHTML = `
             <div class="space-y-4">
                 <p class="text-2xl font-bold text-blue-600">Estimated Lead Time: ${Math.round(leadTime)} days</p>
+                <div class="text-sm text-gray-500 mb-2">Total Distance: ${Math.round(middleMileDist + firstMileDist + lastMileDist).toLocaleString()} km</div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-green-500">
                         <h4 class="font-bold text-gray-700">Origin Node SCM Issues (${originCity}):</h4>
@@ -117,17 +195,27 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear map and draw new route
         map.eachLayer(layer => { if (layer instanceof L.Marker || layer instanceof L.Polyline) map.removeLayer(layer); });
 
-        L.marker(origin.coords).addTo(map).bindPopup(`<b>Origin:</b> ${originCity}<br><span class="text-xs">${origin.scmIssues}</span>`);
-        L.marker(destination.coords).addTo(map).bindPopup(`<b>Destination:</b> ${destinationCity}<br><span class="text-xs">${destination.scmIssues}</span>`);
-        L.marker(originHub.coords, { icon: L.icon({ iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x-red.png', iconSize: [25, 41] }) }).addTo(map).bindPopup(`<b>Hub:</b> ${originHub.name}`);
-        L.marker(destHub.coords, { icon: L.icon({ iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x-red.png', iconSize: [25, 41] }) }).addTo(map).bindPopup(`<b>Hub:</b> ${destHub.name}`);
+        // Draw locations
+        L.marker(origin.coords).addTo(map).bindPopup(`<b>Origin:</b> ${originCity}`);
+        L.marker(destination.coords).addTo(map).bindPopup(`<b>Destination:</b> ${destinationCity}`);
+        
+        // Draw Hubs
+        const hubIcon = L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] });
+        L.marker(originHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>${transportMode.toUpperCase()} Hub:</b> ${originHub.name}`);
+        L.marker(destHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>${transportMode.toUpperCase()} Hub:</b> ${destHub.name}`);
 
         // Draw route segments
-        L.polyline([origin.coords, originHub.coords], { color: 'green', dashArray: '5, 5' }).addTo(map); // First mile
-        L.polyline([originHub.coords, destHub.coords], { color: 'blue', weight: 3 }).addTo(map); // Middle mile
-        L.polyline([destHub.coords, destination.coords], { color: 'orange', dashArray: '5, 5' }).addTo(map); // Last mile
+        L.polyline([origin.coords, originHub.coords], { color: 'green', weight: 2, dashArray: '5, 5' }).addTo(map); // First mile
+        
+        if (transportMode === 'sea') {
+            L.polyline(middleMilePath, { color: '#2563eb', weight: 4, opacity: 0.8 }).addTo(map); // Sea route
+        } else {
+            L.polyline(middleMilePath, { color: '#ef4444', weight: 3, opacity: 0.7, dashArray: '1, 10' }).addTo(map); // Air route (dotted arc)
+        }
 
-        map.fitBounds([origin.coords, destination.coords, originHub.coords, destHub.coords], { padding: [50, 50] });
+        L.polyline([destHub.coords, destination.coords], { color: 'orange', weight: 2, dashArray: '5, 5' }).addTo(map); // Last mile
+
+        map.fitBounds([origin.coords, destination.coords, ...middleMilePath], { padding: [50, 50] });
     });
 
     function calculateDistance(coords1, coords2) {
