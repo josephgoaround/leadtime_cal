@@ -66,43 +66,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }).addTo(map);
 
     const waypoints = {
-        "suez": { name: "Suez Canal", coords: [30.5852, 32.2654] },
-        "panama": { name: "Panama Canal", coords: [9.352, -79.920] },
-        "malacca": { name: "Strait of Malacca", coords: [2.2, 102.2] },
-        "gibraltar": { name: "Strait of Gibraltar", coords: [35.9, -5.5] },
-        "cape": { name: "Cape of Good Hope", coords: [-34.35, 18.47] },
-        "bab_el_mandeb": { name: "Bab-el-Mandeb", coords: [12.6, 43.3] }
+        "suez": [30.5852, 32.2654],
+        "panama": [9.352, -79.920],
+        "malacca": [2.2, 102.2],
+        "gibraltar": [35.9, -5.5],
+        "cape": [-34.35, 18.47],
+        "bab_el_mandeb": [12.6, 43.3],
+        "south_tip_india": [5.9, 80.5],
+        "pacific_mid": [20.0, -160.0] // Honolulu area for trans-pacific
     };
 
     function getSeaRoute(originHub, destHub) {
-        const path = [originHub.coords];
-        const oLat = originHub.coords[0];
+        let path = [originHub.coords];
         const oLon = originHub.coords[1];
-        const dLat = destHub.coords[0];
         const dLon = destHub.coords[1];
+        const oLat = originHub.coords[0];
+        const dLat = destHub.coords[0];
 
-        // Logic to decide waypoints (simplified routing engine)
-        // Asia to Europe
-        if ((oLon > 60 && dLon < 20) || (oLon < 20 && dLon > 60)) {
+        // Trans-Pacific Check (LAX to Asia/Oceania)
+        if (oLon < -100 && dLon > 100) {
+             path.push(waypoints.pacific_mid);
+        } 
+        else if (oLon > 100 && dLon < -100) {
+             path.push(waypoints.pacific_mid);
+        }
+        // Asia to Europe via Suez
+        else if ((oLon > 60 && dLon < 20) || (oLon < 20 && dLon > 60)) {
             if (oLon > 60) { // East to West
-                path.push(waypoints.malacca.coords);
-                path.push(waypoints.bab_el_mandeb.coords);
-                path.push(waypoints.suez.coords);
-                path.push(waypoints.gibraltar.coords);
+                path.push(waypoints.malacca);
+                path.push(waypoints.south_tip_india);
+                path.push(waypoints.bab_el_mandeb);
+                path.push(waypoints.suez);
+                path.push(waypoints.gibraltar);
             } else { // West to East
-                path.push(waypoints.gibraltar.coords);
-                path.push(waypoints.suez.coords);
-                path.push(waypoints.bab_el_mandeb.coords);
-                path.push(waypoints.malacca.coords);
+                path.push(waypoints.gibraltar);
+                path.push(waypoints.suez);
+                path.push(waypoints.bab_el_mandeb);
+                path.push(waypoints.south_tip_india);
+                path.push(waypoints.malacca);
             }
         }
-        // US East to US West / Asia via Panama
-        else if ((oLon < -40 && oLon > -100 && dLon > 100) || (oLon > 100 && dLon < -40 && dLon > -100)) {
-            path.push(waypoints.panama.coords);
+        // US East Coast to Asia via Panama
+        else if (oLon > -80 && oLon < -60 && dLon > 100) {
+            path.push(waypoints.panama);
+            path.push(waypoints.pacific_mid);
         }
-        // Europe to US East
-        else if (oLon < 20 && oLon > -10 && dLon < -40) {
-            path.push(waypoints.gibraltar.coords);
+        // Asia to US East Coast via Panama
+        else if (oLon > 100 && dLon > -80 && dLon < -60) {
+            path.push(waypoints.pacific_mid);
+            path.push(waypoints.panama);
+        }
+        // Europe to South America
+        else if (oLon < 20 && oLon > -10 && dLat < -10 && dLon < -30) {
+            path.push(waypoints.gibraltar);
         }
 
         path.push(destHub.coords);
@@ -110,17 +126,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getAirRoute(originCoords, destCoords) {
-        // Create a curved path (simple arc) to simulate Great Circle
         const path = [];
-        const steps = 20;
+        const steps = 30;
+        
+        // Handle Antimeridian for Air
+        let startLon = originCoords[1];
+        let endLon = destCoords[1];
+        
+        if (Math.abs(startLon - endLon) > 180) {
+            if (startLon > 0) endLon += 360;
+            else endLon -= 360;
+        }
+
         for (let i = 0; i <= steps; i++) {
             const f = i / steps;
             const lat = originCoords[0] + (destCoords[0] - originCoords[0]) * f;
-            const lon = originCoords[1] + (destCoords[1] - originCoords[1]) * f;
+            const lon = startLon + (endLon - startLon) * f;
             
-            // Add a slight arc height based on distance
             const dist = calculateDistance(originCoords, destCoords);
-            const offset = Math.sin(Math.PI * f) * (dist / 10000) * 10; 
+            const offset = Math.sin(Math.PI * f) * (dist / 12000) * 15; 
             path.push([lat + offset, lon]);
         }
         return path;
@@ -145,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const originHub = hubs[origin.hubs[transportMode]];
         const destHub = hubs[destination.hubs[transportMode]];
 
-        // Calculate total distance through waypoints for sea, or curved for air
         let middleMilePath = [];
         let middleMileDist = 0;
 
@@ -162,11 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstMileDist = calculateDistance(origin.coords, originHub.coords);
         const lastMileDist = calculateDistance(destHub.coords, destination.coords);
 
-        // Calculate lead time based on mode
-        const speeds = { sea: 600, air: 20000, land: 500 }; // km/day (adjusted for more realism)
+        const speeds = { sea: 700, air: 20000, land: 500 }; 
         let leadTime = (firstMileDist / speeds.land) + (middleMileDist / speeds[transportMode]) + (lastMileDist / speeds.land);
 
-        // Add buffer for port/airport handling
         const handlingTime = { sea: 5, air: 2 }; 
         leadTime += handlingTime[transportMode];
 
@@ -192,36 +213,57 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Clear map and draw new route
         map.eachLayer(layer => { if (layer instanceof L.Marker || layer instanceof L.Polyline) map.removeLayer(layer); });
 
-        // Draw locations
         L.marker(origin.coords).addTo(map).bindPopup(`<b>Origin:</b> ${originCity}`);
         L.marker(destination.coords).addTo(map).bindPopup(`<b>Destination:</b> ${destinationCity}`);
         
-        // Draw Hubs
         const hubIcon = L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] });
         L.marker(originHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>${transportMode.toUpperCase()} Hub:</b> ${originHub.name}`);
         L.marker(destHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>${transportMode.toUpperCase()} Hub:</b> ${destHub.name}`);
 
-        // Draw route segments
-        L.polyline([origin.coords, originHub.coords], { color: 'green', weight: 2, dashArray: '5, 5' }).addTo(map); // First mile
+        L.polyline([origin.coords, originHub.coords], { color: 'green', weight: 2, dashArray: '5, 5' }).addTo(map); 
         
         if (transportMode === 'sea') {
-            L.polyline(middleMilePath, { color: '#2563eb', weight: 4, opacity: 0.8 }).addTo(map); // Sea route
+            // Split polyline if it crosses the antimeridian
+            drawSeaPath(middleMilePath);
         } else {
-            L.polyline(middleMilePath, { color: '#ef4444', weight: 3, opacity: 0.7, dashArray: '1, 10' }).addTo(map); // Air route (dotted arc)
+            L.polyline(middleMilePath, { color: '#ef4444', weight: 3, opacity: 0.7, dashArray: '1, 10' }).addTo(map); 
         }
 
-        L.polyline([destHub.coords, destination.coords], { color: 'orange', weight: 2, dashArray: '5, 5' }).addTo(map); // Last mile
+        L.polyline([destHub.coords, destination.coords], { color: 'orange', weight: 2, dashArray: '5, 5' }).addTo(map); 
 
         map.fitBounds([origin.coords, destination.coords, ...middleMilePath], { padding: [50, 50] });
     });
 
+    function drawSeaPath(path) {
+        let segments = [[]];
+        let currentSegment = 0;
+
+        for (let i = 0; i < path.length; i++) {
+            if (i > 0) {
+                const prevLon = path[i-1][1];
+                const currLon = path[i][1];
+                if (Math.abs(prevLon - currLon) > 180) {
+                    segments.push([]);
+                    currentSegment++;
+                }
+            }
+            segments[currentSegment].push(path[i]);
+        }
+
+        segments.forEach(seg => {
+            L.polyline(seg, { color: '#2563eb', weight: 4, opacity: 0.8 }).addTo(map);
+        });
+    }
+
     function calculateDistance(coords1, coords2) {
-        const R = 6371; // km
+        const R = 6371; 
         const dLat = (coords2[0] - coords1[0]) * Math.PI / 180;
         const dLon = (coords2[1] - coords1[1]) * Math.PI / 180;
+        if (Math.abs(dLon) > Math.PI) {
+            // handle wrap around
+        }
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                   Math.cos(coords1[0] * Math.PI / 180) * Math.cos(coords2[0] * Math.PI / 180) *
                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
