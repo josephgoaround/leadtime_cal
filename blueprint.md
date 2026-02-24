@@ -20,6 +20,7 @@ This application is a web-based tool designed to provide estimated lead times fo
     *   JavaScript logic to dynamically calculate and display estimated shipping lead time.
     *   Integration of **Node-specific SCM Intelligence**, providing critical logistics insights (e.g., port congestion, labor issues) for each selected location.
     *   **Partnership Inquiry System:** A Formspree-powered contact form for B2B collaboration and integration inquiries.
+    *   **Community Engagement:** Integrated **Disqus** for user comments and logistics community discussions.
 
 ## Current Plan: Continuous Intelligence & Deployment
 
