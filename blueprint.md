@@ -19,6 +19,7 @@ This application is a web-based tool designed to provide estimated lead times fo
     *   An input form for users to select cargo type and departure/arrival cities (Expanded list: NYC, LA, London, Shanghai, Hamburg, Tokyo, Busan, Singapore, Rotterdam, Dubai, Mumbai, Sydney, Santos).
     *   JavaScript logic to dynamically calculate and display estimated shipping lead time.
     *   Integration of **Node-specific SCM Intelligence**, providing critical logistics insights (e.g., port congestion, labor issues) for each selected location.
+    *   **Partnership Inquiry System:** A Formspree-powered contact form for B2B collaboration and integration inquiries.
 
 ## Current Plan: Continuous Intelligence & Deployment
 
