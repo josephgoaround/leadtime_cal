@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +58,22 @@
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Volume (CBM)</label>
                                 <input type="number" id="cargo-volume" value="2" min="0.1" step="0.1" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Inland Mode</label>
+                                <select id="inland-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold text-gray-700">
+                                    <option value="truck">🚛 Truck</option>
+                                    <option value="rail">🚆 Rail</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end pb-1">
+                                <label class="flex items-center gap-2 cursor-pointer group w-full bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                                    <input type="checkbox" id="peak-season" class="rounded text-indigo-600 focus:ring-indigo-500">
+                                    <span class="text-[10px] font-bold text-gray-500 uppercase group-hover:text-gray-700">Peak Season</span>
+                                </label>
                             </div>
                         </div>
                         
