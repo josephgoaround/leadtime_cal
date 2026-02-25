@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tabOverview: "Overview",
             tabFinance: "Financials",
             tabRisk: "Risk & ESG",
-            tabCustoms: "Customs",
             totalLead: "Total Lead Time",
             reliability: "Network Health",
             eta: "Estimated ETA",
@@ -25,13 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
             esgOffset: "Sustainability Impact",
             carbonTax: "Est. Carbon Tax (Future)",
             treesMsg: "trees to offset this shipment",
-            volatility: "Lane Reliability Score",
+            volatility: "Market Rate Volatility",
             recentTitle: "Recent Analyses",
             shareBtn: "Share Link",
             copySummary: "Copy Summary",
             exportCsv: "Export CSV",
-            customsDocs: "Required Documentation",
-            disclaimer: "• 16kts avg. speed. Data are high-level AI simulations."
+            cargoRisk: "Product Risk Profile",
+            disclaimer: "• 16kts avg. speed. Volatility based on SCFI/WCI indexes."
         },
         ko: {
             subtitle: "글로벌 물류 및 통관 AI 경로 분석기",
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tabOverview: "종합 요약",
             tabFinance: "비용 분석",
             tabRisk: "리스크/ESG",
-            tabCustoms: "통관 정보",
             totalLead: "총 리드타임",
             reliability: "네트워크 건전성",
             eta: "최종 도착 예정일",
@@ -58,13 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
             esgOffset: "지속가능성 영향",
             carbonTax: "예상 탄소세 (미래)",
             treesMsg: "탄소 상쇄를 위한 소나무 수",
-            volatility: "노선 정시 신뢰도 점수",
+            volatility: "시장 운임 변동성",
             recentTitle: "최근 분석 기록",
             shareBtn: "링크 공유",
             copySummary: "요약 복사",
             exportCsv: "CSV 내보내기",
-            customsDocs: "필수 통관 서류",
-            disclaimer: "• 16노트 평균속도 기준. 모든 지표는 AI 추정치입니다."
+            cargoRisk: "품목별 리스크 프로필",
+            disclaimer: "• 16노트 평균속도 기준. 변동성은 SCFI/WCI 지수를 반영합니다."
         }
     };
 
@@ -72,15 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCurrency = 'USD';
     const rates = { KRW: 1350, EUR: 0.92, USD: 1 };
     const annualICC = 0.15;
-
-    const hubs = {
-        "kor-pus": { name: "Busan Port", coords: [35.1069, 129.0453], status: "green", congestion: "Low" },
-        "kor-icn": { name: "Incheon Intl", coords: [37.4602, 126.4407], status: "green", congestion: "Stable" },
-        "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833], status: "red", congestion: "High" },
-        "sgp-sin": { name: "Singapore Hub", coords: [1.2644, 103.8398], status: "yellow", congestion: "Medium" },
-        "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450], status: "yellow", congestion: "Medium" },
-        "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764], status: "red", congestion: "High" }
-    };
 
     const portCities = {
         "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", country: "South Korea", duty: 0.10 },
@@ -95,11 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
         "FRA (Frankfurt)": { coords: [50.0379, 8.5622], hub: "deu-fra", country: "Germany", duty: 0.12 }
     };
 
-    const customsChecklists = {
-        "South Korea": ["KC Certification (Electronics)", "FTA Origin Certificate", "Commercial Invoice", "Packing List"],
-        "China": ["CCC Mark (Mandatory)", "Export License", "CIQ Inspection", "HS Code Verified Invoice"],
-        "USA": ["ISF 10+2 Filing (Sea)", "Customs Bond", "BOL / AWB", "FDA/EPA Declaration"],
-        "Germany": ["EORI Number", "VAT ID Certificate", "EU Transit Doc", "Safety Data Sheet"]
+    const hubs = {
+        "kor-pus": { name: "Busan Port", coords: [35.1069, 129.0453], status: "green" },
+        "kor-icn": { name: "Incheon Intl", coords: [37.4602, 126.4407], status: "green" },
+        "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833], status: "red" },
+        "sgp-sin": { name: "Singapore Hub", coords: [1.2644, 103.8398], status: "yellow" },
+        "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450], status: "yellow" },
+        "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764], status: "red" }
+    };
+
+    const cargoMetadata = {
+        general: { risk: "Low", score: 95, icons: "📦" },
+        electronics: { risk: "High (Theft/Damage)", score: 72, icons: "💻" },
+        textiles: { risk: "Medium (Moisture)", score: 88, icons: "👕" },
+        chemicals: { risk: "Severe (Hazmat)", score: 45, icons: "🧪" }
     };
 
     const waypoints = { "pacific_mid": [20.0, -160.0], "suez": [29.9, 32.5] };
@@ -108,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const originSelect = document.getElementById('origin');
     const destinationSelect = document.getElementById('destination');
     const dateInput = document.getElementById('departure-date');
-    const serviceTier = document.getElementById('service-tier');
+    const cargoCategory = document.getElementById('cargo-category');
     const resultContainer = document.getElementById('result');
     const executiveActions = document.getElementById('executive-actions');
 
@@ -133,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mode = modeSelect.value;
         const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
         const value = parseFloat(document.getElementById('cargo-value').value) || 50000;
-        const tier = serviceTier.value;
+        const category = cargoCategory.value;
         const originName = originSelect.value;
         const destName = destinationSelect.value;
         const departureDate = new Date(dateInput.value);
@@ -157,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const speeds = { sea: 711, air: 20000, truck: 500 };
         let transitD = mDist / speeds[mode];
         let handlingD = (mode==='sea' ? 5 : 2);
-        if (tier === 'premium') handlingD *= 0.6;
+        if (category === 'chemicals') handlingD += 4; // DG inspections
 
         const totalD = transitD + (dist(origin.coords, oHub.coords)+dist(dHub.coords, dest.coords))/500 + handlingD + 2;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
@@ -165,19 +163,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseFreight = totalDist * (mode==='sea'?0.15:4.5) * weight;
         const inventoryCost = (value * annualICC / 365) * totalD;
         const totalSpend = baseFreight + inventoryCost;
-        const reliability = Math.round(98 - (totalDist / 10000) * 5);
-
+        
+        const cargoRisk = cargoMetadata[category];
         const t = translations[currentLang];
         const convert = (val) => `${currentCurrency==='KRW'?'₩':'$'}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
-
-        const checklist = customsChecklists[dest.country] || ["Invoice", "Packing List", "BOL"];
 
         resultContainer.innerHTML = `
             <div class="space-y-4 animate-fade-in">
                 <div class="flex bg-gray-100 p-1 rounded-xl">
                     <button onclick="switchTab('overview')" id="tab-overview" class="flex-1 py-2 text-[9px] font-bold rounded-lg bg-white shadow-sm text-indigo-600">${t.tabOverview}</button>
                     <button onclick="switchTab('finance')" id="tab-finance" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabFinance}</button>
-                    <button onclick="switchTab('customs')" id="tab-customs" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabCustoms}</button>
+                    <button onclick="switchTab('risk')" id="tab-risk" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabRisk}</button>
                 </div>
 
                 <div id="tab-content-overview" class="tab-pane space-y-4">
@@ -187,34 +183,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString()}</p>
                     </div>
                     <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                        <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${t.reliability}</p><p class="text-2xl font-black text-green-500">${reliability}%</p></div>
-                        <div class="text-right"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Efficiency</p><p class="text-lg font-bold text-gray-700">${tier.toUpperCase()}</p></div>
+                        <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${t.cargoRisk}</p><p class="text-sm font-bold text-gray-700">${cargoRisk.icons} ${cargoRisk.risk}</p></div>
+                        <div class="text-right"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Score</p><p class="text-lg font-black ${cargoRisk.score > 80 ? 'text-green-500' : 'text-orange-500'}">${cargoRisk.score}%</p></div>
                     </div>
                 </div>
 
                 <div id="tab-content-finance" class="tab-pane hidden space-y-4">
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
-                        <div class="flex justify-between text-xs"><span>Freight Cost</span><span class="font-bold">${convert(baseFreight)}</span></div>
-                        <div class="flex justify-between text-xs text-orange-500"><span>ICC (Capital)</span><span class="font-bold">${convert(inventoryCost)}</span></div>
-                        <div class="border-t pt-3 flex justify-between font-black text-gray-900 text-lg"><span>Total spend</span><span>${convert(totalSpend)}</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between"><span>Freight Cost</span><span class="font-bold">${convert(baseFreight)}</span></div>
+                            <div class="flex justify-between text-orange-500"><span>ICC (Capital tied-up)</span><span class="font-bold">${convert(inventoryCost)}</span></div>
+                            <div class="border-t pt-2 flex justify-between font-black text-gray-900 text-lg"><span>Total Landed Spend</span><span>${convert(totalSpend)}</span></div>
+                        </div>
+                        <div class="pt-4 border-t">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">${t.volatility}</p>
+                            <svg viewBox="0 0 275 40" class="w-full h-8 stroke-current text-indigo-500 fill-none"><path d="M 0,20 L 30,15 L 60,25 L 90,10 L 120,30 L 150,20 L 180,35 L 210,15 L 240,25 L 275,10" stroke-width="2" /></svg>
+                        </div>
                     </div>
-                    <button onclick="exportCSV()" class="w-full bg-gray-900 text-white font-bold py-2 rounded-lg text-[10px] uppercase hover:bg-black transition-all flex items-center justify-center gap-2">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 10l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        ${t.exportCsv}
-                    </button>
                 </div>
 
-                <div id="tab-content-customs" class="tab-pane hidden space-y-4">
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.customsDocs}: ${dest.country}</p>
-                        <ul class="space-y-2">
-                            ${checklist.map(item => `
-                                <li class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg text-xs font-semibold text-gray-700">
-                                    <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500">
-                                    ${item}
-                                </li>
-                            `).join('')}
-                        </ul>
+                <div id="tab-content-risk" class="tab-pane hidden space-y-4">
+                    <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
+                        <p class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-2">${t.esgOffset}</p>
+                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${Math.ceil((totalDist * (mode==='sea'?25:500) * weight / 1000) / 22)}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
                     </div>
                 </div>
             </div>`;
@@ -224,18 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.currentAnalysis = { originName, destName, mode, totalD, eta, convert, totalSpend };
     }
 
-    window.exportCSV = () => {
-        const a = window.currentAnalysis;
-        const csv = `Metric,Value\nRoute,${a.originName} to ${a.destName}\nLead Time,${Math.round(a.totalD)} Days\nETA,${a.eta.toLocaleDateString()}\nCost,${a.convert(a.totalSpend)}`;
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a_el = document.createElement('a'); a_el.setAttribute('hidden', ''); a_el.setAttribute('href', url); a_el.setAttribute('download', 'leadtime_analysis.csv');
-        document.body.appendChild(a_el); a_el.click(); document.body.removeChild(a_el);
-    };
-
     window.copyExecutiveSummary = () => {
         const a = window.currentAnalysis;
-        const text = `[LOGISTICS ANALYSIS SUMMARY]\n\nRoute: ${a.originName} to ${a.destName}\nMode: ${a.mode.toUpperCase()}\nLead Time: ${Math.round(a.totalD)} Days\nEstimated ETA: ${a.eta.toLocaleDateString()}\nLanded Cost: ${a.convert(a.totalSpend)}\n\nGenerated by LeadTime Intelligence.`;
+        const text = `[LOGISTICS INTEL SUMMARY]\n\nRoute: ${a.originName} to ${a.destName}\nLead Time: ${Math.round(a.totalD)} Days\nLanded Cost: ${a.convert(a.totalSpend)}\nMode: ${a.mode.toUpperCase()}\n\nGenerated by LeadTime Intelligence AI.`;
         navigator.clipboard.writeText(text); alert("Summary Copied!");
     };
 
@@ -248,9 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderMap(path, o, d, oH, dH, oN, dN) {
         map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) map.removeLayer(l); });
-        const hI = L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41] });
         L.marker(o.coords).addTo(map).bindPopup(oN); L.marker(d.coords).addTo(map).bindPopup(dN);
-        L.marker(oH.coords, {icon: hI}).addTo(map); L.marker(dH.coords, {icon: hI}).addTo(map);
         path.forEach((p, i) => { if(i>0 && Math.abs(path[i-1][1]-p[1])<180) L.polyline([path[i-1], p], {color: '#dc2626', weight: 5}).addTo(map); });
         map.fitBounds([o.coords, d.coords], {padding: [50, 50]});
     }
