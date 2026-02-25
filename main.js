@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabOverview: "Overview",
             tabFinance: "Financials",
             tabRisk: "Risk & ESG",
-            tabCustoms: "Customs",
+            tabStrategy: "Strategic Comp",
             totalLead: "Total Lead Time",
             reliability: "Network Health",
             eta: "Estimated ETA",
@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn: "Share Link",
             copySummary: "Copy Summary",
             exportCsv: "Export CSV",
-            compChart: "Cost-Time Efficiency (Sea vs Air)",
-            disclaimer: "• 16kts avg. speed. Data reflects real-time global stress."
+            compTitle: "As-Is vs To-Be Strategy",
+            disclaimer: "• 16kts avg. speed. Strategic advice based on 2026 geo-trends."
         },
         ko: {
             subtitle: "글로벌 물류 및 통관 AI 경로 분석기",
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabOverview: "종합 요약",
             tabFinance: "비용 분석",
             tabRisk: "리스크/ESG",
-            tabCustoms: "통관 정보",
+            tabStrategy: "전략 비교",
             totalLead: "총 리드타임",
             reliability: "네트워크 건전성",
             eta: "최종 도착 예정일",
@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn: "링크 공유",
             copySummary: "요약 복사",
             exportCsv: "CSV 내보내기",
-            compChart: "비용-시간 효율성 (해상 vs 항공)",
-            disclaimer: "• 16노트 평균속도 기준. 전 세계 물류 부하 지수를 반영합니다."
+            compTitle: "현재 노선 vs 전략적 대안",
+            disclaimer: "• 16노트 평균속도 기준. 전략 제언은 2026년 지오트렌드를 반영합니다."
         }
     };
 
@@ -69,14 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const rates = { KRW: 1350, EUR: 0.92, USD: 1 };
     const annualICC = 0.15;
 
-    // --- Global Hub Intelligence Database ---
+    // --- Enterprise Hub Intelligence ---
     const hubs = {
-        "kor-pus": { name: "Port of Busan", coords: [35.1069, 129.0453], status: "green", congestion: "Low", type: "Sea", country: "South Korea" },
+        "kor-pus": { name: "Busan Port", coords: [35.1069, 129.0453], status: "green", congestion: "Low", type: "Sea", country: "South Korea" },
         "kor-icn": { name: "Incheon Intl", coords: [37.4602, 126.4407], status: "green", congestion: "Stable", type: "Air", country: "South Korea" },
-        "chn-sha": { name: "Port of Shanghai", coords: [31.3833, 121.5833], status: "red", congestion: "High", type: "Sea", country: "China" },
+        "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833], status: "red", congestion: "High", type: "Sea", country: "China" },
         "sgp-sin": { name: "Singapore Hub", coords: [1.2644, 103.8398], status: "yellow", congestion: "Medium", type: "Sea", country: "Singapore" },
-        "nld-rot": { name: "Port of Rotterdam", coords: [51.9490, 4.1450], status: "yellow", congestion: "Medium", type: "Sea", country: "Netherlands" },
-        "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764], status: "red", congestion: "High", type: "Sea", country: "USA" }
+        "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450], status: "yellow", congestion: "Medium", type: "Sea", country: "Netherlands" },
+        "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764], status: "red", congestion: "High", type: "Sea", country: "USA" },
+        "mex-man": { name: "Manzanillo Hub", coords: [19.0522, -104.3158], status: "green", congestion: "Low", type: "Sea", country: "Mexico" },
+        "vnm-hcm": { name: "Ho Chi Minh Port", coords: [10.7626, 106.6602], status: "green", congestion: "Stable", type: "Sea", country: "Vietnam" }
     };
 
     const portCities = {
@@ -84,7 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "Port of Shanghai": { hub: "chn-sha", country: "China" },
         "Port of Singapore": { hub: "sgp-sin", country: "Singapore" },
         "Port of Rotterdam": { hub: "nld-rot", country: "Netherlands" },
-        "Port of Los Angeles": { hub: "usa-lax", country: "USA" }
+        "Port of Los Angeles": { hub: "usa-lax", country: "USA" },
+        "Port of Manzanillo": { hub: "mex-man", country: "Mexico" },
+        "Port of Ho Chi Minh": { hub: "vnm-hcm", country: "Vietnam" }
     };
 
     const airportCities = {
@@ -93,19 +97,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const cargoMetadata = {
-        general: { duty: 0.08, docs: ["Commercial Invoice", "Packing List"] },
-        electronics: { duty: 0.0, docs: ["KC/CE Certificate", "FTA Origin"] },
-        textiles: { duty: 0.12, docs: ["Origin Declaration", "Inspection Cert"] }
+        general: { duty: 0.08, vat: 0.10 },
+        electronics: { duty: 0.0, vat: 0.10 },
+        textiles: { duty: 0.12, vat: 0.10 }
     };
 
     const waypoints = { "pacific_mid": [20.0, -160.0], "suez": [29.9, 32.5], "good_hope": [-34.35, 18.47] };
+    const riskZones = {
+        "redsea": { coords: [18.0, 40.0], radius: 1200000, color: 'red', label: "Conflict Area" },
+        "panama": { coords: [9.1, -79.7], radius: 600000, color: 'orange', label: "Drought Delay" }
+    };
 
     const modeSelect = document.getElementById('transport-mode');
-    const carrierSelect = document.getElementById('carrier-select');
     const originSelect = document.getElementById('origin');
     const destinationSelect = document.getElementById('destination');
     const dateInput = document.getElementById('departure-date');
-    const serviceTier = document.getElementById('service-tier');
     const resultContainer = document.getElementById('result');
     const executiveActions = document.getElementById('executive-actions');
     const newsTicker = document.getElementById('news-ticker');
@@ -115,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function populate() {
         const mode = modeSelect.value;
         const cities = mode === 'sea' ? portCities : airportCities;
-        
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
         Object.keys(cities).sort().forEach(c => {
             originSelect.add(new Option(c, c)); destinationSelect.add(new Option(c, c));
@@ -132,29 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const mode = modeSelect.value;
         const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
         const value = parseFloat(document.getElementById('cargo-value').value) || 50000;
-        const tier = serviceTier.value;
         const category = document.getElementById('cargo-category').value;
-        const inlandMode = document.getElementById('inland-mode').value;
-        const hsCode = document.getElementById('hs-code').value;
         const departureDate = new Date(dateInput.value);
         const originName = originSelect.value;
         const destName = destinationSelect.value;
 
         if (originName === destName || !originName || !destName) return;
 
-        const cityData = mode === 'sea' ? portCities : airportCities;
-        const origin = cityData[originName]; const dest = cityData[destName];
-        const oHub = hubs[origin.hub] || {coords: [35, 129], status: 'green', name: originName};
-        const dHub = hubs[dest.hub] || {coords: [40, -74], status: 'green', name: destName};
-
-        let risks = [];
-        let path = [oHub.coords];
-        
-        // --- Intelligent Routing & Transshipment ---
-        let tHub = null;
-        if (mode === 'sea' && (oHub.country === "China" || oHub.country === "South Korea") && dest.country === "Netherlands") {
-            tHub = hubs["sgp-sin"]; path.push(tHub.coords);
-        }
+        const oHub = hubs[portCities[originName]?.hub || airportCities[originName]?.hub];
+        const dHub = hubs[portCities[destName]?.hub || airportCities[destName]?.hub];
         
         const sandbox = {
             redSea: document.getElementById('risk-redsea').checked,
@@ -162,36 +153,17 @@ document.addEventListener('DOMContentLoaded', () => {
             strike: document.getElementById('risk-strike').checked
         };
 
-        if (mode === 'sea' && sandbox.redSea) { path.push(waypoints.good_hope); risks.push("Red Sea Redirect"); }
-        else if (mode === 'sea' && dist(oHub.coords, dHub.coords) > 8000) path.push(waypoints.suez);
+        const result = solveRoute(oHub, dHub, mode, weight, value, category, sandbox);
         
-        path.push(dHub.coords);
-
-        let mDist = 0; for(let i=0; i<path.length-1; i++) mDist += dist(path[i], path[i+1]);
-        const totalDist = mDist + 1000; // inland buffer
-
-        const speeds = { sea: 711, air: 20000, truck: 500, rail: 300 };
-        const co2Factors = { sea: 25, air: 500, truck: 80, rail: 20 };
-        
-        let transitD = mDist / speeds[mode];
-        let handlingD = (mode==='sea' ? 5 : 2) + (tHub ? 3 : 0);
-        if (tier === 'premium') handlingD *= 0.6;
-        if (sandbox.strike) { handlingD += 7; risks.push("Labor Strike"); }
-        if (oHub.status === 'red' || dHub.status === 'red') { handlingD += 3; risks.push("Hub Congestion"); }
-
-        const totalD = transitD + (1000/speeds[inlandMode]) + handlingD + 2;
-        const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
-
-        // --- Landed Cost Calculations ---
-        const baseFreight = (mDist * (mode==='sea'?0.15:4.5) + 1000 * (inlandMode==='truck'?0.8:0.3)) * weight;
-        const dutyRate = hsCode.startsWith('85') ? 0.0 : cargoMetadata[category].duty;
-        const inventoryCost = (value * annualICC / 365) * totalD;
-        const totalSpend = baseFreight + inventoryCost + (value * dutyRate);
-        
-        const co2LegMain = (mDist * co2Factors[mode] * weight) / 1000;
-        const co2LegInland = (1000 * co2Factors[inlandMode] * weight) / 1000;
-        const co2Total = co2LegMain + co2LegInland;
-        const reliability = Math.max(25, 98 - (risks.length * 15));
+        // --- Strategy Logic: Near-shoring Alternative ---
+        let alternative = null;
+        if (oHub.country === "China" && dHub.country === "USA") {
+            alternative = solveRoute(hubs["mex-man"], dHub, "sea", weight, value, category, {redSea: false, panama: false, strike: false});
+            alternative.strategyLabel = "Mexico Near-shoring";
+        } else if (mode === "sea") {
+            alternative = solveRoute(oHub, dHub, "air", weight, value, category, sandbox);
+            alternative.strategyLabel = "Air Freight Priority";
+        }
 
         const t = translations[currentLang];
         const convert = (val) => {
@@ -199,96 +171,97 @@ document.addEventListener('DOMContentLoaded', () => {
             return `${sym[currentCurrency]}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
         };
 
-        // --- Strategic Recommendation ---
-        let recommendation = "";
-        if (mode === 'sea' && (inventoryCost > baseFreight)) {
-            recommendation = currentLang==='ko' ? "AI 제언: 고가치 화물입니다. 항공 전환 시 재고 유지 비용 절감이 운임 상승분보다 큽니다." : "AI Rec: High-value cargo. Switching to AIR saves more in capital costs than the freight premium.";
-        } else if (risks.length > 0) {
-            recommendation = currentLang==='ko' ? "리스크 대응: 경로상의 병목이 심각합니다. 긴급 물량은 니어쇼어링 또는 항공 분할 선적을 권장합니다." : "Risk Strategic: Significant lane stress. Recommend split-shipment via AIR for urgent inventory.";
-        }
-
         resultContainer.innerHTML = `
             <div class="space-y-4 animate-fade-in">
                 <div class="flex bg-gray-100 p-1 rounded-xl">
                     <button onclick="switchTab('overview')" id="tab-overview" class="flex-1 py-2 text-[9px] font-bold rounded-lg bg-white shadow-sm text-indigo-600">${t.tabOverview}</button>
                     <button onclick="switchTab('finance')" id="tab-finance" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabFinance}</button>
-                    <button onclick="switchTab('risk')" id="tab-risk" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabRisk}</button>
+                    <button onclick="switchTab('strategy')" id="tab-strategy" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabStrategy}</button>
                 </div>
 
                 <div id="tab-content-overview" class="tab-pane space-y-4">
                     <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
                         <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
-                        <p class="text-5xl font-black text-indigo-900">${Math.round(totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
-                        <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString()}</p>
+                        <p class="text-5xl font-black text-indigo-900">${Math.round(result.totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
+                        <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${result.eta.toLocaleDateString()}</p>
                     </div>
-                    ${recommendation ? `<div class="p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl shadow-sm"><p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">${t.aiRec}</p><p class="text-xs font-semibold text-gray-700 leading-relaxed">${recommendation}</p></div>` : ''}
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                        <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${t.volatility}</p><p class="text-2xl font-black ${reliability > 80 ? 'text-green-500' : 'text-red-500'}">${reliability}%</p></div>
-                        <div class="text-right"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Landed Spend</p><p class="text-lg font-bold text-gray-700">${convert(totalSpend)}</p></div>
-                    </div>
+                    ${result.recommendation ? `<div class="p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl shadow-sm"><p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">${t.aiRec}</p><p class="text-xs font-semibold text-gray-700 leading-relaxed">${result.recommendation}</p></div>` : ''}
                 </div>
 
                 <div id="tab-content-finance" class="tab-pane hidden space-y-4">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
                         <div class="space-y-2 text-xs">
-                            <div class="flex justify-between"><span>Freight + Inland</span><span class="font-bold">${convert(baseFreight)}</span></div>
-                            <div class="flex justify-between text-blue-500"><span>Est. Duty (${(dutyRate*100).toFixed(1)}%)</span><span class="font-bold">${convert(value * dutyRate)}</span></div>
-                            <div class="flex justify-between text-orange-500"><span>ICC (Financial Loss)</span><span class="font-bold">${convert(inventoryCost)}</span></div>
-                            <div class="border-t pt-2 flex justify-between font-black text-gray-900 text-lg"><span>Total landed cost</span><span>${convert(totalSpend)}</span></div>
-                        </div>
-                        <div class="h-3 w-full bg-gray-100 rounded-full flex overflow-hidden">
-                            <div style="width: ${(baseFreight/totalSpend)*100}%" class="bg-indigo-500"></div>
-                            <div style="width: ${((value*dutyRate)/totalSpend)*100}%" class="bg-blue-400"></div>
-                            <div style="width: ${(inventoryCost/totalSpend)*100}%" class="bg-orange-400"></div>
+                            <div class="flex justify-between"><span>Freight + Handling</span><span class="font-bold">${convert(result.freight)}</span></div>
+                            <div class="flex justify-between text-orange-500"><span>ICC (Capital tying)</span><span class="font-bold">${convert(result.icc)}</span></div>
+                            <div class="border-t pt-2 flex justify-between font-black text-gray-900 text-lg"><span>Landed Cost</span><span>${convert(result.totalSpend)}</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div id="tab-content-risk" class="tab-pane hidden space-y-4">
-                    <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
-                        <p class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-2">${t.esgOffset}</p>
-                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${Math.ceil(co2Total / 22)}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">ESG Breakdown (CO2)</p>
-                        <div class="flex justify-between text-xs"><span>Main Leg (${mode})</span><span class="font-bold">${(co2LegMain/1000).toFixed(2)}t</span></div>
-                        <div class="flex justify-between text-xs"><span>Inland Leg (${inlandMode})</span><span class="font-bold">${(co2LegInland/1000).toFixed(2)}t</span></div>
+                <div id="tab-content-strategy" class="tab-pane hidden space-y-4">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.compTitle}</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <p class="text-[8px] font-bold text-gray-400 uppercase mb-1">Current Route</p>
+                                <p class="text-xl font-black text-gray-800">${Math.round(result.totalD)} <span class="text-[10px]">Days</span></p>
+                                <p class="text-xs font-bold text-gray-500">${convert(result.totalSpend)}</p>
+                            </div>
+                            <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                                <p class="text-[8px] font-bold text-indigo-400 uppercase mb-1">${alternative.strategyLabel}</p>
+                                <p class="text-xl font-black text-indigo-600">${Math.round(alternative.totalD)} <span class="text-[10px]">Days</span></p>
+                                <p class="text-xs font-bold text-indigo-500">${convert(alternative.totalSpend)}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>`;
 
         executiveActions.classList.remove('hidden');
-        renderMap(path, oHub, dHub, risks, tHub);
-        updateTicker(oHub, dHub, risks);
+        renderMap(result.path, oHub, dHub, result.risks, sandbox);
+        updateTicker(oHub, dHub, result.risks);
         
-        window.currentAnalysis = { originName, destName, mode, totalD, eta, convert, totalSpend, reliability, risks };
+        window.currentAnalysis = { originName, destName, mode, totalD: result.totalD, eta: result.eta, convert, totalSpend: result.totalSpend, reliability: result.reliability, risks: result.risks };
+    }
+
+    function solveRoute(o, d, mode, weight, value, category, sandbox) {
+        let path = [o.coords];
+        let risks = [];
+        let transitD = 0;
+        let handlingD = (mode==='sea' ? 5 : 2);
+
+        if (mode === 'sea') {
+            if (sandbox.redSea) { path.push(waypoints.good_hope); risks.push("Red Sea Redirect"); }
+            else if (dist(o.coords, d.coords) > 8000) path.push(waypoints.suez);
+        }
+        path.push(d.coords);
+
+        let mDist = 0; for(let i=0; i<path.length-1; i++) mDist += dist(path[i], path[i+1]);
+        const speeds = { sea: 711, air: 20000 };
+        transitD = mDist / speeds[mode];
+        if (risks.includes("Red Sea Redirect")) transitD += 12;
+        if (sandbox.strike) handlingD += 7;
+
+        const totalD = transitD + (1000/500) + handlingD + 2;
+        const eta = new Date(dateInput.value); eta.setDate(eta.getDate() + totalD);
+        
+        const freight = mDist * (mode==='sea'?0.15:4.5) * weight;
+        const icc = (value * annualICC / 365) * totalD;
+        const totalSpend = freight + icc + (value * cargoMetadata[category].duty);
+        const reliability = Math.max(25, 98 - (risks.length * 20));
+
+        let rec = "";
+        if (mode === 'sea' && icc > freight) rec = "AI Rec: High-value cargo. Switching to AIR saves more in capital costs.";
+
+        return { totalD, eta, freight, icc, totalSpend, reliability, risks, path, recommendation: rec };
     }
 
     function updateTicker(o, d, risks) {
         let news = `<span>Live Analysis: ${o.name} to ${d.name}.</span>`;
-        if (risks.includes("Red Sea Redirect")) news += "<span>Alert: Vessels rerouting via Good Hope (+12 days).</span>";
-        newsTicker.innerHTML = news + "<span>Global air cargo demand rising.</span><span>Shanghai efficiency at 92%.</span>";
+        if (risks.includes("Red Sea Redirect")) news += "<span>Alert: Suez volumes down 42% YoY. Rerouting via Good Hope.</span>";
+        newsTicker.innerHTML = news + "<span>Global air capacity rising.</span><span>EU CBAM implementation starts.</span>";
     }
-
-    // --- Currency Handling ---
-    const setCurrency = (c) => {
-        currentCurrency = c;
-        ['usd', 'krw', 'eur'].forEach(id => {
-            const btn = document.getElementById(`curr-${id}`);
-            btn.className = `px-2 py-1 rounded text-[10px] font-bold transition-all ${id===c.toLowerCase()?'bg-white shadow-sm text-indigo-600':'text-gray-500'}`;
-        });
-        if (window.currentAnalysis) calculateAndDisplay();
-    };
-    document.getElementById('curr-usd').onclick = () => setCurrency('USD');
-    document.getElementById('curr-krw').onclick = () => setCurrency('KRW');
-    document.getElementById('curr-eur').onclick = () => setCurrency('EUR');
-
-    window.copyExecutiveSummary = () => {
-        const a = window.currentAnalysis; if (!a) return;
-        const text = `[EXECUTIVE SCM REPORT]\n\nRoute: ${a.originName} to ${a.destName}\nLead Time: ${Math.round(a.totalD)} Days\nLanded Cost: ${a.convert(a.totalSpend)}\nReliability: ${a.reliability}%\n\nGenerated by LeadTime Intelligence AI.`;
-        navigator.clipboard.writeText(text); alert("Summary Copied!");
-    };
 
     window.switchTab = (tab) => {
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
@@ -297,12 +270,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
     };
 
-    function renderMap(path, oH, dH, risks, tH) {
-        map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) map.removeLayer(l); });
+    function renderMap(path, oH, dH, risks, sandbox) {
+        map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline || l instanceof L.Circle) map.removeLayer(l); });
+        
+        if (sandbox.redSea) L.circle(riskZones.redsea.coords, { radius: riskZones.redsea.radius, color: 'red', fillOpacity: 0.1, weight: 1 }).addTo(map);
+        if (sandbox.panama) L.circle(riskZones.panama.coords, { radius: riskZones.panama.radius, color: 'orange', fillOpacity: 0.1, weight: 1 }).addTo(map);
+
         const dot = (color) => L.divIcon({ html: `<div class="w-4 h-4 rounded-full border-2 border-white shadow-md bg-${color}-500"></div>`, className: 'custom-div-icon', iconSize: [16, 16] });
         L.marker(oH.coords, {icon: dot(oH.status)}).addTo(map).bindPopup(oH.name);
         L.marker(dH.coords, {icon: dot(dH.status)}).addTo(map).bindPopup(dH.name);
-        if (tH) L.marker(tH.coords, {icon: dot('indigo')}).addTo(map).bindPopup(`<b>${tH.name} Hub</b><br>T/S Handling Active`);
+        
         L.polyline(path, {color: '#4f46e5', weight: 5, className: 'leaflet-ant-path'}).addTo(map);
         map.fitBounds([oH.coords, dH.coords], {padding: [50, 50]});
     }
@@ -316,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
     document.getElementById('lang-ko').onclick = () => { currentLang='ko'; updateUI(); };
     document.getElementById('lang-en').onclick = () => { currentLang='en'; updateUI(); };
-    
     function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k];
