@@ -5,6 +5,7 @@ body {
 
 #map {
     border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .leaflet-popup-content-wrapper {
@@ -15,4 +16,15 @@ body {
 .leaflet-popup-content {
     font-size: 0.875rem;
     line-height: 1.25rem;
+}
+
+/* AdSense Container Styles */
+.adsense-container {
+    width: 100%;
+    clear: both;
+    overflow: hidden;
+}
+
+.adsense-container .adsbygoogle {
+    background-color: transparent;
 }
