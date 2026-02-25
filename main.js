@@ -63,7 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
             news3: "Shanghai Port automation upgrades improving turnaround by 15%.",
             news4: "New EU Carbon Border Adjustment Mechanism (CBAM) phase-in starts.",
             updatedRealtime: "Updated: Real-time",
-            feedPlaceholder: "Select a route to generate deep-dive intelligence briefing."
+            feedPlaceholder: "Select a route to generate deep-dive intelligence briefing.",
+            compareTitle: "Alternative Analysis",
+            compareSea: "Sea Alternative",
+            compareAir: "Air Alternative"
         },
         ko: {
             subtitle: "글로벌 물류 AI 경로 분석기",
@@ -128,7 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
             news3: "상하이 항구 자동화 업그레이드로 처리 속도 15% 향상.",
             news4: "EU 탄소국경조정제도(CBAM) 단계적 도입 시작.",
             updatedRealtime: "업데이트: 실시간",
-            feedPlaceholder: "경로를 선택하면 상세 인텔리전스 보고서가 생성됩니다."
+            feedPlaceholder: "경로를 선택하면 상세 인텔리전스 보고서가 생성됩니다.",
+            compareTitle: "타 운송 수단 비교",
+            compareSea: "해상 운송 시",
+            compareAir: "항공 운송 시"
         }
     };
 
@@ -260,11 +266,20 @@ document.addEventListener('DOMContentLoaded', () => {
         resultContainer.innerHTML += newsHtml;
     }
 
+    function calculateStats(dist, mode, hscode, isRedSea) {
+        const speed = mode === 'sea' ? 16 : 850;
+        const totalD = (dist / (speed * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + hsCodeDelays[hscode];
+        let costUSD = (mode === 'sea' ? 1200 + (dist * 0.15) : 3500 + (dist * 2.5));
+        if (isRedSea && mode === 'sea') costUSD += 800;
+        return { totalD, costUSD };
+    }
+
     function solveRoute(oId, dId, mode, hscode, sandbox) {
         const o = hubs[oId], d = hubs[dId];
-        let rawPath = [o.coords];
         const isRedSea = document.getElementById('risk-redsea').checked;
         
+        // Current Mode Calculation
+        let rawPath = [o.coords];
         if (mode === 'sea') {
             const maritimePath = findMaritimePath(o.exit, d.exit, isRedSea);
             if (maritimePath.length > 0) rawPath = rawPath.concat(maritimePath);
@@ -280,16 +295,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let dist = 0;
         for (let i = 0; i < finalPath.length - 1; i++) dist += getDist(finalPath[i], finalPath[i+1]);
-        
-        const speed = mode === 'sea' ? 16 : 850;
-        const totalD = (dist / (speed * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + hsCodeDelays[hscode];
-        
-        let costUSD = (mode === 'sea' ? 1200 + (dist * 0.15) : 3500 + (dist * 2.5));
-        if (isRedSea && mode === 'sea') costUSD += 800;
+        const currentStats = calculateStats(dist, mode, hscode, isRedSea);
+
+        // Alternative Mode Calculation
+        const altMode = mode === 'sea' ? 'air' : 'sea';
+        let altDist = dist;
+        if (altMode === 'sea') {
+            const altMaritimePath = findMaritimePath(o.exit, d.exit, isRedSea);
+            let altRaw = [o.coords].concat(altMaritimePath).concat([d.coords]);
+            altDist = 0;
+            for (let i = 0; i < altRaw.length - 1; i++) altDist += getDist(altRaw[i], altRaw[i+1]);
+        } else {
+            altDist = getDist(o.coords, d.coords);
+        }
+        const altStats = calculateStats(altDist, altMode, hscode, isRedSea);
 
         const eta = new Date(document.getElementById('departure-date').value || new Date());
-        eta.setDate(eta.getDate() + totalD);
-        return { totalD, eta, path: finalPath, dist, costUSD, risks: isRedSea && mode === 'sea' ? ["riskMsgSuez"] : [] };
+        eta.setDate(eta.getDate() + currentStats.totalD);
+        return { totalD: currentStats.totalD, eta, path: finalPath, dist, costUSD: currentStats.costUSD, risks: isRedSea && mode === 'sea' ? ["riskMsgSuez"] : [], altStats, altMode };
     }
 
     function getDist(c1, c2) {
@@ -314,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const costConverted = route.costUSD * rates[currentCurrency];
         const formattedCost = Math.round(costConverted).toLocaleString();
+        const altCostConverted = route.altStats.costUSD * rates[currentCurrency];
         
         // Dynamic Font Size logic for large numbers (especially KRW)
         let fontSizeClass = "text-5xl";
@@ -334,11 +358,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="${fontSizeClass} font-black text-gray-900 mb-2 leading-none flex items-baseline justify-center"><span class="text-2xl text-gray-400 mr-1 font-bold">${symbols[currentCurrency]}</span>${formattedCost}</p>
                     <p class="text-xs font-bold text-gray-500 mt-2 uppercase">${t.marketRateLabel}</p>
                 </div>
-                <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center relative overflow-hidden group">
+                <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center relative overflow-hidden group">
                     <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-500"></div>
-                    <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.totalDist}</p>
-                    <p class="text-5xl font-black text-gray-900 mb-2 leading-none">${Math.round(route.dist * 0.539957).toLocaleString()} <span class="text-lg font-bold text-orange-400">${t.unitNM}</span></p>
-                    <p class="text-xs font-bold text-gray-500 mt-2">${t.approx} ${Math.round(route.dist).toLocaleString()} KM</p>
+                    <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.compareTitle}</p>
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-bold text-orange-400 uppercase tracking-tighter">${route.altMode === 'sea' ? t.compareSea : t.compareAir}</p>
+                        <p class="text-2xl font-black text-gray-900 leading-tight">${Math.round(route.altStats.totalD)}${t.unitDays} / <span class="text-indigo-600">${symbols[currentCurrency]}${Math.round(altCostConverted).toLocaleString()}</span></p>
+                        <p class="text-[9px] text-gray-400 font-medium italic">${t.totalDist}: ${Math.round(route.dist * 0.539957).toLocaleString()} NM</p>
+                    </div>
                 </div>
             </div>
             ${route.risks.length ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${route.risks.map(rk => t[rk] || rk).join('<br>')}</div>` : ''}`;
