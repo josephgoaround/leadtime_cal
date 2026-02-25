@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             inventoryCost: "ICC (Capital Cost)",
             totalImpact: "Total Landed Spend",
             journeyLog: "Journey Milestones",
-            aiRec: "Strategic Recommendation",
+            aiRec: "AI Strategic Recommendation",
             esgOffset: "Sustainability Impact",
             carbonTax: "Est. Carbon Tax (Future)",
             treesMsg: "trees to offset this shipment",
@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn: "Share Link",
             copySummary: "Copy Summary",
             exportCsv: "Export CSV",
-            disclaimer: "• 16kts avg. speed. AI Recommendations based on Value/Risk."
+            compChart: "Cost-Time Efficiency (Sea vs Air)",
+            disclaimer: "• 16kts avg. speed. Data reflects real-time global stress."
         },
         ko: {
             subtitle: "글로벌 물류 및 통관 AI 경로 분석기",
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             inventoryCost: "재고 금융 비용",
             totalImpact: "총 수입 원가 합계",
             journeyLog: "여정 주요 마일스톤",
-            aiRec: "전략적 솔루션 제언",
+            aiRec: "AI 전략적 솔루션 제언",
             esgOffset: "지속가능성 영향",
             carbonTax: "예상 탄소세 (미래)",
             treesMsg: "탄소 상쇄를 위한 소나무 수",
@@ -60,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn: "링크 공유",
             copySummary: "요약 복사",
             exportCsv: "CSV 내보내기",
-            disclaimer: "• 16노트 평균속도 기준. AI 제언은 화물 가치/리스크 기반입니다."
+            compChart: "비용-시간 효율성 (해상 vs 항공)",
+            disclaimer: "• 16노트 평균속도 기준. 전 세계 물류 부하 지수를 반영합니다."
         }
     };
 
@@ -91,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450] },
         "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764] },
         "deu-fra": { name: "Frankfurt Air", coords: [50.0379, 8.5622] },
-        "usa-jfk": { name: "JFK Intl", coords: [40.6413, -73.7781] }
+        "usa-jfk": { name: "John F. Kennedy", coords: [40.6413, -73.7781] }
     };
 
     const waypoints = { "pacific_mid": [20.0, -160.0], "good_hope": [-34.35, 18.47], "suez": [29.9, 32.5] };
@@ -101,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const destinationSelect = document.getElementById('destination');
     const dateInput = document.getElementById('departure-date');
     const serviceTier = document.getElementById('service-tier');
-    const inlandModeSelect = document.getElementById('inland-mode');
     const resultContainer = document.getElementById('result');
     const executiveActions = document.getElementById('executive-actions');
 
@@ -127,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
         const value = parseFloat(document.getElementById('cargo-value').value) || 50000;
         const tier = serviceTier.value;
-        const inlandMode = inlandModeSelect.value;
         const originName = originSelect.value;
         const destName = destinationSelect.value;
         const departureDate = new Date(dateInput.value);
@@ -146,56 +146,44 @@ document.addEventListener('DOMContentLoaded', () => {
         let risks = [];
         let path = [oHub.coords];
         
-        // Intelligent Routing
-        let tHub = null;
+        // Waypoint Logic
         if (mode === 'sea') {
-            if ((origin.country === "South Korea" || origin.country === "China") && dest.country === "Netherlands") {
-                tHub = hubs["sgp-sin"]; path.push(tHub.coords);
-            }
             if (sandbox.redSea) { path.push(waypoints.good_hope); risks.push("Red Sea Conflict"); }
             else if (dist(oHub.coords, dHub.coords) > 10000) path.push(waypoints.suez);
         }
         path.push(dHub.coords);
 
         let mDist = 0; for(let i=0; i<path.length-1; i++) mDist += dist(path[i], path[i+1]);
-        const totalDist = mDist + dist(origin.coords, oHub.coords) + dist(dHub.coords, dest.coords);
+        const totalDistance = mDist + dist(origin.coords, oHub.coords) + dist(dHub.coords, dest.coords);
 
-        const speeds = { sea: 711, air: 20000, truck: 500, rail: 300 };
-        const co2Factors = { sea: 25, air: 500, truck: 80, rail: 20 };
-        
+        const speeds = { sea: 711, air: 20000, truck: 500 };
         let transitD = mDist / speeds[mode];
-        let inlandD = (dist(origin.coords, oHub.coords)+dist(dHub.coords, dest.coords)) / speeds[inlandMode];
-        let handlingD = (mode==='sea' ? 5 : 2) + (tHub ? 3 : 0);
+        let handlingD = (mode==='sea' ? 5 : 2);
         if (tier === 'premium') handlingD *= 0.6;
-        if (origin.status === 'red' || dest.status === 'red') { handlingD += 3; risks.push("Hub Congestion"); }
+        if (risks.includes("Red Sea Conflict")) transitD += 12;
 
-        const totalD = transitD + inlandD + handlingD + 2;
+        const totalD = transitD + (dist(origin.coords, oHub.coords)+dist(dHub.coords, dest.coords))/500 + handlingD + 2;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
 
-        // --- Strategic AI Logic ---
-        const airCost = totalDist * 4.5 * weight;
-        const seaCost = totalDist * 0.15 * weight;
-        const iccSavings = (value * annualICC / 365) * (totalD - 5);
-        
-        let recommendation = "";
-        if (mode === 'sea' && iccSavings > (airCost - seaCost)) {
-            recommendation = currentLang==='ko' ? "AI 제언: 고가치 화물입니다. 항공 전환 시 재고 유지 비용을 획기적으로 낮출 수 있습니다." : "AI Rec: High-value detected. Switching to AIR saves more in capital costs than the freight premium.";
-        } else if (risks.length > 0) {
-            recommendation = currentLang==='ko' ? "AI 제언: 현재 경로의 지정학적 리스크가 큽니다. 긴급 물량은 항공 분할 선적을 권장합니다." : "AI Rec: Elevated geopolitical risks. Recommend split-shipment via AIR for urgent inventory.";
-        } else if (inlandMode === 'truck' && totalDist < 5000) {
-            recommendation = currentLang==='ko' ? "ESG 제언: 내륙 구간을 철도(Rail)로 전환하면 탄소 배출량을 75% 절감할 수 있습니다." : "ESG Rec: Switching inland leg to RAIL reduces segment emissions by 75%.";
-        }
+        // --- Side-by-Side Mode Comparison Calculation ---
+        const altMode = mode === 'sea' ? 'air' : 'sea';
+        const altTransitD = mDist / speeds[altMode];
+        const altTotalD = altTransitD + (dist(origin.coords, oHub.coords)+dist(dHub.coords, dest.coords))/500 + (altMode==='sea'?5:2) + 2;
+        const baseFreight = totalDistance * (mode==='sea'?0.15:4.5) * weight;
+        const altFreight = totalDistance * (altMode==='sea'?0.15:4.5) * weight;
+        const iccCurrent = (value * annualICC / 365) * totalD;
+        const iccAlt = (value * annualICC / 365) * altTotalD;
+        const landedCurrent = baseFreight + iccCurrent + (value * (dest.duty || 0.1));
+        const landedAlt = altFreight + iccAlt + (value * (dest.duty || 0.1));
 
-        const baseFreight = (mDist * (mode==='sea'?0.15:4.5) + (dist(origin.coords, oHub.coords)+dist(dHub.coords, dest.coords)) * (inlandMode==='truck'?0.8:0.3)) * weight;
-        const inventoryCost = (value * annualICC / 365) * totalD;
-        const estDuty = value * (dest.duty || 0.10);
-        const totalSpend = baseFreight + inventoryCost + estDuty;
-        
-        const co2Total = (mDist * co2Factors[mode] * weight + (dist(origin.coords, oHub.coords)+dist(dHub.coords, dest.coords)) * co2Factors[inlandMode] * weight) / 1000;
-        const reliability = Math.max(25, 98 - (risks.length * 20));
+        let recommendation = "";
+        if (mode === 'sea' && (iccCurrent - iccAlt) > (altFreight - baseFreight)) {
+            recommendation = currentLang==='ko' ? "고가치 화물: 항공 전환 시 재고 비용 절감이 운임 차액보다 큽니다. 항공 운송을 적극 권장합니다." : "High-value detection: Switching to AIR saves more in capital costs than the freight premium. Recommend Mode Switch.";
+        }
 
         const t = translations[currentLang];
         const convert = (val) => `${currentCurrency==='KRW'?'₩':'$'}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
+        const reliability = Math.max(25, 98 - (risks.length * 20));
 
         resultContainer.innerHTML = `
             <div class="space-y-4 animate-fade-in">
@@ -206,30 +194,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div id="tab-content-overview" class="tab-pane space-y-4">
-                    <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center">
+                    <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full ${mode==='sea'?'bg-blue-500':'bg-indigo-600'}"></div>
                         <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
                         <p class="text-5xl font-black text-indigo-900">${Math.round(totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
                         <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString()}</p>
                     </div>
                     ${recommendation ? `<div class="p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl shadow-sm"><p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">${t.aiRec}</p><p class="text-xs font-semibold text-gray-700 leading-relaxed">${recommendation}</p></div>` : ''}
                     <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                        <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${t.volatility}</p><p class="text-2xl font-black ${reliability > 80 ? 'text-green-500' : 'text-red-500'}">${reliability}%</p></div>
-                        <div class="text-right"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Inland Leg</p><p class="text-sm font-bold text-gray-700">${inlandMode.toUpperCase()}</p></div>
+                        <div><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${t.reliability}</p><p class="text-2xl font-black ${reliability > 80 ? 'text-green-500' : 'text-red-500'}">${reliability}%</p></div>
+                        <div class="text-right"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Efficiency</p><p class="text-sm font-bold text-gray-700">${tier.toUpperCase()}</p></div>
                     </div>
                 </div>
 
                 <div id="tab-content-finance" class="tab-pane hidden space-y-4">
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between"><span>Freight + Handling</span><span class="font-bold">${convert(baseFreight)}</span></div>
-                            <div class="flex justify-between text-blue-500"><span>Est. Duty & Tax</span><span class="font-bold">${convert(estDuty)}</span></div>
-                            <div class="flex justify-between text-orange-500"><span>ICC (Capital tying)</span><span class="font-bold">${convert(inventoryCost)}</span></div>
-                            <div class="border-t pt-2 flex justify-between font-black text-gray-900 text-lg"><span>Landed Cost</span><span>${convert(totalSpend)}</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${t.compChart}</p>
+                        <div class="flex items-end gap-4 h-32">
+                            <div class="flex-1 flex flex-col items-center gap-2">
+                                <div class="w-full bg-indigo-600 rounded-t-lg relative group transition-all hover:opacity-80" style="height: ${(landedCurrent/Math.max(landedCurrent, landedAlt))*100}%">
+                                    <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-indigo-600">${convert(landedCurrent)}</span>
+                                </div>
+                                <span class="text-[9px] font-black text-gray-500 uppercase">${mode.toUpperCase()} (Now)</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2">
+                                <div class="w-full bg-gray-300 rounded-t-lg relative group transition-all hover:opacity-80" style="height: ${(landedAlt/Math.max(landedCurrent, landedAlt))*100}%">
+                                    <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-400">${convert(landedAlt)}</span>
+                                </div>
+                                <span class="text-[9px] font-black text-gray-400 uppercase">${altMode.toUpperCase()} (Alt)</span>
+                            </div>
                         </div>
-                        <div class="h-3 w-full bg-gray-100 rounded-full flex overflow-hidden">
-                            <div style="width: ${(baseFreight/totalSpend)*100}%" class="bg-indigo-500"></div>
-                            <div style="width: ${(estDuty/totalSpend)*100}%" class="bg-blue-400"></div>
-                            <div style="width: ${(inventoryCost/totalSpend)*100}%" class="bg-orange-400"></div>
+                        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-50">
+                            <div class="text-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Current Transit</p><p class="text-sm font-bold text-gray-700">${Math.round(totalD)} Days</p></div>
+                            <div class="text-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Alt Transit</p><p class="text-sm font-bold text-indigo-500">${Math.round(altTotalD)} Days</p></div>
                         </div>
                     </div>
                 </div>
@@ -237,20 +234,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="tab-content-risk" class="tab-pane hidden space-y-4">
                     <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
                         <p class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-2">${t.esgOffset}</p>
-                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${Math.ceil(co2Total / 22)}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
+                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${Math.ceil((totalDistance * (mode==='sea'?25:500) * weight / 1000) / 22)}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
                     </div>
                 </div>
             </div>`;
 
         executiveActions.classList.remove('hidden');
-        renderMap(path, origin, dest, oHub, dHub, originName, destName, tHub);
-        window.currentAnalysis = { originName, destName, mode, totalD, eta, convert, totalSpend, co2Total, reliability, risks };
+        updateIntelligence(origin, dest, risks, reliability);
+        renderMap(path, origin, dest, oHub, dHub, originName, destName);
+        
+        window.currentAnalysis = { originName, destName, mode, totalD, eta, convert, landedCurrent, reliability, risks };
     }
 
     window.copyExecutiveSummary = () => {
         const a = window.currentAnalysis; if (!a) return;
-        const text = `[EXECUTIVE SCM ADVISORY]\n\nRoute: ${a.originName} to ${a.destName}\nMode: ${a.mode.toUpperCase()}\nLead Time: ${Math.round(a.totalD)} Days\nLanded Cost: ${a.convert(a.totalSpend)}\nReliability: ${a.reliability}%\nESG Impact: ${Math.ceil(a.co2Total / 22)} trees/shipment\n\nStrategic Note: ${a.risks.length > 0 ? 'Risk alert active for ' + a.risks.join(', ') : 'Network stable.'}`;
-        navigator.clipboard.writeText(text); alert("Executive Summary Copied!");
+        const text = `[LOGISTICS STRATEGIC SUMMARY]\n\nRoute: ${a.originName} to ${a.destName}\nMode: ${a.mode.toUpperCase()}\nLead Time: ${Math.round(a.totalD)} Days\nLanded Cost: ${a.convert(a.landedCurrent)}\nReliability: ${a.reliability}%\n\nStrategic Insight: ${a.risks.length > 0 ? 'Risk alert active for ' + a.risks.join(', ') : 'Network remains stable.'}`;
+        navigator.clipboard.writeText(text); alert("Summary Copied!");
     };
 
     window.switchTab = (tab) => {
@@ -260,12 +259,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
     };
 
-    function renderMap(path, o, d, oH, dH, oN, dN, tH) {
+    function updateIntelligence(o, d, risks, rel) {
+        const badge = document.getElementById('network-status-badge');
+        badge.classList.remove('hidden');
+        const alert = rel < 80;
+        badge.querySelector('span:last-child').innerText = alert ? "Elevated Alert" : "Network Stable";
+        badge.querySelector('span:first-child span:last-child').className = `relative inline-flex rounded-full h-2 w-2 ${alert?'bg-red-500':'bg-green-500'}`;
+        
+        const feed = document.getElementById('feed-container');
+        feed.innerHTML = (alert ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Notice: Lane reliability dropped to ${rel}%. Major bottleneck at Suez/Panama observed.</div>` : '') + `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">Standard regional monitoring active for ${d.country}. Clearance speeds optimal.</div>`;
+    }
+
+    function renderMap(path, o, d, oH, dH, oN, dN) {
         map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) map.removeLayer(l); });
         const dot = (color) => L.divIcon({ html: `<div class="w-4 h-4 rounded-full border-2 border-white shadow-md bg-${color}-500"></div>`, className: 'custom-div-icon', iconSize: [16, 16] });
         L.marker(o.coords, {icon: dot('green')}).addTo(map).bindPopup(oN);
         L.marker(d.coords, {icon: dot('green')}).addTo(map).bindPopup(dN);
-        if (tH) L.marker(tH.coords, {icon: dot('indigo')}).addTo(map).bindPopup(`<b>${tH.name} Hub</b><br>T/S Handling active`);
         L.polyline(path, {color: '#4f46e5', weight: 5, className: 'leaflet-ant-path'}).addTo(map);
         map.fitBounds([o.coords, d.coords], {padding: [50, 50]});
     }
