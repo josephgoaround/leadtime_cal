@@ -77,27 +77,32 @@
                             RUN INTELLIGENCE ANALYSIS
                         </button>
                     </form>
-                    <div id="result" class="mt-8"></div>
-                </div>
+                <div id="result" class="mt-8 space-y-6"></div>
             </div>
 
             <div class="lg:col-span-8 space-y-6">
-                <div class="bg-white p-2 rounded-2xl shadow-2xl shadow-gray-200 border border-gray-100 overflow-hidden">
+                <div class="bg-white p-2 rounded-2xl shadow-2xl shadow-gray-200 border border-gray-100 overflow-hidden relative">
+                    <div id="network-status-badge" class="absolute top-6 right-6 z-[1000] bg-white/90 backdrop-blur px-3 py-1.5 rounded-full shadow-sm border border-gray-100 flex items-center gap-2 hidden">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <span class="text-[10px] font-bold text-gray-600 uppercase tracking-tight">Network Stable</span>
+                    </div>
                     <div id="map" class="rounded-xl"></div>
                 </div>
                 
                 <div id="dynamic-scm-feed" class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                    <h3 class="text-md font-bold text-gray-800 mb-4 flex items-center">
-                        <span class="relative flex h-2.5 w-2.5 mr-2">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                        </span>
-                        <span data-i18n="feedTitle">Market Intelligence Live</span>
-                    </h3>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-gray-50 rounded-xl border-l-4 border-indigo-500">
-                            <p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">System Update</p>
-                            <p class="text-sm text-gray-600">Route volatility tracking enabled. Select ports to view 12-month historical performance trends.</p>
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-md font-bold text-gray-800 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span data-i18n="feedTitle">Route-Specific Intelligence</span>
+                        </h3>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Updated: Real-time</span>
+                    </div>
+                    <div class="space-y-4" id="feed-container">
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <p class="text-sm text-gray-500 italic text-center">Select a route to generate deep-dive intelligence briefing.</p>
                         </div>
                     </div>
                 </div>
