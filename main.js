@@ -304,10 +304,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="text-5xl font-black text-indigo-900 mb-2 leading-none">${Math.round(route.totalD)} <span class="text-lg font-bold text-indigo-400">${t.unitDays}</span></p>
                     <p class="text-xs font-bold text-indigo-500 mt-2 bg-white/50 py-1 px-3 rounded-full inline-block border border-indigo-200">${t.eta}: ${route.eta.toLocaleDateString()}</p>
                 </div>
-                <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center relative overflow-hidden group">
+                <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center relative overflow-hidden group">
                     <div class="absolute top-0 left-0 w-full h-1.5 bg-green-500"></div>
                     <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
-                    <p class="text-5xl font-black text-gray-900 mb-2 leading-none"><span class="text-3xl text-gray-400 mr-1">${symbols[currentCurrency]}</span>${Math.round(costConverted).toLocaleString()}</p>
+                    <p class="text-5xl font-black text-gray-900 mb-2 leading-none flex items-baseline justify-center"><span class="text-3xl text-gray-400 mr-1">${symbols[currentCurrency]}</span>${Math.round(costConverted).toLocaleString()}</p>
                     <p class="text-xs font-bold text-gray-500 mt-2 uppercase">${t.marketRateLabel}</p>
                 </div>
                 <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center relative overflow-hidden group">
@@ -333,6 +333,30 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k];
         });
+
+        // 1. Currency Button UI Refresh
+        ['USD', 'KRW', 'EUR'].forEach(c => {
+            const btn = document.getElementById(`curr-${c.toLowerCase()}`);
+            if (btn) {
+                if (c === currentCurrency) {
+                    btn.className = "px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600";
+                } else {
+                    btn.className = "px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700";
+                }
+            }
+        });
+
+        // 2. Language Button UI Refresh
+        const langKo = document.getElementById('lang-ko');
+        const langEn = document.getElementById('lang-en');
+        if (currentLang === 'ko') {
+            langKo.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm";
+            langEn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50";
+        } else {
+            langKo.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50";
+            langEn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm";
+        }
+
         if(resultContainer.innerHTML.includes('indigo-50')) calculateAndDisplay();
         populate();
     }
