@@ -295,7 +295,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const route = solveRoute(oId, dId, modeSelect.value, hscodeSelect.value, { redSea: document.getElementById('risk-redsea').checked });
         
         const costConverted = route.costUSD * rates[currentCurrency];
+        const formattedCost = Math.round(costConverted).toLocaleString();
         
+        // Dynamic Font Size logic for large numbers (especially KRW)
+        let fontSizeClass = "text-5xl";
+        if (formattedCost.length > 10) fontSizeClass = "text-3xl";
+        else if (formattedCost.length > 7) fontSizeClass = "text-4xl";
+
         resultContainer.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
                 <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center relative overflow-hidden group">
@@ -307,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center relative overflow-hidden group">
                     <div class="absolute top-0 left-0 w-full h-1.5 bg-green-500"></div>
                     <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
-                    <p class="text-5xl font-black text-gray-900 mb-2 leading-none flex items-baseline justify-center"><span class="text-3xl text-gray-400 mr-1">${symbols[currentCurrency]}</span>${Math.round(costConverted).toLocaleString()}</p>
+                    <p class="${fontSizeClass} font-black text-gray-900 mb-2 leading-none flex items-baseline justify-center"><span class="text-2xl text-gray-400 mr-1 font-bold">${symbols[currentCurrency]}</span>${formattedCost}</p>
                     <p class="text-xs font-bold text-gray-500 mt-2 uppercase">${t.marketRateLabel}</p>
                 </div>
                 <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center relative overflow-hidden group">
