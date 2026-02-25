@@ -131,27 +131,24 @@ document.addEventListener('DOMContentLoaded', () => {
         "nzl-akl": { name: "Auckland", coords: [-36.8485, 174.7633], type: "Both", country: "New Zealand", region: "OCEANIA" }
     };
 
-    // --- Key Maritime Waypoints ---
+    // --- Key Maritime Waypoints (The "Skeleton" for realistic paths) ---
+    // Added intermediate "buffer" points to avoid land-cutting
     const nav = {
+        "south_china_sea": [15.0, 115.0], // Buffer between NE Asia and Malacca
         "malacca": [1.2, 103.8],
+        "south_of_india": [5.0, 80.0],    // Buffer between Malacca and Middle East
         "bab_el_mandeb": [12.6, 43.3],
         "suez_canal": [29.9, 32.5],
+        "med_central": [35.0, 18.0],      // Buffer in Central Mediterranean
         "gibraltar": [35.9, -5.3],
+        "portugal_off": [40.0, -12.0],    // Buffer off Portugal
+        "english_channel": [50.0, -1.0],
         "panama_canal": [9.1, -79.7],
         "good_hope": [-35.0, 20.0],
         "cape_horn": [-56.0, -67.0],
-        "english_channel": [50.0, -1.0],
-        "bering_strait": [66.0, -169.0],
         "pacific_mid": [20.0, -165.0],
         "atlantic_mid": [30.0, -40.0],
-        "indian_mid": [-15.0, 75.0],
-        "south_atlantic_mid": [-25.0, -15.0],
-        "south_pacific_mid": [-30.0, -130.0],
-        "around_india": [5.0, 78.0],
-        "around_japan": [35.0, 145.0],
-        "caribbean": [15.0, -75.0],
-        "brazil_coast": [-10.0, -30.0],
-        "africa_west": [0.0, 0.0]
+        "indian_mid": [-15.0, 75.0]
     };
 
     const modeSelect = document.getElementById('transport-mode');
@@ -260,82 +257,92 @@ document.addEventListener('DOMContentLoaded', () => {
             const from = (reg) => r1 === reg;
             const to = (reg) => r2 === reg;
 
-            // --- OPTIMIZED MARITIME ROUTING ---
+            // --- REFINED MARITIME ROUTING WITH BUFFERS ---
             
-            // 1. ASIA <-> EUROPE (Optimized: Malacca -> Suez)
+            // Asia <-> Europe
             if (match('NE_ASIA', 'EUROPE_NORTH') || match('SE_ASIA', 'EUROPE_NORTH') || match('NE_ASIA', 'EUROPE_SOUTH') || match('SE_ASIA', 'EUROPE_SOUTH') || match('SOUTH_ASIA', 'EUROPE_NORTH') || match('SOUTH_ASIA', 'EUROPE_SOUTH')) {
+                if (from('NE_ASIA') || to('NE_ASIA')) path.push(nav.south_china_sea);
                 if (!from('SOUTH_ASIA') && !to('SOUTH_ASIA')) path.push(nav.malacca);
+                
                 if (sandbox.redSea) {
                     path.push(nav.good_hope);
-                    risks.push("Red Sea Conflict: Optimal reroute via Good Hope");
+                    risks.push("Red Sea Conflict: Rerouting via Good Hope");
                 } else {
+                    if (!from('SOUTH_ASIA') && !to('SOUTH_ASIA')) path.push(nav.south_of_india);
                     path.push(nav.bab_el_mandeb);
                     path.push(nav.suez_canal);
+                    path.push(nav.med_central);
                 }
-                if (match('NE_ASIA', 'EUROPE_NORTH') || match('SE_ASIA', 'EUROPE_NORTH')) path.push(nav.gibraltar);
+                
+                path.push(nav.gibraltar);
+                if (r1.includes('NORTH') || r2.includes('NORTH')) {
+                    path.push(nav.portugal_off);
+                    path.push(nav.english_channel);
+                }
             }
-            // 2. ASIA <-> US EAST (Optimized: Panama is shorter than Suez for NE Asia)
+            // Asia <-> US East Coast
             else if ((from('NE_ASIA') || from('SE_ASIA')) && to('US_EAST')) {
                 if (sandbox.panama) {
+                    path.push(nav.south_china_sea);
                     path.push(nav.malacca);
+                    path.push(nav.south_of_india);
+                    path.push(nav.bab_el_mandeb);
                     path.push(nav.suez_canal);
+                    path.push(nav.med_central);
                     path.push(nav.gibraltar);
+                    path.push(nav.atlantic_mid);
                     risks.push("Panama Congestion: Optimized via Suez Canal");
                 } else {
                     path.push(nav.pacific_mid);
                     path.push(nav.panama_canal);
                 }
             }
-            // 3. EUROPE <-> US WEST (Optimized: Panama)
+            // Europe <-> US West Coast
             else if (r1.includes('EUROPE') && to('US_WEST')) {
                 if (sandbox.panama) {
                     path.push(nav.gibraltar);
                     path.push(nav.cape_horn);
-                    risks.push("Panama Closed: Shortest detour via Cape Horn");
+                    risks.push("Panama Closed: Detour via Cape Horn");
                 } else {
+                    path.push(nav.english_channel);
+                    path.push(nav.portugal_off);
+                    path.push(nav.gibraltar);
                     path.push(nav.atlantic_mid);
                     path.push(nav.panama_canal);
                 }
             }
-            // 4. US EAST <-> US WEST (Optimized: Panama)
+            // US East <-> US West (Sea)
             else if (match('US_EAST', 'US_WEST')) {
                 path.push(nav.panama_canal);
             }
-            // 5. NE_ASIA <-> OCEANIA (Optimized: Direct)
-            else if (match('NE_ASIA', 'OCEANIA')) {
-                // Direct ocean path is already optimal
+            // Asia <-> Australia
+            else if ((from('NE_ASIA') || from('SE_ASIA')) && to('OCEANIA')) {
+                if (from('NE_ASIA')) path.push(nav.south_china_sea);
             }
-            // 6. SE_ASIA <-> OCEANIA (Optimized: Direct)
-            else if (match('SE_ASIA', 'OCEANIA')) {
-                // Direct
+            // Default Fallback
+            else {
+                path.push(nav.indian_mid); 
             }
-            // 7. EUROPE <-> AFRICA (Optimized: Gibraltar)
-            else if (r1.includes('EUROPE') && to('AFRICA')) {
-                path.push(nav.gibraltar);
-            }
-            // 8. ASIA <-> SA_EAST (Optimized: via Malacca/Good Hope or Panama)
-            else if (match('NE_ASIA', 'SA_EAST') || match('SE_ASIA', 'SA_EAST')) {
-                path.push(nav.malacca);
-                path.push(nav.good_hope);
-            }
-        } 
+        } else {
+            // Air: Direct
+            path.push(d.coords);
+        }
         
         path.push(d.coords);
 
-        // Distance & Lead Time Calculation
         let totalDist = 0;
         for (let i = 0; i < path.length - 1; i++) totalDist += getDist(path[i], path[i+1]);
 
         const speed = mode === 'sea' ? 16 * 1.852 * 24 : 850 * 24; 
         let transitD = totalDist / speed;
         
-        // Dynamic Risk Penalties
-        if (risks.some(r => r.includes("Good Hope"))) transitD += 10; // Optimized penalty
-        if (risks.some(r => r.includes("Suez Canal") && r.includes("Panama"))) transitD += 7;
+        if (risks.some(r => r.includes("Good Hope"))) transitD += 12;
+        if (risks.some(r => r.includes("Suez Canal") && r.includes("Panama"))) transitD += 8;
+        if (sandbox.strike) transitD += 5;
 
-        milestones.push({ name: "Port/Airport Handling", days: mode === 'sea' ? 3 : 1 });
-        milestones.push({ name: "Optimized Transit", days: Math.max(1, Math.round(transitD)) });
-        milestones.push({ name: "Customs & Release", days: mode === 'sea' ? 3 : 1 });
+        milestones.push({ name: "Port/Airport Handling", days: mode === 'sea' ? 4 : 1 });
+        milestones.push({ name: "Transit", days: Math.max(1, Math.round(transitD)) });
+        milestones.push({ name: "Distribution", days: mode === 'sea' ? 3 : 1 });
 
         let totalD = milestones.reduce((sum, m) => sum + m.days, 0);
         const eta = new Date(dateInput.value); eta.setDate(eta.getDate() + totalD);
