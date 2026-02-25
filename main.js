@@ -244,7 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "good_hope": [-36.0, 20.0], "west_africa_1": [15.0, -19.0],
         "madagascar_ne": [-10.0, 55.0], "madagascar_se": [-30.0, 52.0], "madagascar_nw": [-10.0, 42.0], "madagascar_sw": [-30.0, 40.0],
         "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "lax_gate": [32.5, -120.0], "nyc_gate": [40.2, -73.5], "savannah_exit": [31.5, -80.5], "brazil_e": [-6.0, -34.0],
-        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "sydney_outer": [-35.0, 153.0], "tokyo_outer": [34.0, 141.5]
+        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "sydney_outer": [-35.0, 153.0], "tokyo_outer": [34.0, 141.5],
+        "atlantic_mid_n": [45.0, -40.0], "atlantic_mid_s": [20.0, -35.0], "english_channel": [50.0, -2.0], "azores": [38.0, -28.0]
     };
 
     const seaEdges = [
@@ -252,7 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ["shanghai_gate", "ningbo_exit"], ["ningbo_exit", "taipei_outer"], ["taipei_outer", "hongkong_outer"], ["hongkong_outer", "luzon_strait"], ["hongkong_outer", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "malacca_e"], ["malacca_e", "singapore_gate"], ["singapore_gate", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"], ["andaman_sea", "srilanka_s"],
         ["srilanka_s", "arabian_sea_mid"], ["arabian_sea_mid", "hormuz_strait"], ["hormuz_strait", "jebel_ali_gate"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "med_mid"], ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "rotterdam_exit"], ["rotterdam_exit", "hamburg_exit"], ["rotterdam_exit", "antwerp_exit"],
         ["srilanka_s", "madagascar_ne"], ["madagascar_ne", "madagascar_se"], ["madagascar_se", "good_hope"], ["srilanka_s", "madagascar_nw"], ["madagascar_nw", "madagascar_sw"], ["madagascar_sw", "good_hope"],
-        ["good_hope", "west_africa_1"], ["west_africa_1", "portugal_w"], ["taipei_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_gate"], ["panama_w", "lax_gate"], ["panama_e", "nyc_gate"], ["panama_e", "savannah_exit"], ["savannah_exit", "nyc_gate"], ["portugal_w", "nyc_gate"], ["brazil_e", "portugal_w"], ["brazil_e", "good_hope"], ["tokyo_outer", "pacific_mid_w"]
+        ["good_hope", "west_africa_1"], ["west_africa_1", "portugal_w"], ["taipei_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_gate"], ["panama_w", "lax_gate"], ["panama_e", "nyc_gate"], ["panama_e", "savannah_exit"], ["savannah_exit", "nyc_gate"], ["portugal_w", "nyc_gate"], ["brazil_e", "portugal_w"], ["brazil_e", "good_hope"], ["tokyo_outer", "pacific_mid_w"],
+        ["english_channel", "atlantic_mid_n"], ["atlantic_mid_n", "nyc_gate"], ["hamburg_exit", "english_channel"], ["rotterdam_exit", "english_channel"], ["gibraltar", "azores"], ["azores", "atlantic_mid_n"], ["atlantic_mid_s", "savannah_exit"], ["azores", "atlantic_mid_s"]
     ];
 
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
