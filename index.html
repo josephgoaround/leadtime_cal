@@ -11,26 +11,24 @@
     <link rel="stylesheet" href="style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-50 font-sans text-gray-900">
+<body class="bg-gray-50 font-sans text-gray-900 leading-normal">
     <div class="container mx-auto p-4 max-w-6xl">
         <header class="flex justify-between items-center mb-8 py-6 border-b border-gray-200">
             <div>
                 <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
                 <p class="text-gray-500 text-sm font-medium" data-i18n="subtitle">Global Logistics & Customs AI Pathfinder</p>
             </div>
-            <div class="flex items-center gap-2">
-                <button id="lang-ko" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">KO</button>
-                <button id="lang-en" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">EN</button>
+            <div class="flex items-center gap-3">
+                <div class="flex bg-gray-100 p-1 rounded-lg mr-2">
+                    <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
+                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">KRW</button>
+                </div>
+                <div class="flex items-center gap-1 border-l pl-3 border-gray-200">
+                    <button id="lang-ko" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">KO</button>
+                    <button id="lang-en" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">EN</button>
+                </div>
             </div>
         </header>
-
-        <!-- Top Ad -->
-        <div class="adsense-container mb-8">
-            <div class="text-center text-[9px] text-gray-400 mb-1 tracking-widest uppercase">Sponsored</div>
-            <div class="bg-white p-2 rounded-lg shadow-sm flex items-center justify-center min-h-[90px] border border-gray-100">
-                <p class="text-gray-300 italic text-xs">Responsive Ad Banner</p>
-            </div>
-        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
@@ -40,37 +38,43 @@
                         <span data-i18n="formTitle">Shipment Config</span>
                     </h2>
                     <form id="shipping-form" class="space-y-5">
-                        <div>
-                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelMode">Transport Mode</label>
-                            <select id="transport-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm font-semibold">
-                                <option value="sea">🚢 Sea Freight</option>
-                                <option value="air">✈️ Air Freight</option>
-                            </select>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelMode">Transport Mode</label>
+                                <select id="transport-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
+                                    <option value="sea">🚢 Sea</option>
+                                    <option value="air">✈️ Air</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelDate">Departure Date</label>
+                                <input type="date" id="departure-date" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
+                            </div>
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelService">Service Level</label>
-                            <select id="sub-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm font-semibold"></select>
+                            <select id="sub-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold"></select>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelCargo">Cargo Type</label>
-                            <select id="cargo-type" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm font-semibold">
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelCargo">Cargo Category</label>
+                            <select id="cargo-type" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
                                 <option data-i18n="cargoGen">General Cargo</option>
-                                <option data-i18n="cargoRef">Refrigerated (Cold Chain)</option>
-                                <option data-i18n="cargoDG">Dangerous Goods (DG)</option>
+                                <option data-i18n="cargoRef">Refrigerated</option>
+                                <option data-i18n="cargoDG">Dangerous Goods</option>
                             </select>
                         </div>
                         <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelOrigin">Departure</label>
-                                <select id="origin" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm font-semibold"></select>
+                                <select id="origin" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold"></select>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelDest">Arrival</label>
-                                <select id="destination" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm font-semibold"></select>
+                                <select id="destination" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold"></select>
                             </div>
                         </div>
                         <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-lg shadow-indigo-200 text-sm tracking-wide" data-i18n="btnAnalyze">
-                            ANALYZE LOGISTICS DATA
+                            RUN INTELLIGENCE ANALYSIS
                         </button>
                     </form>
                     <div id="result" class="mt-8"></div>
@@ -92,55 +96,26 @@
                     </h3>
                     <div class="space-y-3">
                         <div class="p-3 bg-gray-50 rounded-xl border-l-4 border-indigo-500">
-                            <p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">System Ready</p>
-                            <p class="text-sm text-gray-600">Global logistics database updated. Awaiting shipment configuration for route-specific analysis.</p>
+                            <p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">System Update</p>
+                            <p class="text-sm text-gray-600">Route volatility tracking enabled. Select ports to view 12-month historical performance trends.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Capability Cards -->
-        <div class="mt-16 mb-16">
-            <h2 class="text-2xl font-extrabold text-gray-900 mb-10 text-center" data-i18n="capTitle">Enterprise Intelligence Engine</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold mb-3" data-i18n="cap1Title">Smart Routing</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="cap1Desc">Calculates routes using major maritime chokepoints and atmospheric wind-corrected flight paths.</p>
-                </div>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold mb-3" data-i18n="cap2Title">Sustainability</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="cap2Desc">Estimate Scope 3 emissions for your global supply chain with our integrated CO2 intelligence engine.</p>
-                </div>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-red-50 text-red-600 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold mb-3" data-i18n="cap3Title">Risk Mitigation</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="cap3Desc">Active monitoring of Red Sea, Panama Canal, and regional labor strikes integrated into lead time data.</p>
-                </div>
+        <div class="mt-16 mb-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 class="font-bold text-gray-800 mb-2" data-i18n="cap1Title">Smart Routing</h3>
+                <p class="text-sm text-gray-500" data-i18n="cap1Desc">Calculates routes using major maritime chokepoints and atmospheric wind-corrected flight paths.</p>
             </div>
-        </div>
-
-        <!-- API CTA -->
-        <div class="bg-gray-900 rounded-3xl p-10 md:p-16 shadow-2xl relative overflow-hidden mb-16">
-            <div class="max-w-2xl mx-auto relative z-10 text-center">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-6" data-i18n="apiTitle">Power Your TMS with Our API</h2>
-                <p class="text-gray-400 text-lg mb-10 leading-relaxed" data-i18n="apiDesc">Integrate professional logistics intelligence directly into your workflow. Trusted by freight forwarders and Fortune 500 shippers.</p>
-                <form action="https://formspree.io/f/xzdayboe" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                    <input type="text" name="company" placeholder="Company Name" required class="bg-gray-800 border-none rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500">
-                    <input type="email" name="email" placeholder="Business Email" required class="bg-gray-800 border-none rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500">
-                    <textarea name="message" rows="2" placeholder="Describe your integration needs..." required class="md:col-span-2 bg-gray-800 border-none rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500"></textarea>
-                    <button type="submit" class="md:col-span-2 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold py-4 rounded-xl transition-all shadow-xl shadow-indigo-900/20 uppercase tracking-widest text-sm">
-                        Request Access Keys
-                    </button>
-                </form>
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 class="font-bold text-gray-800 mb-2" data-i18n="cap2Title">Sustainability</h3>
+                <p class="text-sm text-gray-500" data-i18n="cap2Desc">Estimate Scope 3 emissions for your global supply chain with our integrated CO2 intelligence engine.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 class="font-bold text-gray-800 mb-2" data-i18n="cap3Title">Risk Mitigation</h3>
+                <p class="text-sm text-gray-500" data-i18n="cap3Desc">Active monitoring of Red Sea, Panama Canal, and regional labor strikes integrated into lead time data.</p>
             </div>
         </div>
 
