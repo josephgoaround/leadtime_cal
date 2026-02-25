@@ -11,31 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
         air: ["Express Priority", "Standard Cargo"]
     };
 
-    // Categorized Locations
+    // Categorized Locations - Expanded
     const portCities = {
-        "Port of New York": { coords: [40.7128, -74.0060], hub: "usa-nyc", country: "USA", scmIssues: "Port labor negotiations; Driver shortages." },
-        "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", country: "USA", scmIssues: "San Pedro Bay congestion." },
+        "Port of New York": { coords: [40.7128, -74.0060], hub: "usa-nyc", country: "USA", scmIssues: "Port labor negotiations." },
+        "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", country: "USA", scmIssues: "Warehouse capacity limits." },
         "Port of Shanghai": { coords: [31.2304, 121.4737], hub: "chn-sha", country: "China", scmIssues: "Strict export inspections." },
         "Port of Rotterdam": { coords: [51.9225, 4.4792], hub: "nld-rot", country: "Netherlands", scmIssues: "Customs clearance backlogs." },
         "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", country: "South Korea", scmIssues: "Labor union strikes." },
         "Port of Singapore": { coords: [1.3521, 103.8198], hub: "sgp-sin", country: "Singapore", scmIssues: "Vessel bunching at hub." },
         "Port of Hamburg": { coords: [53.5511, 9.9937], hub: "deu-ham", country: "Germany", scmIssues: "Rail capacity constraints." },
-        "Port of Jebel Ali (Dubai)": { coords: [25.0112, 55.0617], hub: "are-dxb-sea", country: "UAE", scmIssues: "Geopolitical tensions." },
+        "Port of Jebel Ali": { coords: [25.0112, 55.0617], hub: "are-dxb-sea", country: "UAE", scmIssues: "Geopolitical tensions." },
         "Port of Mumbai": { coords: [18.9647, 72.8347], hub: "ind-bom", country: "India", scmIssues: "Infrastructure bottlenecks." },
-        "Port of Santos": { coords: [-23.9608, -46.3331], hub: "bra-ssz", country: "Brazil", scmIssues: "Heavy bureaucracy." }
+        "Port of Santos": { coords: [-23.9608, -46.3331], hub: "bra-ssz", country: "Brazil", scmIssues: "Heavy bureaucracy." },
+        "Port of Vancouver": { coords: [49.2827, -123.1207], hub: "can-van", country: "Canada", scmIssues: "Wildfire risk to rail." },
+        "Port of Barcelona": { coords: [41.3851, 2.1734], hub: "esp-bcn", country: "Spain", scmIssues: "Regional port strike risk." }
     };
 
     const airportCities = {
-        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", scmIssues: "Cargo terminal modernization." },
-        "LAX (Los Angeles)": { coords: [33.9416, -118.4085], hub: "usa-lax-air", country: "USA", scmIssues: "Tight warehouse capacity." },
-        "PVG (Shanghai)": { coords: [31.1444, 121.8053], hub: "chn-pvg", country: "China", scmIssues: "Frequent flight cancellations." },
-        "AMS (Amsterdam)": { coords: [52.3105, 4.7683], hub: "nld-ams", country: "Netherlands", scmIssues: "Schiphol flight caps." },
-        "ICN (Seoul)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", scmIssues: "E-commerce volume spikes." },
-        "SIN (Singapore)": { coords: [1.3644, 103.9915], hub: "sgp-sin-air", country: "Singapore", scmIssues: "Tight cold-chain space." },
-        "LHR (London)": { coords: [51.4700, -0.4543], hub: "gbr-lhr", country: "UK", scmIssues: "Post-Brexit customs delays." },
-        "DXB (Dubai)": { coords: [25.2532, 55.3657], hub: "are-dxb-air", country: "UAE", scmIssues: "High transshipment volume." },
-        "BOM (Mumbai)": { coords: [19.0896, 72.8656], hub: "ind-bom-air", country: "India", scmIssues: "Documentation backlogs." },
-        "GRU (Sao Paulo)": { coords: [-23.4356, -46.4731], hub: "bra-sao-air", country: "Brazil", scmIssues: "Customs strike risk." }
+        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", scmIssues: "Terminal modernization." },
+        "LAX (Los Angeles)": { coords: [33.9416, -118.4085], hub: "usa-lax-air", country: "USA", scmIssues: "High storage fees." },
+        "PVG (Shanghai)": { coords: [31.1444, 121.8053], hub: "chn-pvg", country: "China", scmIssues: "Flight cancellations." },
+        "AMS (Amsterdam)": { coords: [52.3105, 4.7683], hub: "nld-ams", country: "Netherlands", scmIssues: "Environmental flight caps." },
+        "ICN (Seoul)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", scmIssues: "Peak season peak." },
+        "SIN (Singapore)": { coords: [1.3644, 103.9915], hub: "sgp-sin-air", country: "Singapore", scmIssues: "Cold-chain space tight." },
+        "LHR (London)": { coords: [51.4700, -0.4543], hub: "gbr-lhr", country: "UK", scmIssues: "Post-Brexit documentation." },
+        "DXB (Dubai)": { coords: [25.2532, 55.3657], hub: "are-dxb-air", country: "UAE", scmIssues: "Transshipment backlog." },
+        "BOM (Mumbai)": { coords: [19.0896, 72.8656], hub: "ind-bom-air", country: "India", scmIssues: "Ground handling delays." },
+        "GRU (Sao Paulo)": { coords: [-23.4356, -46.4731], hub: "bra-sao-air", country: "Brazil", scmIssues: "Customs processing." },
+        "IST (Istanbul)": { coords: [41.2753, 28.7519], hub: "tur-ist", country: "Turkey", scmIssues: "High cargo volume." },
+        "FRA (Frankfurt)": { coords: [50.0379, 8.5622], hub: "deu-fra", country: "Germany", scmIssues: "Cargo staff shortages." }
     };
 
     const hubs = {
@@ -58,7 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
         "ind-bom": { name: "Mumbai Port", coords: [18.9647, 72.8347] },
         "ind-bom-air": { name: "Mumbai Airport", coords: [19.0896, 72.8656] },
         "bra-ssz": { name: "Santos Port", coords: [-23.9883, -46.3089] },
-        "bra-sao-air": { name: "Guarulhos Airport", coords: [-23.4356, -46.4731] }
+        "bra-sao-air": { name: "Guarulhos Airport", coords: [-23.4356, -46.4731] },
+        "can-van": { name: "Port of Vancouver", coords: [49.2827, -123.1207] },
+        "esp-bcn": { name: "Port of Barcelona", coords: [41.3462, 2.1672] },
+        "tur-ist": { name: "Istanbul Airport", coords: [41.2753, 28.7519] },
+        "deu-fra": { name: "Frankfurt Airport", coords: [50.0379, 8.5622] }
     };
 
     const waypoints = {
@@ -83,14 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateCities() {
         const mode = modeSelect.value;
         const currentCities = mode === 'sea' ? portCities : airportCities;
-        
-        // Update Sub-modes
         subModeSelect.innerHTML = '';
-        serviceLevels[mode].forEach(lvl => {
-            const opt = document.createElement('option'); opt.value = lvl; opt.textContent = lvl; subModeSelect.appendChild(opt);
-        });
-
-        // Update Cities
+        serviceLevels[mode].forEach(lvl => { const opt = document.createElement('option'); opt.value = lvl; opt.textContent = lvl; subModeSelect.appendChild(opt); });
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
         Object.keys(currentCities).sort().forEach(city => {
             const opt1 = document.createElement('option'); opt1.value = city; opt1.textContent = city; originSelect.appendChild(opt1);
@@ -129,13 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstMileDist = calculateDistance(origin.coords, originHub.coords);
         const lastMileDist = calculateDistance(destHub.coords, dest.coords);
         
-        // Lead Time Breakdown (in days)
         const speeds = { sea: 711, air: 20000, land: 500 };
         let transitDays = middleMileDist / speeds[mode];
         let inlandDays = (firstMileDist + lastMileDist) / speeds.land;
         let handlingDays = (mode === 'sea' ? 5 : 2);
         
-        // Sub-mode penalties
         if (subMode.includes("LCL")) handlingDays += 4;
         if (subMode.includes("Express")) handlingDays -= 1;
 
@@ -147,79 +147,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const customsInfo = getCustomsIntelligence(origin.country, dest.country);
         const totalDays = transitDays + inlandDays + handlingDays + customsInfo.delay;
-        const totalCO2 = Math.round(((middleMileDist + firstMileDist + lastMileDist) * (mode === 'sea' ? 25 : 500)) / 1000);
+        const totalDist = Math.round(middleMileDist + firstMileDist + lastMileDist);
+        const totalCO2 = Math.round((totalDist * (mode === 'sea' ? 25 : 500)) / 1000);
 
-        // Visual Breakdown Bar (Percentage)
-        const total = totalDays;
-        const pInland = (inlandDays / total) * 100;
-        const pTransit = (transitDays / total) * 100;
-        const pHandling = (handlingDays / total) * 100;
-        const pCustoms = (customsInfo.delay / total) * 100;
+        // --- Mock Cost Estimation ---
+        const ratePerKm = { sea: 0.15, air: 4.50 };
+        let costBase = totalDist * ratePerKm[mode];
+        if (subMode.includes("Express")) costBase *= 1.5;
+        if (cargoType.includes("Refrigerated")) costBase *= 1.3;
+        if (cargoType.includes("Dangerous")) costBase *= 1.8;
+        const estimatedCost = Math.round(costBase);
+
+        const pInland = (inlandDays / totalDays) * 100;
+        const pTransit = (transitDays / totalDays) * 100;
+        const pHandling = (handlingDays / totalDays) * 100;
+        const pCustoms = (customsInfo.delay / totalDays) * 100;
+
+        let riskAlertHtml = '';
+        if (activeRisks.length > 0) {
+            riskAlertHtml = `<div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg text-sm text-red-700">
+                <h4 class="font-bold flex items-center mb-1"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>Risk Factors</h4>
+                ${activeRisks.map(r => `• ${r.description}`).join('<br>')}</div>`;
+        }
 
         resultDiv.innerHTML = `
             <div class="space-y-6 animate-fade-in">
-                <div class="p-5 bg-indigo-50 rounded-xl border border-indigo-100">
+                ${riskAlertHtml}
+                <div class="p-5 bg-indigo-50 rounded-xl border border-indigo-100 shadow-sm">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-[10px] text-indigo-600 font-bold uppercase tracking-widest">Total Intelligence Lead Time</p>
-                            <p class="text-5xl font-black text-indigo-900">${Math.round(totalDays)} <span class="text-xl font-normal">Days</span></p>
+                            <p class="text-[10px] text-indigo-600 font-bold uppercase tracking-widest">Est. Lead Time</p>
+                            <p class="text-5xl font-black text-indigo-900">${Math.round(totalDays)} <span class="text-xl font-normal text-indigo-400">Days</span></p>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-bold text-indigo-400 uppercase tracking-tight">${Math.round(middleMileDist + firstMileDist + lastMileDist).toLocaleString()} km</p>
-                            <p class="text-xs font-bold text-green-600 uppercase tracking-tight mt-1">${totalCO2.toLocaleString()} kg CO2/t</p>
+                            <p class="text-xs font-bold text-indigo-400 uppercase">${totalDist.toLocaleString()} km</p>
+                            <p class="text-sm font-bold text-gray-700 mt-1">Est. $${estimatedCost.toLocaleString()} USD/tonne</p>
                         </div>
                     </div>
                     
-                    <!-- Timeline Bar -->
-                    <div class="h-3 w-full bg-gray-200 rounded-full flex overflow-hidden shadow-inner">
-                        <div style="width: ${pInland}%" class="bg-green-400" title="Inland"></div>
-                        <div style="width: ${pTransit}%" class="bg-indigo-500" title="Transit"></div>
-                        <div style="width: ${pHandling}%" class="bg-blue-400" title="Handling"></div>
-                        <div style="width: ${pCustoms}%" class="bg-red-400" title="Customs"></div>
+                    <div class="h-3 w-full bg-gray-200 rounded-full flex overflow-hidden">
+                        <div style="width: ${pInland}%" class="bg-green-400 shadow-inner" title="Inland: ${Math.round(inlandDays)}d"></div>
+                        <div style="width: ${pTransit}%" class="bg-indigo-500 shadow-inner" title="Transit: ${Math.round(transitDays)}d"></div>
+                        <div style="width: ${pHandling}%" class="bg-blue-400 shadow-inner" title="Handling: ${Math.round(handlingDays)}d"></div>
+                        <div style="width: ${pCustoms}%" class="bg-red-400 shadow-inner" title="Customs: ${Math.round(customsInfo.delay)}d"></div>
                     </div>
-                    <div class="flex justify-between text-[9px] mt-2 font-bold text-indigo-400 uppercase">
-                        <span>Inland</span>
-                        <span>Ocean/Air</span>
-                        <span>Handling</span>
-                        <span>Customs</span>
+                    <div class="flex justify-between text-[8px] mt-2 font-bold text-indigo-300 uppercase">
+                        <span>Inland</span><span>Ocean/Air</span><span>Handling</span><span>Customs</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-3">
-                    <div class="p-4 bg-white rounded-lg border border-gray-100 shadow-sm">
-                        <div class="flex justify-between items-center mb-2">
-                            <h4 class="font-bold text-gray-800 text-sm">Customs & Regulatory</h4>
-                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${customsInfo.color}">${customsInfo.level} Risk</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="p-3 bg-white rounded border border-gray-100 shadow-sm">
+                        <div class="font-bold text-gray-700 text-xs mb-1 border-b pb-1">Node Risk Feed</div>
+                        <p class="text-[11px] text-gray-500 italic mt-1">Origin: ${origin.scmIssues}</p>
+                        <p class="text-[11px] text-gray-500 italic">Dest: ${dest.scmIssues}</p>
+                    </div>
+                    <div class="p-3 bg-white rounded border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-gray-700 text-xs">Customs Status</h4>
+                            <span class="px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase ${customsInfo.color}">${customsInfo.level} Risk</span>
                         </div>
-                        <div class="flex flex-wrap gap-1.5">${customsInfo.docs.map(doc => `<span class="bg-gray-50 text-gray-500 px-2 py-1 rounded text-[10px] border border-gray-100">${doc}</span>`).join('')}</div>
+                        <div class="flex flex-wrap gap-1">${customsInfo.docs.map(doc => `<span class="bg-gray-50 text-gray-400 px-1.5 py-0.5 rounded text-[9px] border border-gray-100">${doc}</span>`).join('')}</div>
                     </div>
                 </div>
 
-                <button id="share-btn" class="w-full bg-indigo-600 text-white py-3 rounded-lg shadow-lg shadow-indigo-100 font-bold hover:bg-indigo-700 transition-all flex items-center justify-center">
+                <button id="share-btn" class="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-lg shadow-sm font-bold hover:bg-gray-50 transition-all flex items-center justify-center text-sm">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                    Copy Intelligence Report Link
+                    Copy Intelligence Report
                 </button>
-
-                <div class="text-[10px] text-gray-400 leading-relaxed text-center italic">
-                    • 16kts avg. speed applied. External delays due to weather/congestion not guaranteed.
-                </div>
             </div>`;
 
-        // Map and Sharing logic...
         document.getElementById('share-btn').onclick = () => {
             const url = new URL(window.location);
             url.searchParams.set('mode', mode); url.searchParams.set('origin', originName); url.searchParams.set('dest', destName);
-            navigator.clipboard.writeText(url.href).then(() => alert('Link copied!'));
+            navigator.clipboard.writeText(url.href).then(() => alert('Report link copied to clipboard!'));
         };
 
         map.eachLayer(layer => { if (layer instanceof L.Marker || layer instanceof L.Polyline) map.removeLayer(layer); });
-        L.marker(origin.coords).addTo(map); L.marker(dest.coords).addTo(map);
+        L.marker(origin.coords).addTo(map).bindPopup(`<b>Origin:</b> ${originName}`);
+        L.marker(dest.coords).addTo(map).bindPopup(`<b>Destination:</b> ${destName}`);
         const hubIcon = L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41] });
-        L.marker(originHub.coords, { icon: hubIcon }).addTo(map); L.marker(destHub.coords, { icon: hubIcon }).addTo(map);
-        L.polyline([origin.coords, originHub.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5' }).addTo(map);
-        middleMilePath.forEach((p, i) => { if(i > 0 && Math.abs(middleMilePath[i-1][1]-p[1]) < 180) L.polyline([middleMilePath[i-1], p], {color: '#dc2626', weight: 5}).addTo(map); });
-        L.polyline([destHub.coords, dest.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5' }).addTo(map);
-        map.fitBounds([origin.coords, dest.coords]);
+        L.marker(originHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>Hub:</b> ${originHub.name}`);
+        L.marker(destHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>Hub:</b> ${destHub.name}`);
+        
+        L.polyline([origin.coords, originHub.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5' }).addTo(map).bindTooltip("First Mile (Inland)");
+        middleMilePath.forEach((p, i) => { 
+            if(i > 0 && Math.abs(middleMilePath[i-1][1]-p[1]) < 180) {
+                const line = L.polyline([middleMilePath[i-1], p], {color: '#dc2626', weight: 5, opacity: 0.9}).addTo(map);
+                line.bindTooltip(`${mode.toUpperCase()} Transit Segment: ${Math.round(calculateDistance(middleMilePath[i-1], p)).toLocaleString()} km`);
+            }
+        });
+        L.polyline([destHub.coords, dest.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5' }).addTo(map).bindTooltip("Last Mile (Inland)");
+        map.fitBounds([origin.coords, dest.coords], { padding: [50, 50] });
     }
 
     document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
@@ -249,6 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateDistance(c1, c2) {
         const R = 6371; const dLat = (c2[0]-c1[0])*Math.PI/180; let dLon = (c2[1]-c1[1])*Math.PI/180;
         const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*Math.PI/180)*Math.cos(c2[0]*Math.PI/180)*Math.sin(dLon/2)**2;
-        return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 });
