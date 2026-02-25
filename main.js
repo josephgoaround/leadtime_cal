@@ -76,80 +76,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentLang = 'en';
 
-    // 1. 초정밀 해상 노드 (육지 침범 절대 불가 영역)
+    // 1. 정밀 해상 노드 네트워크 (육지 회피용 초정밀 포인트)
     const seaNodes = {
-        // Korea / NE Asia
-        "pusan_exit": [35.0, 129.1], "incheon_exit": [37.2, 126.0], "jeju_s": [32.5, 126.5], "yellow_sea_mid": [35.5, 124.5],
-        "shanghai_exit": [31.2, 122.5], "shanghai_outer": [30.5, 123.5], "ningbo_exit": [29.8, 122.5], "qingdao_exit": [36.0, 121.0],
-        "taipei_exit": [25.2, 121.8], "taipei_outer": [25.5, 122.5], "kaohsiung_exit": [22.5, 120.2], "hongkong_exit": [22.2, 114.2], "hongkong_outer": [21.5, 114.5],
-        "kyushu_s": [30.5, 131.0], "tokyo_exit": [35.5, 140.0], "tokyo_outer": [34.0, 141.0], "luzon_strait": [20.0, 121.5],
+        // Korea Coastal ( 섬 및 내륙 완벽 우회)
+        "pusan_gate": [35.0, 129.1], "geoje_s": [34.6, 128.8], "namhae_s": [34.2, 128.0], "jeju_ne": [33.8, 127.5], "jeju_s": [32.5, 126.5], "incheon_gate": [37.2, 126.1], "incheon_outer": [37.0, 125.0], "yellow_sea_mid": [35.5, 124.5],
+        // NE Asia
+        "shanghai_gate": [31.2, 122.5], "shanghai_outer": [30.5, 123.5], "ningbo_exit": [29.8, 122.5], "qingdao_exit": [36.0, 121.0], "taipei_gate": [25.2, 121.8], "taipei_outer": [25.5, 123.0], "kaohsiung_gate": [22.5, 120.2], "hongkong_gate": [22.1, 114.3], "hongkong_outer": [21.5, 115.0], "luzon_strait": [20.0, 121.5], "kyushu_s": [30.5, 131.0], "tokyo_gate": [35.5, 140.0], "tokyo_outer": [34.0, 141.5],
         // SE Asia
-        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "malacca_east": [1.5, 104.8], "singapore_gate": [1.2, 103.8],
-        "port_kelang_exit": [3.0, 101.0], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0],
-        "jakarta_exit": [-6.0, 106.8], "sunda_strait": [-6.2, 105.5], "indonesia_south": [-10.0, 115.0],
-        "manila_exit": [14.5, 120.8], "bangkok_exit": [13.0, 100.8],
-        // Indian Ocean
-        "srilanka_s": [5.5, 80.5], "mumbai_exit": [18.8, 72.5], "mumbai_outer": [18.5, 71.0], "dubai_exit": [25.2, 55.3], "jebel_ali_gate": [25.0, 55.0], "jeddah_exit": [21.5, 39.0],
-        "arabian_sea_mid": [15.0, 62.0], "bab_el_mandeb": [12.6, 43.3], "red_sea_mid": [21.0, 38.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
+        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "gulf_thailand": [6.5, 102.5], "malacca_e": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_w": [5.2, 97.5], "andaman_sea": [6.5, 94.0], "jakarta_exit": [-6.0, 106.8], "sunda_strait": [-6.2, 105.5], "indonesia_south": [-10.0, 115.0], "manila_exit": [14.5, 120.8], "bangkok_exit": [13.0, 100.8],
+        // Indian Ocean & Middle East
+        "srilanka_s": [5.5, 80.5], "mumbai_exit": [18.8, 72.5], "mumbai_outer": [18.5, 71.0], "dubai_gate": [25.2, 55.5], "dubai_outer": [25.8, 56.8], "jebel_ali_exit": [25.0, 55.0], "jeddah_exit": [21.5, 39.0], "arabian_sea_mid": [15.0, 62.0], "bab_el_mandeb": [12.6, 43.3], "red_sea_1": [17.0, 40.5], "red_sea_2": [21.0, 38.0], "red_sea_3": [25.0, 36.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
         // Europe
-        "piraeus_exit": [37.8, 23.6], "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "valencia_exit": [39.4, -0.2], "algeciras_gate": [36.0, -5.4],
-        "portugal_w": [39.0, -11.0], "bay_of_biscay": [46.5, -6.5], "english_channel": [49.8, -3.5], "le_havre_gate": [49.5, 0.0],
-        "rotterdam_exit": [52.0, 3.8], "antwerp_gate": [51.3, 4.3], "hamburg_exit": [54.0, 8.2], "felixstowe_gate": [51.9, 1.3],
+        "piraeus_exit": [37.8, 23.6], "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "valencia_exit": [39.4, -0.2], "algeciras_gate": [36.0, -5.4], "portugal_w": [39.0, -11.0], "finisterre": [44.5, -10.0], "bay_of_biscay": [46.5, -6.5], "english_channel": [49.8, -3.5], "le_havre_exit": [49.5, 0.0], "rotterdam_exit": [52.0, 3.8], "antwerp_exit": [51.3, 4.3], "hamburg_exit": [54.0, 8.2], "felixstowe_exit": [51.9, 1.3],
         // Africa
-        "good_hope": [-36.0, 20.0], "durban_exit": [-30.0, 31.0], "cape_town_exit": [-34.0, 18.4], "west_africa_1": [15.0, -19.0], "west_africa_2": [0.0, -12.0],
+        "good_hope": [-36.0, 20.0], "durban_exit": [-30.0, 31.0], "cape_town_exit": [-34.0, 18.4], "west_africa_1": [15.0, -19.0], "west_africa_2": [0.0, -12.0], "canary_islands": [28.0, -17.0],
         // Americas
-        "nyc_exit": [40.2, -73.5], "savannah_gate": [31.5, -80.5], "houston_gate": [29.0, -94.5], "florida_s": [24.2, -81.0], "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6],
-        "mexico_w": [18.5, -106.0], "lax_exit": [33.5, -118.5], "oakland_gate": [37.8, -122.5], "vancouver_exit": [49.0, -123.8],
-        "santos_exit": [-24.0, -46.3], "buenos_aires_exit": [-34.6, -58.0], "brazil_e": [-6.0, -34.0], "cape_horn": [-57.5, -67.0],
+        "nyc_gate": [40.2, -73.5], "savannah_exit": [31.5, -80.5], "houston_exit": [29.0, -94.5], "florida_s": [24.2, -81.0], "bahamas_n": [27.0, -78.5], "caribbean_mid": [16.0, -76.0], "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "mexico_w": [18.5, -106.0], "lax_gate": [33.5, -118.5], "lax_outer": [32.5, -120.0], "oakland_exit": [37.8, -122.5], "vancouver_gate": [49.0, -123.8], "vancouver_outer": [48.5, -126.5], "brazil_e": [-6.0, -34.0], "santos_gate": [-24.2, -46.0], "santos_outer": [-25.5, -45.0], "buenos_aires_exit": [-34.6, -58.0], "cape_horn": [-57.5, -67.0],
         // Mid Oceans
-        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "atlantic_mid": [32.0, -45.0], "sydney_gate": [-33.9, 151.5]
+        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "atlantic_mid": [32.0, -45.0], "sydney_gate": [-33.9, 151.5], "sydney_outer": [-35.0, 153.0]
     };
 
     const seaEdges = [
-        ["incheon_exit", "yellow_sea_mid"], ["pusan_exit", "jeju_s"], ["yellow_sea_mid", "jeju_s"], ["jeju_s", "shanghai_exit"], ["shanghai_exit", "ningbo_exit"], ["shanghai_exit", "qingdao_exit"], ["jeju_s", "kyushu_s"],
-        ["kyushu_s", "tokyo_exit"], ["shanghai_gate", "taipei_exit"], ["taipei_exit", "kaohsiung_exit"], ["kaohsiung_exit", "luzon_strait"], ["taipei_exit", "luzon_strait"], ["luzon_strait", "hongkong_exit"],
-        ["hongkong_exit", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "bangkok_exit"], ["vietnam_s", "manila_exit"], ["vietnam_s", "singapore_gate"], ["singapore_gate", "jakarta_exit"], ["jakarta_exit", "sunda_strait"],
-        ["singapore_gate", "port_kelang_exit"], ["port_kelang_exit", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"], ["andaman_sea", "srilanka_s"],
-        ["srilanka_s", "mumbai_exit"], ["srilanka_s", "arabian_sea_mid"], ["mumbai_exit", "arabian_sea_mid"], ["arabian_sea_mid", "dubai_exit"], ["dubai_exit", "jebel_ali_gate"], ["dubai_exit", "bab_el_mandeb"],
-        ["bab_el_mandeb", "red_sea_mid"], ["red_sea_mid", "jeddah_exit"], ["red_sea_mid", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "piraeus_exit"], ["suez_n", "med_mid"], ["med_mid", "valencia_exit"], ["med_mid", "gibraltar"],
-        ["gibraltar", "algeciras_gate"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"], ["finisterre", "bay_of_biscay"], ["bay_of_biscay", "le_havre_gate"], ["bay_of_biscay", "english_channel"], ["english_channel", "felixstowe_gate"], ["english_channel", "rotterdam_exit"], ["rotterdam_exit", "antwerp_gate"], ["rotterdam_exit", "hamburg_exit"],
-        ["srilanka_s", "good_hope"], ["good_hope", "durban_exit"], ["good_hope", "cape_town_exit"], ["good_hope", "west_africa_2"], ["west_africa_2", "west_africa_1"], ["west_africa_1", "canary_islands"], ["canary_islands", "portugal_w"],
-        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_exit"], ["nyc_exit", "savannah_gate"], ["savannah_gate", "florida_s"], ["florida_s", "houston_gate"], ["florida_s", "bahamas_n"], ["bahamas_n", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_exit"], ["lax_exit", "oakland_gate"], ["lax_exit", "vancouver_exit"],
-        ["canary_islands", "brazil_e"], ["brazil_e", "santos_exit"], ["santos_exit", "buenos_aires_exit"], ["santos_exit", "cape_horn"],
-        ["tokyo_exit", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_exit"], ["singapore_gate", "sunda_strait"], ["sunda_strait", "indonesia_south"], ["indonesia_south", "sydney_gate"]
+        // Korea Bypass Network
+        ["incheon_gate", "incheon_outer"], ["incheon_outer", "yellow_sea_mid"], ["yellow_sea_mid", "jeju_s"], ["pusan_gate", "geoje_s"], ["geoje_s", "namhae_s"], ["namhae_s", "jeju_ne"], ["jeju_ne", "jeju_s"], ["jeju_s", "shanghai_gate"], ["jeju_s", "kyushu_s"],
+        // Asia Network
+        ["shanghai_gate", "shanghai_outer"], ["shanghai_outer", "taipei_outer"], ["taipei_gate", "taipei_outer"], ["taipei_outer", "kaohsiung_gate"], ["kaohsiung_gate", "luzon_strait"], ["taipei_outer", "luzon_strait"], ["taipei_outer", "kyushu_s"], ["kyushu_s", "tokyo_outer"], ["tokyo_gate", "tokyo_outer"], ["luzon_strait", "hongkong_outer"], ["hongkong_gate", "hongkong_outer"], ["hongkong_outer", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "bangkok_exit"], ["vietnam_s", "manila_exit"], ["vietnam_s", "malacca_e"], ["malacca_e", "singapore_gate"], ["singapore_gate", "jakarta_exit"], ["jakarta_exit", "sunda_strait"], ["singapore_gate", "malacca_mid"], ["malacca_mid", "malacca_w"], ["malacca_w", "andaman_sea"],
+        // Indian Ocean & Suez
+        ["andaman_sea", "srilanka_s"], ["srilanka_s", "mumbai_outer"], ["mumbai_exit", "mumbai_outer"], ["srilanka_s", "arabian_sea_mid"], ["mumbai_outer", "arabian_sea_mid"], ["dubai_outer", "arabian_sea_mid"], ["dubai_gate", "dubai_outer"], ["jebel_ali_exit", "dubai_outer"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "piraeus_exit"], ["suez_n", "med_mid"], ["med_mid", "valencia_exit"], ["med_mid", "gibraltar"], ["srilanka_s", "good_hope"],
+        // Europe & Africa
+        ["gibraltar", "algeciras_gate"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"], ["finisterre", "bay_of_biscay"], ["bay_of_biscay", "le_havre_exit"], ["bay_of_biscay", "english_channel"], ["english_channel", "felixstowe_exit"], ["english_channel", "rotterdam_exit"], ["rotterdam_exit", "antwerp_exit"], ["rotterdam_exit", "hamburg_exit"], ["good_hope", "durban_exit"], ["good_hope", "cape_town_exit"], ["good_hope", "west_africa_2"], ["west_africa_2", "west_africa_1"], ["west_africa_1", "canary_islands"], ["canary_islands", "portugal_w"],
+        // Americas
+        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_gate"], ["nyc_gate", "savannah_exit"], ["savannah_exit", "florida_s"], ["florida_s", "houston_exit"], ["florida_s", "bahamas_n"], ["bahamas_n", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_outer"], ["lax_gate", "lax_outer"], ["lax_outer", "oakland_exit"], ["lax_outer", "vancouver_outer"], ["vancouver_gate", "vancouver_outer"], ["canary_islands", "brazil_e"], ["brazil_e", "santos_gate"], ["santos_gate", "buenos_aires_exit"], ["santos_gate", "cape_horn"],
+        // Pacific
+        ["tokyo_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_outer"], ["singapore_gate", "sunda_strait"], ["sunda_strait", "indonesia_south"], ["indonesia_south", "sydney_outer"], ["sydney_gate", "sydney_outer"], ["pacific_mid_w", "sydney_outer"]
     ];
 
     const hubs = {
-        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_exit", country: "South Korea" },
-        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_exit", country: "South Korea" },
-        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_exit", country: "China" },
+        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_gate", country: "South Korea" },
+        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_gate", country: "South Korea" },
+        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_gate", country: "China" },
         "chn-nbo": { name: "Ningbo", coords: [29.86, 121.54], exit: "ningbo_exit", country: "China" },
-        "chn-shz": { name: "Shenzhen", coords: [22.54, 114.05], exit: "hongkong_exit", country: "China" },
-        "chn-hkg": { name: "Hong Kong", coords: [22.31, 114.16], exit: "hongkong_exit", country: "Hong Kong" },
-        "jpn-tyo": { name: "Tokyo", coords: [35.67, 139.65], exit: "tokyo_exit", country: "Japan" },
+        "chn-hkg": { name: "Hong Kong", coords: [22.31, 114.16], exit: "hongkong_gate", country: "Hong Kong" },
+        "twn-tpe": { name: "Taipei", coords: [25.03, 121.56], exit: "taipei_gate", country: "Taiwan" },
+        "jpn-tyo": { name: "Tokyo", coords: [35.67, 139.65], exit: "tokyo_gate", country: "Japan" },
         "sgp-sin": { name: "Singapore", coords: [1.26, 103.83], exit: "singapore_gate", country: "Singapore" },
-        "mys-pkg": { name: "Port Kelang", coords: [3.00, 101.40], exit: "port_kelang_exit", country: "Malaysia" },
-        "vnm-hcm": { name: "Ho Chi Minh", coords: [10.76, 106.66], exit: "vietnam_s", country: "Vietnam" },
-        "tha-lcb": { name: "Laem Chabang", coords: [13.08, 100.90], exit: "bangkok_exit", country: "Thailand" },
-        "phl-mnl": { name: "Manila", coords: [14.59, 120.98], exit: "manila_exit", country: "Philippines" },
         "ind-bom": { name: "Mumbai", coords: [18.93, 72.83], exit: "mumbai_exit", country: "India" },
-        "uae-dxb": { name: "Dubai", coords: [25.20, 55.27], exit: "dubai_exit", country: "UAE" },
-        "uae-jba": { name: "Jebel Ali", coords: [25.01, 55.06], exit: "jebel_ali_gate", country: "UAE" },
-        "sau-jed": { name: "Jeddah", coords: [21.50, 39.18], exit: "jeddah_exit", country: "Saudi Arabia" },
+        "uae-dxb": { name: "Dubai", coords: [25.20, 55.27], exit: "dubai_gate", country: "UAE" },
         "nld-rot": { name: "Rotterdam", coords: [51.92, 4.47], exit: "rotterdam_exit", country: "Netherlands" },
         "deu-ham": { name: "Hamburg", coords: [53.55, 9.99], exit: "hamburg_exit", country: "Germany" },
-        "bel-ant": { name: "Antwerp", coords: [51.22, 4.40], exit: "antwerp_gate", country: "Belgium" },
-        "gbr-feli": { name: "Felixstowe", coords: [51.96, 1.35], exit: "felixstowe_gate", country: "UK" },
-        "esp-val": { name: "Valencia", coords: [39.47, -0.37], exit: "valencia_exit", country: "Spain" },
-        "esp-alg": { name: "Algeciras", coords: [36.13, -5.45], exit: "algeciras_gate", country: "Spain" },
-        "grc-pir": { name: "Piraeus", coords: [37.94, 23.64], exit: "piraeus_exit", country: "Greece" },
-        "usa-lax": { name: "Los Angeles", coords: [33.75, -118.27], exit: "lax_exit", country: "USA" },
-        "usa-oak": { name: "Oakland", coords: [37.80, -122.27], exit: "oakland_gate", country: "USA" },
+        "usa-lax": { name: "Los Angeles", coords: [33.75, -118.27], exit: "lax_gate", country: "USA" },
         "usa-nyc": { name: "New York", coords: [40.71, -74.00], exit: "nyc_gate", country: "USA" },
-        "usa-sav": { name: "Savannah", coords: [32.08, -81.09], exit: "savannah_gate", country: "USA" },
-        "usa-hou": { name: "Houston", coords: [29.76, -95.36], exit: "houston_gate", country: "USA" },
-        "can-yvr": { name: "Vancouver", coords: [49.28, -123.12], exit: "vancouver_exit", country: "Canada" },
-        "bra-sao": { name: "Santos", coords: [-23.96, -46.33], exit: "santos_exit", country: "Brazil" },
         "aus-syd": { name: "Sydney", coords: [-33.86, 151.20], exit: "sydney_gate", country: "Australia" }
     };
 
@@ -188,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-                if (redSeaRisk && (neighbor === "red_sea_mid" || neighbor === "bab_el_mandeb" || neighbor === "suez_s")) return;
+                if (redSeaRisk && (neighbor === "red_sea_1" || neighbor === "bab_el_mandeb" || neighbor === "suez_s")) return;
 
                 let d = getDist(seaNodes[closest], seaNodes[neighbor]);
                 let alt = distances[closest] + d;
