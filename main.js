@@ -76,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentLang = 'en';
 
-    // 1. 초정밀 해상 노드 (기존 노드망 유지)
+    // 1. 초정밀 해상 노드 (육지 침범 절대 불가 영역)
     const seaNodes = {
         "pusan_gate": [35.0, 129.1], "geoje_s": [34.6, 128.8], "namhae_s": [34.2, 128.0], "jeju_ne": [33.8, 127.5], "jeju_s": [32.5, 126.5], "incheon_gate": [37.2, 126.1], "incheon_outer": [37.0, 125.0], "yellow_sea_mid": [35.5, 124.5],
         "shanghai_gate": [31.2, 122.5], "shanghai_outer": [30.5, 123.5], "ningbo_exit": [29.8, 122.5], "qingdao_exit": [36.0, 121.0], "taipei_gate": [25.2, 121.8], "taipei_outer": [25.5, 123.0], "kaohsiung_gate": [22.5, 120.2], "hongkong_gate": [22.1, 114.3], "hongkong_outer": [21.5, 115.0], "luzon_strait": [20.0, 121.5], "kyushu_s": [30.5, 131.0], "tokyo_gate": [35.5, 140.0], "tokyo_outer": [34.0, 141.5],
-        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "gulf_thailand": [6.5, 102.5], "malacca_e": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0], "jakarta_exit": [-6.0, 106.8], "sunda_strait": [-6.2, 105.5], "indonesia_south": [-10.0, 115.0], "manila_exit": [14.5, 120.8], "bangkok_exit": [13.0, 100.8],
-        "srilanka_s": [5.5, 80.5], "mumbai_exit": [18.8, 72.5], "mumbai_outer": [18.5, 71.0], "dubai_gate": [25.2, 55.5], "dubai_outer": [25.8, 56.8], "jebel_ali_exit": [25.0, 55.0], "jeddah_exit": [21.5, 39.0], "arabian_sea_mid": [15.0, 62.0], "bab_el_mandeb": [12.6, 43.3], "red_sea_mid": [21.0, 38.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
+        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "gulf_thailand": [6.5, 102.5], "malacca_e": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_w": [5.2, 97.5], "andaman_sea": [6.5, 94.0], "jakarta_exit": [-6.0, 106.8], "sunda_strait": [-6.2, 105.5], "indonesia_south": [-10.0, 115.0], "manila_exit": [14.5, 120.8], "bangkok_exit": [13.0, 100.8],
+        "srilanka_s": [5.5, 80.5], "mumbai_exit": [18.8, 72.5], "mumbai_outer": [18.5, 71.0], "dubai_gate": [25.2, 55.5], "dubai_outer": [25.8, 56.8], "jebel_ali_exit": [25.0, 55.0], "jeddah_exit": [21.5, 39.0], "arabian_sea_mid": [15.0, 62.0], "bab_el_mandeb": [12.6, 43.3], "red_sea_1": [17.0, 40.5], "red_sea_2": [21.0, 38.0], "red_sea_3": [25.0, 36.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
         "piraeus_exit": [37.8, 23.6], "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "valencia_exit": [39.4, -0.2], "algeciras_gate": [36.0, -5.4], "portugal_w": [39.0, -11.0], "finisterre": [44.5, -10.0], "bay_of_biscay": [46.5, -6.5], "english_channel": [49.8, -3.5], "le_havre_exit": [49.5, 0.0], "rotterdam_exit": [52.0, 3.8], "antwerp_exit": [51.3, 4.3], "hamburg_exit": [54.0, 8.2], "felixstowe_exit": [51.9, 1.3],
         "good_hope": [-36.0, 20.0], "durban_exit": [-30.0, 31.0], "cape_town_exit": [-34.0, 18.4], "west_africa_1": [15.0, -19.0], "west_africa_2": [0.0, -12.0], "canary_islands": [28.0, -17.0],
         "nyc_gate": [40.2, -73.5], "savannah_exit": [31.5, -80.5], "houston_exit": [29.0, -94.5], "florida_s": [24.2, -81.0], "bahamas_n": [27.0, -78.5], "caribbean_mid": [16.0, -76.0], "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "mexico_w": [18.5, -106.0], "lax_gate": [33.5, -118.5], "lax_outer": [32.5, -120.0], "oakland_exit": [37.8, -122.5], "vancouver_gate": [49.0, -123.8], "vancouver_outer": [48.5, -126.5], "brazil_e": [-6.0, -34.0], "santos_gate": [-24.2, -46.0], "santos_outer": [-25.5, -45.0], "buenos_aires_exit": [-34.6, -58.0], "cape_horn": [-57.5, -67.0],
@@ -93,13 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ["shanghai_gate", "shanghai_outer"], ["shanghai_outer", "taipei_outer"], ["taipei_gate", "taipei_outer"], ["taipei_outer", "kaohsiung_gate"], ["kaohsiung_gate", "luzon_strait"], ["taipei_outer", "luzon_strait"], ["taipei_outer", "kyushu_s"], ["kyushu_s", "tokyo_outer"], ["tokyo_gate", "tokyo_outer"], ["luzon_strait", "hongkong_outer"], ["hongkong_gate", "hongkong_outer"], ["hongkong_outer", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "bangkok_exit"], ["vietnam_s", "manila_exit"], ["vietnam_s", "malacca_e"], ["malacca_e", "singapore_gate"], ["singapore_gate", "jakarta_exit"], ["jakarta_exit", "sunda_strait"], ["singapore_gate", "malacca_mid"], ["malacca_mid", "malacca_w"], ["malacca_w", "andaman_sea"],
         ["andaman_sea", "srilanka_s"], ["srilanka_s", "mumbai_outer"], ["mumbai_exit", "mumbai_outer"], ["srilanka_s", "arabian_sea_mid"], ["mumbai_outer", "arabian_sea_mid"], ["dubai_outer", "arabian_sea_mid"], ["dubai_gate", "dubai_outer"], ["jebel_ali_exit", "dubai_outer"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "piraeus_exit"], ["suez_n", "med_mid"], ["med_mid", "valencia_exit"], ["med_mid", "gibraltar"], ["srilanka_s", "good_hope"],
         ["gibraltar", "algeciras_gate"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"], ["finisterre", "bay_of_biscay"], ["bay_of_biscay", "le_havre_exit"], ["bay_of_biscay", "english_channel"], ["english_channel", "felixstowe_exit"], ["english_channel", "rotterdam_exit"], ["rotterdam_exit", "antwerp_exit"], ["rotterdam_exit", "hamburg_exit"], ["good_hope", "durban_exit"], ["good_hope", "cape_town_exit"], ["good_hope", "west_africa_2"], ["west_africa_2", "west_africa_1"], ["west_africa_1", "canary_islands"], ["canary_islands", "portugal_w"],
-        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_gate"], ["nyc_gate", "savannah_exit"], ["savannah_exit", "florida_s"], ["florida_s", "houston_exit"], ["florida_s", "bahamas_n"], ["bahamas_n", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_outer"], ["lax_exit", "lax_outer"], ["lax_outer", "vancouver_outer"], ["vancouver_gate", "vancouver_outer"], ["canary_islands", "brazil_e"], ["brazil_e", "santos_outer"], ["santos_gate", "santos_outer"], ["santos_gate", "buenos_aires_exit"], ["santos_outer", "cape_horn"],
+        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_gate"], ["nyc_gate", "savannah_exit"], ["savannah_exit", "florida_s"], ["florida_s", "houston_exit"], ["florida_s", "bahamas_n"], ["bahamas_n", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_outer"], ["lax_gate", "lax_outer"], ["lax_outer", "oakland_exit"], ["lax_outer", "vancouver_outer"], ["vancouver_gate", "vancouver_outer"], ["canary_islands", "brazil_e"], ["brazil_e", "santos_outer"], ["santos_gate", "santos_outer"], ["santos_gate", "buenos_aires_exit"], ["santos_outer", "cape_horn"],
         ["tokyo_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_outer"], ["singapore_gate", "sunda_strait"], ["sunda_strait", "indonesia_south"], ["indonesia_south", "sydney_gate"], ["sydney_gate", "sydney_outer"], ["pacific_mid_w", "sydney_outer"]
     ];
 
-    // 항구 리스트 대폭 확장 (50개+)
     const hubs = {
-        // ASIA
         "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_gate", country: "South Korea" },
         "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_gate", country: "South Korea" },
         "kor-kwn": { name: "Gwangyang", coords: [34.91, 127.69], exit: "namhae_s", country: "South Korea" },
@@ -186,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modeSelect = document.getElementById('transport-mode');
     const originSelect = document.getElementById('origin');
     const destinationSelect = document.getElementById('destination');
-    const resultContainer = document.getElementById('result');
 
     function populate() {
         const curO = originSelect.value, curD = destinationSelect.value;
@@ -273,7 +270,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderMap(path, oH, dH) {
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
-        L.marker(oH.coords).addTo(map); L.marker(dH.coords).addTo(map);
+        
+        // Start/End Points from the ACTUAL calculated path
+        const startPoint = path[0];
+        const endPoint = path[path.length - 1];
+        
+        L.marker(startPoint).addTo(map); 
+        L.marker(endPoint).addTo(map);
+        
         L.polyline(path, { color: '#ef4444', weight: 5, dashArray: '10, 15', lineJoin: 'round' }).addTo(map);
         map.fitBounds(path, { padding: [50, 50] });
     }
@@ -285,7 +289,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const route = solveRoute(oId, dId, modeSelect.value);
         const t = translations[currentLang];
         
-        resultContainer.innerHTML = `
+        const feedContainer = document.getElementById('feed-container');
+        feedContainer.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
                 <!-- Lead Time Card -->
                 <div class="p-8 bg-indigo-50 rounded-3xl shadow-lg border border-indigo-100 text-center relative overflow-hidden group hover:bg-indigo-100 transition-all">
@@ -312,6 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             ${route.risks.length ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${route.risks.map(rk => t[rk] || rk).join('<br>')}</div>` : ''}`;
+        
+        document.getElementById('executive-actions').classList.remove('hidden');
         renderMap(route.path, hubs[oId], hubs[dId]);
     };
 
@@ -321,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k];
         });
-        if(resultContainer.innerHTML !== '') document.getElementById('shipping-form').dispatchEvent(new Event('submit'));
+        if(document.getElementById('feed-container').innerHTML.includes('p-8')) document.getElementById('shipping-form').dispatchEvent(new Event('submit'));
         populate();
     }
     updateUI();
