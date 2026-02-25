@@ -10,15 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "Cargo Category",
             labelOrigin: "Departure",
             labelDest: "Arrival",
-            cargoGen: "General Cargo",
-            cargoRef: "Refrigerated",
-            cargoDG: "Dangerous Goods",
             btnAnalyze: "RUN INTELLIGENCE ANALYSIS",
             feedTitle: "Route-Specific Intelligence",
             totalLead: "Total Est. Lead Time",
             reliability: "Network Health Index",
             eta: "Estimated ETA",
             costTitle: "Cost Breakdown (EST)",
+            comparisonTitle: "Mode Comparison Summary",
+            compareMsg: "Alternative via",
             disclaimer: "• 16kts avg. speed applied. External delays not guaranteed."
         },
         ko: {
@@ -30,15 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "화물 종류",
             labelOrigin: "출발지",
             labelDest: "도착지",
-            cargoGen: "일반 화물",
-            cargoRef: "냉장/냉동",
-            cargoDG: "위험물 (DG)",
             btnAnalyze: "물류 분석 실행",
             feedTitle: "경로별 맞춤 인텔리전스",
             totalLead: "총 예상 리드타임",
             reliability: "네트워크 건전성 지수",
             eta: "최종 도착 예정일",
             costTitle: "상세 예상 비용 분석",
+            comparisonTitle: "운송 수단별 비교 요약",
+            compareMsg: "대안 수단 이용 시:",
             disclaimer: "• 컨테이너선 평균 16노트 기준. 기상 및 혼잡에 따른 지연은 제외되었습니다."
         }
     };
@@ -46,12 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLang = 'en';
     let currentCurrency = 'USD';
     const exchangeRate = 1350;
-
-    const globalRisks = {
-        redSeaCrisis: { active: true, description: "Red Sea/Suez Canal Avoidance", impact: "+12 days via Cape" },
-        panamaDrought: { active: true, description: "Panama Canal Drought Restrictions", impact: "+5 days waiting" },
-        russiaAirspace: { active: true, description: "Russian Airspace Closure", impact: "+1 day detour" }
-    };
 
     const portCities = {
         "Port of New York": { coords: [40.7128, -74.0060], hub: "usa-nyc", country: "USA", scmIssues: "Port labor negotiations." },
@@ -112,17 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const map = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
 
-    function calculateAndDisplay() {
-        const mode = modeSelect.value; const originName = originSelect.value; const destName = destinationSelect.value;
-        if (originName === destName) return;
-
-        const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
-        const volume = parseFloat(document.getElementById('cargo-volume').value) || 1;
+    function getResultForMode(mode, originName, destName, weight, volume) {
         const cityData = mode === 'sea' ? portCities : airportCities;
         const origin = cityData[originName]; const dest = cityData[destName];
+        if (!origin || !dest) return null;
+        
         const oHub = hubs[origin.hub]; const dHub = hubs[dest.hub];
-        const departureDate = new Date(dateInput.value);
-
         let risks = [];
         let path = mode === 'sea' ? getSeaPath(oHub.coords, dHub.coords, risks) : getAirPath(oHub.coords, dHub.coords, risks);
         
@@ -133,22 +120,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const speeds = { sea: 711, air: 20000, land: 500 };
         let transitD = mDist / speeds[mode];
         let inlandD = (fDist + lDist) / speeds.land;
-        let handlingD = (mode==='sea' ? 5 : 2) + (subModeSelect.value.includes("LCL") ? 4 : 0);
+        let handlingD = (mode==='sea' ? 5 : 2);
         
         risks.forEach(r => { if(r.includes("Red Sea")) transitD += 12; if(r.includes("Panama")) handlingD += 5; });
         const cDelay = (dest.country === "China" ? 5 : 2);
         const totalD = transitD + inlandD + handlingD + cDelay;
-        const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
 
-        // --- Payload Based Cost ---
-        const payableWeight = mode === 'air' ? Math.max(weight * 1000, volume * 167) / 1000 : Math.max(weight, volume / 1.0);
-        const baseRate = totalDist * (mode==='sea'?0.15:4.5) * payableWeight;
-        const riskPremium = risks.length * (mode==='sea'?500:1000);
-        const totalCostUSD = baseRate + riskPremium;
-        
-        const health = Math.max(25, 98 - (risks.length * 25) - (dest.country === "China" ? 10 : 0));
+        // Chargeable Weight Logic: Air (1:6000), Sea (1:1000)
+        const chargeableWeight = mode === 'air' ? Math.max(weight, volume / 6) : Math.max(weight, volume / 1);
+        const cost = totalDist * (mode==='sea'?0.15:4.5) * chargeableWeight;
+
+        return { totalD, totalDist, cost, co2: Math.round((totalDist * (mode==='sea'?25:500)) / 1000), risks, health: Math.max(25, 98 - risks.length * 25), path, origin, dest, oHub, dHub, inlandD, transitD, handlingD, cDelay };
+    }
+
+    function calculateAndDisplay() {
+        const mode = modeSelect.value;
+        const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
+        const volume = parseFloat(document.getElementById('cargo-volume').value) || 1;
+        const originName = originSelect.value;
+        const destName = destinationSelect.value;
+        const departureDate = new Date(dateInput.value);
+
+        if (originName === destName) return;
+
+        const mainRes = getResultForMode(mode, originName, destName, weight, volume);
+        if (!mainRes) return;
+
+        // Try to get alt mode result (simplified map names)
+        const altMode = mode === 'sea' ? 'air' : 'sea';
+        const altOriginName = mode === 'sea' ? Object.keys(airportCities)[0] : Object.keys(portCities)[0]; // Logic placeholder
+        const altDestName = mode === 'sea' ? Object.keys(airportCities)[1] : Object.keys(portCities)[1];
+        const altRes = getResultForMode(altMode, altOriginName, altDestName, weight, volume);
+
         const convert = (val) => currentCurrency === 'USD' ? `$${Math.round(val).toLocaleString()}` : `₩${Math.round(val * exchangeRate).toLocaleString()}`;
         const t = translations[currentLang];
+        const eta = new Date(departureDate); eta.setDate(eta.getDate() + mainRes.totalD);
 
         document.getElementById('result').innerHTML = `
             <div class="space-y-6 animate-fade-in">
@@ -156,32 +162,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest">${t.totalLead}</p>
-                            <p class="text-5xl font-black text-indigo-900">${Math.round(totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
+                            <p class="text-5xl font-black text-indigo-900">${Math.round(mainRes.totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
                             <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString(currentLang==='ko'?'ko-KR':'en-US')}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-lg font-bold text-gray-800">${convert(totalCostUSD)}</p>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">${Math.round(totalDist).toLocaleString()} km</p>
+                            <p class="text-lg font-bold text-gray-800">${convert(mainRes.cost)}</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">${Math.round(mainRes.totalDist).toLocaleString()} km</p>
                         </div>
                     </div>
                     <div class="h-1.5 w-full bg-gray-100 rounded-full flex overflow-hidden">
-                        <div style="width: ${(inlandD/totalD)*100}%" class="bg-green-400"></div>
-                        <div style="width: ${(transitD/totalD)*100}%" class="bg-indigo-500"></div>
-                        <div style="width: ${((handlingD+cDelay)/totalD)*100}%" class="bg-gray-300"></div>
+                        <div style="width: ${(mainRes.inlandD/mainRes.totalD)*100}%" class="bg-green-400"></div>
+                        <div style="width: ${(mainRes.transitD/mainRes.totalD)*100}%" class="bg-indigo-500"></div>
+                        <div style="width: ${((mainRes.handlingD+mainRes.cDelay)/mainRes.totalD)*100}%" class="bg-gray-300"></div>
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.reliability}</p>
-                    <div class="flex items-center gap-4">
-                        <div class="text-3xl font-black ${health > 70 ? 'text-green-500' : health > 40 ? 'text-yellow-500' : 'text-red-500'}">${health}%</div>
-                        <div class="flex-1 bg-gray-100 h-2 rounded-full overflow-hidden"><div style="width: ${health}%" class="${health > 70 ? 'bg-green-500' : health > 40 ? 'bg-yellow-500' : 'bg-red-500'} h-full"></div></div>
+                <!-- Comparison Box -->
+                <div class="p-4 bg-gray-900 rounded-2xl text-white shadow-xl">
+                    <p class="text-[10px] font-bold text-gray-500 uppercase mb-3 tracking-widest">${t.comparisonTitle}</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">${altMode === 'air' ? '✈️' : '🚢'}</span>
+                            <div>
+                                <p class="text-[10px] text-gray-400 uppercase">${altMode.toUpperCase()}</p>
+                                <p class="font-bold text-indigo-400">${convert(altRes.cost)}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-gray-400 uppercase">SPEED</p>
+                            <p class="font-bold text-green-400">~${Math.round(altRes.totalD)} Days</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-center text-xs">
+                    <div class="p-3 bg-white rounded-xl border border-gray-100 shadow-sm">
+                        <p class="font-bold text-gray-400 uppercase tracking-tighter">${t.co2Impact}</p>
+                        <p class="text-lg font-bold text-green-600">${mainRes.co2.toLocaleString()}kg</p>
+                    </div>
+                    <div class="p-3 bg-white rounded-xl border border-gray-100 shadow-sm">
+                        <p class="font-bold text-gray-400 uppercase tracking-tighter">${t.reliability}</p>
+                        <p class="text-lg font-bold ${mainRes.health > 70 ? 'text-green-500' : 'text-red-500'}">${mainRes.health}%</p>
                     </div>
                 </div>
             </div>`;
 
-        updateIntelligence(origin, dest, risks, health);
-        renderMap(path, origin, dest, oHub, dHub, originName, destName);
+        updateIntelligence(mainRes.origin, mainRes.dest, mainRes.risks, mainRes.health);
+        renderMap(mainRes.path, mainRes.origin, mainRes.dest, mainRes.oHub, mainRes.dHub, originName, destName);
     }
 
     function updateIntelligence(o, d, risks, health) {
@@ -191,8 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (health > 70) { statusText.innerText = "Network Stable"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500"; }
         else { statusText.innerText = "Elevated Alert"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
 
-        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Impacted by ${risks.join(' & ')}.</div>` : '';
-        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700">Customs alert for ${d.country}: expect documentation audits for ${o.country} cargo.</div>`;
+        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Affected by ${risks.join(' & ')}.</div>` : '';
+        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700">Customs alert for ${d.country}: expect audits for ${o.country} cargo.</div>`;
         feedContainer.innerHTML = briefing;
     }
 
