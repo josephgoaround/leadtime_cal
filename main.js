@@ -48,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
             footerTagline: "Empowering global supply chains with intelligent routing and predictive analytics for a faster, more transparent world.",
             footerNavTitle: "Platform",
             footerLegalTitle: "Legal",
+            contactTitle: "Partnership & Inquiries",
+            contactDesc: "Interested in integrating our logistics engine or have a custom requirement? Send us a message.",
+            labelName: "Full Name",
+            labelEmail: "Email Address",
+            labelMessage: "Message",
+            placeholderName: "John Doe",
+            placeholderEmail: "john@example.com",
+            placeholderMessage: "How can we help you?",
+            btnSubmit: "Send Inquiry",
             liveAlert: "Live Alert",
             news1: "Suez Canal transit volume down 42% YoY.",
             news2: "Panama Canal daily slots restricted due to low water levels.",
@@ -104,6 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
             footerTagline: "지능형 경로 최적화와 예측 분석을 통해 더 빠르고 투명한 글로벌 공급망을 구축합니다.",
             footerNavTitle: "플랫폼",
             footerLegalTitle: "법적 고지",
+            contactTitle: "제휴 및 문의",
+            contactDesc: "당사의 물류 엔진 도입 또는 커스텀 기능 개발에 관심이 있으신가요? 메시지를 남겨주세요.",
+            labelName: "성함",
+            labelEmail: "이메일 주소",
+            labelMessage: "문의 내용",
+            placeholderName: "홍길동",
+            placeholderEmail: "example@company.com",
+            placeholderMessage: "문의하실 내용을 입력해주세요.",
+            btnSubmit: "문의 보내기",
             liveAlert: "실시간 경보",
             news1: "수에즈 운하 통행량 전년 대비 42% 감소.",
             news2: "파나마 운하, 저수위로 인한 일일 통과 슬롯 제한.",
@@ -338,6 +356,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k];
+        });
+
+        // 3. Placeholder & Special Attributes Refresh
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const k = el.getAttribute('data-i18n-placeholder');
+            if(translations[currentLang][k]) el.placeholder = translations[currentLang][k];
         });
 
         // 1. Currency Button UI Refresh

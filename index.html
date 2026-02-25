@@ -217,6 +217,37 @@
             </div>
             <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-500/20 to-transparent pointer-events-none"></div>
         </section>
+
+        <!-- Partnership & Inquiry Form -->
+        <section id="contact" class="mt-24 max-w-4xl mx-auto">
+            <div class="bg-white p-8 md:p-12 rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-indigo-100/50">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4" data-i18n="contactTitle">Partnership & Inquiries</h2>
+                    <p class="text-gray-500 max-w-md mx-auto" data-i18n="contactDesc">Interested in integrating our logistics engine or have a custom requirement? Send us a message.</p>
+                </div>
+                <form action="https://formspree.io/f/xzdayboe" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1" data-i18n="labelName">Full Name</label>
+                            <input type="text" name="name" required class="w-full px-6 py-4 bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 rounded-2xl transition-all text-sm font-semibold" data-i18n-placeholder="placeholderName">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1" data-i18n="labelEmail">Email Address</label>
+                            <input type="email" name="email" required class="w-full px-6 py-4 bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 rounded-2xl transition-all text-sm font-semibold" data-i18n-placeholder="placeholderEmail">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1" data-i18n="labelMessage">Message</label>
+                        <textarea name="message" required rows="4" class="w-full px-6 py-4 bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 rounded-2xl transition-all text-sm font-semibold resize-none" data-i18n-placeholder="placeholderMessage"></textarea>
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-[0.98] transition-all shadow-xl shadow-indigo-200 uppercase tracking-widest text-xs" data-i18n="btnSubmit">
+                            Send Inquiry
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
     </main>
 
     <footer class="bg-white border-t border-gray-200 mt-20 pt-16 pb-8">
