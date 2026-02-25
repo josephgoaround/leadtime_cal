@@ -26,8 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
             treesMsg: "trees to offset this shipment",
             volatility: "12-Month Volatility Index",
             recentTitle: "Recent Analyses",
-            peakAlert: "Peak Season Congestion Active",
-            inlandLabel: "Inland Mode",
+            shareBtn: "Share Link",
+            exportCsv: "Export CSV",
+            printPdf: "Print Report",
+            copyMsg: "Link copied to clipboard!",
             disclaimer: "• 16kts avg. speed. Financials based on 15% annual rate."
         },
         ko: {
@@ -55,8 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
             treesMsg: "탄소 상쇄를 위한 소나무 수",
             volatility: "12개월 변동 지수",
             recentTitle: "최근 분석 기록",
-            peakAlert: "피크 시즌 물동량 폭증 주의",
-            inlandLabel: "내륙 운송 수단",
+            shareBtn: "링크 공유",
+            exportCsv: "CSV 내보내기",
+            printPdf: "PDF 출력",
+            copyMsg: "링크가 복사되었습니다!",
             disclaimer: "• 16노트 평균속도 기준. 금융비용은 연 15% 기준입니다."
         }
     };
@@ -84,16 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
         "kor-pus": { name: "Busan Port", coords: [35.1069, 129.0453] },
         "kor-icn": { name: "Incheon Intl", coords: [37.4602, 126.4407] },
         "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833] },
-        "chn-pvg": { name: "Pudong Intl", coords: [31.1443, 121.8083] },
-        "sgp-sin": { name: "Singapore Port", coords: [1.2644, 103.8398] },
-        "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450] },
+        "sgp-sin": { name: "Singapore Hub", coords: [1.2644, 103.8398] },
+        "nld-rot": { name: "Rotterdam Hub", coords: [51.9490, 4.1450] },
         "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764] },
         "usa-jfk": { name: "John F. Kennedy", coords: [40.6413, -73.7781] }
     };
 
-    const waypoints = { "pacific_mid": [20.0, -160.0], "good_hope": [-34.35, 18.47], "cape_verde": [15.0, -25.0], "suez": [29.9, 32.5] };
+    const waypoints = { "pacific_mid": [20.0, -160.0], "good_hope": [-34.35, 18.47], "suez": [29.9, 32.5] };
 
     const modeSelect = document.getElementById('transport-mode');
+    const subModeSelect = document.getElementById('sub-mode');
     const originSelect = document.getElementById('origin');
     const destinationSelect = document.getElementById('destination');
     const dateInput = document.getElementById('departure-date');
@@ -106,6 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function populate() {
         const mode = modeSelect.value;
         const cities = mode === 'sea' ? portCities : airportCities;
+        subModeSelect.innerHTML = '';
+        (mode==='sea' ? ["FCL (Full Container)", "LCL (Shared)"] : ["Express Priority", "Standard Cargo"]).forEach(s => {
+            subModeSelect.add(new Option(s, s));
+        });
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
         Object.keys(cities).sort().forEach(c => {
             originSelect.add(new Option(c, c)); destinationSelect.add(new Option(c, c));
@@ -120,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function calculateAndDisplay() {
         const mode = modeSelect.value;
+        const subMode = subModeSelect.value;
         const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
         const value = parseFloat(document.getElementById('cargo-value').value) || 50000;
         const inlandMode = document.getElementById('inland-mode').value;
@@ -132,8 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const sandbox = {
             redSea: document.getElementById('risk-redsea').checked,
-            panama: document.getElementById('risk-panama').checked,
-            airspace: document.getElementById('risk-airspace').checked
+            panama: document.getElementById('risk-panama').checked
         };
 
         const cityData = mode === 'sea' ? portCities : airportCities;
@@ -153,63 +161,66 @@ document.addEventListener('DOMContentLoaded', () => {
         const fDist = dist(origin.coords, oHub.coords); const lDist = dist(dHub.coords, dest.coords);
         const totalDist = mDist + fDist + lDist;
 
-        // --- Refined Logistics Engine ---
         const speeds = { sea: 711, air: 20000, truck: 500, rail: 300 };
         let transitD = mDist / speeds[mode];
         let inlandD = (fDist + lDist) / speeds[inlandMode];
         let handlingD = (mode==='sea' ? 5 : 2) + (isPeak ? 4 : 0);
+        if (subMode.includes("LCL")) handlingD += 4; // Consolidation delay
         
         if (risks.includes("Red Sea Conflict")) transitD += 12;
         if (sandbox.panama && totalDist > 10000) { handlingD += 5; risks.push("Panama Delay"); }
 
-        const totalD = transitD + inlandD + handlingD + 2; // +2 for basic customs
+        const totalD = transitD + inlandD + handlingD + 2;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
 
-        // --- Financials & ESG ---
         const baseFreight = (totalDist * (mode==='sea'?0.15:4.5) + (fDist+lDist)*(inlandMode==='truck'?0.8:0.3)) * weight;
         const peakPremium = isPeak ? baseFreight * 0.2 : 0;
         const inventoryCost = (value * annualICC / 365) * totalD;
         const totalCostUSD = baseFreight + peakPremium + inventoryCost;
 
-        const co2KgTransit = Math.round((mDist * (mode==='sea'?25:500) * weight) / 1000);
-        const co2KgInland = Math.round(((fDist + lDist) * (inlandMode==='truck'?80:20) * weight) / 1000);
-        const trees = Math.ceil((co2KgTransit + co2KgInland) / 22);
-
         const t = translations[currentLang];
-        const convert = (val) => currentCurrency === 'USD' ? `$${Math.round(val).toLocaleString()}` : `₩${Math.round(val * exchangeRate).toLocaleString()}`;
+        const convert = (val) => `${currentCurrency==='KRW'?'₩':'$'}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
         const health = Math.max(25, (isPeak ? 75 : 98) - risks.length * 25);
 
         document.getElementById('result').innerHTML = `
             <div class="space-y-4 animate-fade-in">
                 <div class="flex bg-gray-100 p-1 rounded-xl">
-                    <button onclick="switchTab('overview')" id="tab-overview" class="flex-1 py-2 text-[10px] font-bold rounded-lg bg-white shadow-sm text-indigo-600">${t.tabOverview}</button>
-                    <button onclick="switchTab('finance')" id="tab-finance" class="flex-1 py-2 text-[10px] font-bold rounded-lg text-gray-500">${t.tabFinance}</button>
-                    <button onclick="switchTab('risk')" id="tab-risk" class="flex-1 py-2 text-[10px] font-bold rounded-lg text-gray-500">${t.tabRisk}</button>
+                    <button onclick="switchTab('overview')" id="tab-overview" class="flex-1 py-2 text-[9px] font-bold rounded-lg bg-white shadow-sm text-indigo-600">${t.tabOverview}</button>
+                    <button onclick="switchTab('finance')" id="tab-finance" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabFinance}</button>
+                    <button onclick="switchTab('risk')" id="tab-risk" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabRisk}</button>
                 </div>
 
                 <div id="tab-content-overview" class="tab-pane space-y-4">
-                    <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
+                    <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center">
                         <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
                         <p class="text-5xl font-black text-indigo-900">${Math.round(totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
                         <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString()}</p>
                     </div>
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.journeyLog}</p><div class="space-y-4 text-xs font-semibold text-gray-700"><p>• ${originName} (Inland: ${inlandMode.toUpperCase()})</p><p>• Main Transit (~${Math.round(transitD)} Days)</p><p>• ${destName} Final Arrival</p></div></div>
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div><p class="text-[10px] font-bold text-gray-400 uppercase">${t.reliability}</p><p class="text-2xl font-black ${health > 70 ? 'text-green-500' : 'text-red-500'}">${health}%</p></div>
+                        <div class="text-right"><p class="text-[10px] font-bold text-gray-400 uppercase">Spend</p><p class="text-lg font-bold text-gray-700">${convert(totalCostUSD)}</p></div>
+                    </div>
                 </div>
 
                 <div id="tab-content-finance" class="tab-pane hidden space-y-4">
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3 text-sm">
-                        <div class="flex justify-between"><span>Base Freight</span><span class="font-bold">${convert(baseFreight)}</span></div>
-                        <div class="flex justify-between text-orange-500"><span>ICC (Capital Cost)</span><span class="font-bold">${convert(inventoryCost)}</span></div>
-                        <div class="flex justify-between text-red-500"><span>Peak Surcharge</span><span class="font-bold">+${convert(peakPremium)}</span></div>
-                        <div class="border-t pt-3 flex justify-between font-black text-gray-900 text-lg"><span>Total Spend</span><span>${convert(totalCostUSD)}</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
+                        <div class="flex justify-between text-xs"><span>Freight</span><span class="font-bold">${convert(baseFreight + peakPremium)}</span></div>
+                        <div class="flex justify-between text-xs"><span>Finance ICC</span><span class="font-bold text-orange-500">${convert(inventoryCost)}</span></div>
+                        <div class="border-t pt-3 flex justify-between font-black text-lg"><span>Total Spend</span><span>${convert(totalCostUSD)}</span></div>
                     </div>
                 </div>
 
                 <div id="tab-content-risk" class="tab-pane hidden space-y-4">
-                    <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
-                        <p class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-2">${t.esgOffset}</p>
-                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${trees}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
+                    <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl relative">
+                        <p class="text-[10px] font-bold text-indigo-300 uppercase mb-2">${t.esgOffset}</p>
+                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${Math.ceil((totalDist * 25 * weight / 1000) / 22)}</span><p class="text-[10px] pb-1">${t.treesMsg}</p></div>
                     </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 pt-2">
+                    <button onclick="copyLink()" class="bg-white border border-gray-200 text-gray-600 font-bold py-2 rounded-lg text-[10px] uppercase hover:bg-gray-50 transition-all">${t.shareBtn}</button>
+                    <button onclick="exportCSV()" class="bg-white border border-gray-200 text-gray-600 font-bold py-2 rounded-lg text-[10px] uppercase hover:bg-gray-50 transition-all">${t.exportCsv}</button>
+                    <button onclick="window.print()" class="bg-gray-900 text-white font-bold py-2 rounded-lg text-[10px] uppercase hover:bg-black transition-all">${t.printPdf}</button>
                 </div>
             </div>`;
 
@@ -222,21 +233,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
         document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
         document.querySelectorAll('[id^="tab-"]').forEach(b => { b.classList.remove('bg-white', 'shadow-sm', 'text-indigo-600'); b.classList.add('text-gray-500'); });
-        const btn = document.getElementById(`tab-${tab}`);
-        btn.classList.add('bg-white', 'shadow-sm', 'text-indigo-600'); btn.classList.remove('text-gray-500');
+        document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
+    };
+
+    window.copyLink = () => { navigator.clipboard.writeText(window.location.href); alert(translations[currentLang].copyMsg); };
+    window.exportCSV = () => {
+        const rows = [["Metric", "Value"], ["Route", `${originSelect.value} to ${destinationSelect.value}`], ["Mode", modeSelect.value], ["Lead Time", document.querySelector('p.text-5xl').innerText]];
+        const csv = rows.map(r => r.join(",")).join("\n");
+        const link = document.createElement("a"); link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        link.download = "leadtime_analysis.csv"; link.click();
     };
 
     function updateIntelligence(o, d, risks, health, isPeak) {
         networkBadge.classList.remove('hidden');
-        const statusText = networkBadge.querySelector('span:last-child');
-        const statusDot = networkBadge.querySelector('span:first-child span:last-child');
-        if (health > 70) { statusText.innerText = "Network Stable"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500"; }
-        else { statusText.innerText = "Elevated Alert"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
-        
-        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Affected by ${risks.join(' & ')}.</div>` : '';
-        if (isPeak) briefing += `<div class="p-4 bg-yellow-50 rounded-xl border-l-4 border-yellow-500 text-sm font-medium text-yellow-700">${translations[currentLang].peakAlert}: Global hubs reporting +20% volume increases.</div>`;
-        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">Standard regional monitoring active for ${d.country}.</div>`;
-        feedContainer.innerHTML = briefing;
+        const alert = (risks.length > 0 || isPeak);
+        networkBadge.querySelector('span:last-child').innerText = alert ? "Elevated Alert" : "Network Stable";
+        networkBadge.querySelector('span:first-child span:last-child').className = `relative inline-flex rounded-full h-2 w-2 ${alert?'bg-red-500':'bg-green-500'}`;
+        feedContainer.innerHTML = (alert ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-xs font-medium text-red-700">Warning: ${risks.join(' & ')} active. Expect port congestion.</div>` : '') + `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-xs text-gray-700 font-medium">Regional Update: ${d.country} infrastructure handling volumes at standard capacity.</div>`;
     }
 
     function renderMap(path, o, d, oH, dH, oN, dN) {
@@ -260,13 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderHistory() {
         const h = JSON.parse(localStorage.getItem('lt_history') || '[]');
-        if (h.length === 0) return;
-        recentContainer.innerHTML = h.map(x => `
-            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-indigo-300 cursor-pointer transition-all" onclick="loadHistory('${x.o}', '${x.d}', '${x.m}')">
-                <p class="text-[9px] font-bold text-indigo-500 uppercase">${x.m}</p>
-                <p class="text-xs font-semibold text-gray-700 truncate">${x.o} → ${x.d}</p>
-            </div>
-        `).join('');
+        recentContainer.innerHTML = h.length === 0 ? '<p class="text-xs text-gray-400 italic">No history</p>' : h.map(x => `<div class="p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-indigo-300 cursor-pointer transition-all" onclick="loadHistory('${x.o}', '${x.d}', '${x.m}')"><p class="text-[9px] font-bold text-indigo-500 uppercase">${x.m}</p><p class="text-xs font-semibold text-gray-700 truncate">${x.o} → ${x.d}</p></div>`).join('');
     }
 
     window.loadHistory = (o, d, m) => { modeSelect.value = m; populate(); originSelect.value = o; destinationSelect.value = d; calculateAndDisplay(); };
