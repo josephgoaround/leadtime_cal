@@ -7,173 +7,155 @@
     <title>Global Shipping Lead Time & Customs Estimator</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- Google AdSense Auto Ads (Replace with your Client ID) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-100 font-sans">
-    <div class="container mx-auto p-4">
-        <header class="text-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">City-to-City Shipping & Logistics Planner</h1>
+    <div class="container mx-auto p-4 max-w-6xl">
+        <header class="text-center mb-6 py-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+            <p class="text-gray-500 mt-2 font-medium">Real-time Global Logistics & Customs Pathfinder</p>
         </header>
 
         <!-- Top Ad Unit (Horizontal) -->
         <div class="adsense-container mb-8">
-            <div class="text-center text-xs text-gray-400 mb-1">ADVERTISEMENT</div>
+            <div class="text-center text-[10px] text-gray-400 mb-1 tracking-widest">ADVERTISEMENT</div>
             <div class="bg-white p-2 rounded shadow-sm flex items-center justify-center min-h-[90px] border border-gray-200">
-                <!-- Replace with actual AdSense code -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                     data-ad-slot="XXXXXXXXXX"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
                 <p class="text-gray-300 italic text-sm">Responsive Header Banner Placeholder</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="md:col-span-1 bg-white p-6 rounded-lg shadow-lg">
-                <h2 class="text-xl font-semibold mb-4">Shipment Details</h2>
-                <form id="shipping-form">
-                    <div class="mb-4">
-                        <label for="transport-mode" class="block text-sm font-medium text-gray-700">Transport Mode</label>
-                        <select id="transport-mode" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option value="sea">Sea Freight</option>
-                            <option value="air">Air Freight</option>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-xl border border-gray-100">
+                <h2 class="text-xl font-bold mb-6 flex items-center text-gray-800">
+                    <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01m-.01 4h.01"></path></svg>
+                    Shipment Plan
+                </h2>
+                <form id="shipping-form" class="space-y-5">
+                    <div>
+                        <label for="transport-mode" class="block text-xs font-bold text-gray-500 uppercase mb-1">Transport Mode</label>
+                        <select id="transport-mode" class="w-full py-2.5 px-3 border border-gray-300 bg-gray-50 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all sm:text-sm">
+                            <option value="sea">🚢 Sea Freight</option>
+                            <option value="air">✈️ Air Freight</option>
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label for="cargo-type" class="block text-sm font-medium text-gray-700">Cargo Type</label>
-                        <select id="cargo-type" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option>General</option>
-                            <option>Refrigerated</option>
-                            <option>Dangerous Goods</option>
+                    <div id="sub-mode-container">
+                        <label for="sub-mode" class="block text-xs font-bold text-gray-500 uppercase mb-1">Service Level</label>
+                        <select id="sub-mode" class="w-full py-2.5 px-3 border border-gray-300 bg-gray-50 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all sm:text-sm">
+                            <!-- Populated via JS -->
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label for="origin" class="block text-sm font-medium text-gray-700">Origin City</label>
-                        <select id="origin" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <div>
+                        <label for="cargo-type" class="block text-xs font-bold text-gray-500 uppercase mb-1">Cargo Category</label>
+                        <select id="cargo-type" class="w-full py-2.5 px-3 border border-gray-300 bg-gray-50 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all sm:text-sm">
+                            <option>General Cargo</option>
+                            <option>Refrigerated (Cold Chain)</option>
+                            <option>Dangerous Goods (DG)</option>
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label for="destination" class="block text-sm font-medium text-gray-700">Destination City</label>
-                        <select id="destination" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </select>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label for="origin" class="block text-xs font-bold text-gray-500 uppercase mb-1">Departure (Origin)</label>
+                            <select id="origin" class="w-full py-2.5 px-3 border border-gray-300 bg-gray-50 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all sm:text-sm"></select>
+                        </div>
+                        <div>
+                            <label for="destination" class="block text-xs font-bold text-gray-500 uppercase mb-1">Arrival (Destination)</label>
+                            <select id="destination" class="w-full py-2.5 px-3 border border-gray-300 bg-gray-50 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all sm:text-sm"></select>
+                        </div>
                     </div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">Estimate Route</button>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transform active:scale-95 transition-all shadow-lg shadow-indigo-200">
+                        Analyze Logistics Route
+                    </button>
                 </form>
-                <div id="result" class="mt-6"></div>
+                <div id="result" class="mt-8"></div>
             </div>
 
-            <div class="md:col-span-2 bg-white p-4 md:p-6 rounded-lg shadow-lg">
-                <div id="map"></div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="bg-white p-2 rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+                    <div id="map" class="rounded-lg"></div>
+                </div>
+                
+                <div id="dynamic-scm-feed" class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="relative flex h-3 w-3 mr-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        Market Intelligence Feed
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg border-l-4 border-red-500">
+                            <p class="text-xs font-bold text-red-600 uppercase mb-1">Geopolitical Alert</p>
+                            <p class="text-sm text-gray-700">Red Sea transits remain restricted; Expect 40% higher fuel surcharges for EMEA routes.</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+                            <p class="text-xs font-bold text-blue-600 uppercase mb-1">Infrastructure Update</p>
+                            <p class="text-sm text-gray-700">Port of Savannah automation project completed; First-mile efficiency improved by 15%.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- In-Content Ad Unit (Between Result and Partnership) -->
+        <!-- In-Content Ad Unit -->
         <div class="adsense-container my-12">
-            <div class="text-center text-xs text-gray-400 mb-1">ADVERTISEMENT</div>
-            <div class="bg-white p-4 rounded shadow-sm flex items-center justify-center min-h-[250px] border border-gray-200">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-fb+5w+4e-db+86"
-                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                     data-ad-slot="XXXXXXXXXX"></ins>
+            <div class="text-center text-[10px] text-gray-400 mb-1 tracking-widest">ADVERTISEMENT</div>
+            <div class="bg-white p-4 rounded shadow-sm flex items-center justify-center min-h-[200px] border border-gray-200">
                 <p class="text-gray-300 italic text-sm">Native In-Content Ad Placeholder</p>
             </div>
         </div>
 
-        <!-- How It Works Section -->
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-indigo-500">
-                <div class="text-indigo-600 mb-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+        <!-- Professional Capabilities Section -->
+        <div class="mt-12 mb-12">
+            <h2 class="text-2xl font-extrabold text-gray-800 mb-8 text-center">Intelligent Pathfinder Capabilities</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="group">
+                    <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Multi-Segment Routing</h3>
+                    <p class="text-sm text-gray-500 px-4">Sea freight via Suez/Panama/Cape and Air freight via Great Circle paths are precisely calculated.</p>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Real-time Routing</h3>
-                <p class="text-sm text-gray-600">지정학적 리스크(홍해, 러시아 영공 등)와 기상 이변을 실시간으로 분석하여 최적의 경로를 산출합니다.</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-blue-500">
-                <div class="text-blue-600 mb-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <div class="group">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">ESG Footprint Tracking</h3>
+                    <p class="text-sm text-gray-500 px-4">Calculate CO2 emissions per tonne-km to optimize your environmental impact and CSR goals.</p>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Advanced Analytics</h3>
-                <p class="text-sm text-gray-600">컨테이너선의 평균 속력과 항공기의 대권항로를 시뮬레이션하여 가장 현실적인 리드타임을 제공합니다.</p>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow border-t-4 border-green-500">
-                <div class="text-green-600 mb-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <div class="group">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600 group-hover:text-white transition-all">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Customs Compliance</h3>
+                    <p class="text-sm text-gray-500 px-4">Dynamic document checklists and risk levels based on country-to-country trade agreements.</p>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Node Intelligence</h3>
-                <p class="text-sm text-gray-600">전 세계 주요 항구와 공항의 혼잡도 및 노동 쟁의 이슈를 모니터링하여 예상 지연 시간을 반영합니다.</p>
             </div>
         </div>
 
-        <!-- Partnership Section -->
-        <div class="mt-12 bg-white p-8 rounded-lg shadow-lg">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Partnership Inquiries</h2>
-                <p class="text-gray-600 mb-8">Interested in integrating our logistics intelligence into your business? Get in touch with us.</p>
-                
-                <form action="https://formspree.io/f/xzdayboe" method="POST" class="text-left grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Company Name</label>
-                        <input type="text" name="company" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input type="email" name="email" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">Inquiry Details</label>
-                        <textarea name="message" rows="4" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Tell us about your logistics needs..."></textarea>
-                    </div>
-                    <div class="md:col-span-2">
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-md hover:bg-indigo-700 transition-colors shadow-lg">
-                            Submit Inquiry
-                        </button>
-                    </div>
+        <!-- Partnership & Footer -->
+        <div class="bg-gray-900 text-white rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 opacity-10">
+                <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M13 16.5a1 1 0 00.322-.053l5.5-2A1 1 0 0019.5 13.5v-6a1 1 0 00-.678-.947l-5.5-2A1 1 0 0012.5 4.5v6a1 1 0 00.678.947l5.5 2A1 1 0 0019.5 13.5v-6a1 1 0 00-.678-.947l-5.5-2A1 1 0 0012.5 4.5v12z"></path></svg>
+            </div>
+            <div class="max-w-2xl mx-auto relative z-10">
+                <h2 class="text-3xl font-bold mb-4 text-center">Get Your Custom API</h2>
+                <p class="text-gray-400 mb-8 text-center">Professional grade logistics intelligence for your ERP or TMS systems. Fast, secure, and always accurate.</p>
+                <form action="https://formspree.io/f/xzdayboe" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" name="company" placeholder="Company Name" required class="bg-gray-800 border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 text-white placeholder-gray-500">
+                    <input type="email" name="email" placeholder="Business Email" required class="bg-gray-800 border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 text-white placeholder-gray-500">
+                    <textarea name="message" rows="2" placeholder="Tell us about your needs..." required class="md:col-span-2 bg-gray-800 border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 text-white placeholder-gray-500"></textarea>
+                    <button type="submit" class="md:col-span-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-lg transition-all shadow-xl">
+                        Request API Integration
+                    </button>
                 </form>
             </div>
         </div>
 
-        <!-- Bottom Ad Unit (Above Comments) -->
-        <div class="adsense-container mt-12 mb-4">
-            <div class="text-center text-xs text-gray-400 mb-1">ADVERTISEMENT</div>
-            <div class="bg-white p-4 rounded shadow-sm flex items-center justify-center min-h-[90px] border border-gray-200">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                     data-ad-slot="XXXXXXXXXX"
-                     data-ad-format="autorelaxed"></ins>
-                <p class="text-gray-300 italic text-sm">Matched Content/Bottom Banner Placeholder</p>
-            </div>
-        </div>
-
-        <!-- Disqus Comments Section -->
-        <div class="mt-12 bg-white p-8 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Community Discussion</h2>
+        <div class="mt-12">
             <div id="disqus_thread"></div>
-            <script>
-                /**
-                *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-                *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-                /*
-                var disqus_config = function () {
-                this.page.url = window.location.href;  // Use current URL
-                this.page.identifier = 'leadtime-cal-main'; // Unique identifier
-                };
-                */
-                (function() { // DON'T EDIT BELOW THIS LINE
-                var d = document, s = d.createElement('script');
-                s.src = 'https://leadtime-cal.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-                })();
-            </script>
-            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         </div>
     </div>
 
