@@ -1,3 +1,13 @@
+/**
+ * LEADTIME INTELLIGENCE - CORE SYSTEM FILE
+ * 
+ * !!! MANDATORY COMPLIANCE HEADER !!!
+ * 1. DATA INTEGRITY: NEVER truncate or remove ports/airports from the 'hubs' object. Full 100+ global scope must be preserved.
+ * 2. ROUTING PRECISION: NEVER simplify 'seaNodes' or 'seaEdges'. Strict land/island avoidance (Madagascar, etc.) is non-negotiable.
+ * 3. PACIFIC CONNECTIVITY: Always use normalization for trans-pacific routes to ensure connected visualization.
+ * 4. SYSTEM STABILITY: All existing Dijkstra and Antimeridian logic must remain intact during rewrites.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         en: {
