@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstMileDist = calculateDistance(origin.coords, originHub.coords);
         const lastMileDist = calculateDistance(destHub.coords, dest.coords);
 
-        const speeds = { sea: 700, air: 20000, land: 500 }; 
+        const speeds = { sea: 711, air: 20000, land: 500 }; // sea: 16 knots (approx 711km/day)
         let leadTime = (firstMileDist / speeds.land) + (middleMileDist / speeds[mode]) + (lastMileDist / speeds.land);
         leadTime += (mode === 'sea' ? 5 : 2);
 
@@ -260,19 +260,30 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
 
+        const totalDist = Math.round(middleMileDist + firstMileDist + lastMileDist);
+
         resultDiv.innerHTML = `
             <div class="space-y-4">
                 ${riskAlertHtml}
-                <p class="text-2xl font-bold text-blue-600">Estimated Lead Time: ${Math.round(leadTime)} days</p>
+                <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <p class="text-3xl font-bold text-blue-700">${Math.round(leadTime)} Days</p>
+                    <p class="text-lg font-semibold text-blue-600 mt-1">Total Distance: ${totalDist.toLocaleString()} km</p>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div class="p-3 bg-gray-50 rounded border-l-2 border-green-500">
-                        <div class="font-bold text-gray-700">Origin (${originCityName})</div>
-                        ${origin.scmIssues}
+                    <div class="p-3 bg-white rounded border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-700 mb-1 border-b pb-1">Origin (${originCityName})</div>
+                        <p class="text-gray-600">${origin.scmIssues}</p>
                     </div>
-                    <div class="p-3 bg-gray-50 rounded border-l-2 border-orange-500">
-                        <div class="font-bold text-gray-700">Destination (${destCityName})</div>
-                        ${dest.scmIssues}
+                    <div class="p-3 bg-white rounded border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-700 mb-1 border-b pb-1">Destination (${destCityName})</div>
+                        <p class="text-gray-600">${dest.scmIssues}</p>
                     </div>
+                </div>
+
+                <div class="text-[11px] text-gray-500 leading-relaxed space-y-1 mt-4 border-t pt-3">
+                    <p>• 운송 날짜는 컨테이너선종에 따른 평균 속력(16knot)을 기준으로 계산되었습니다.</p>
+                    <p>• 면책 고지: 예상 소요 날짜는 기상 악화, 천재지변 및 항만 혼잡 상황에 따라 변동될 수 있습니다.</p>
                 </div>
             </div>
         `;
@@ -286,10 +297,11 @@ document.addEventListener('DOMContentLoaded', () => {
         L.marker(originHub.coords, { icon: hubIcon }).addTo(map).bindPopup(originHub.name);
         L.marker(destHub.coords, { icon: hubIcon }).addTo(map).bindPopup(destHub.name);
 
-        L.polyline([origin.coords, originHub.coords], { color: '#10b981', weight: 2, dashArray: '5, 5' }).addTo(map); 
+        // All paths changed to high-visibility RED as requested
+        L.polyline([origin.coords, originHub.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5', opacity: 0.6 }).addTo(map); 
         if (mode === 'sea') drawSeaPath(middleMilePath);
-        else L.polyline(middleMilePath, { color: '#ef4444', weight: 3, opacity: 0.7, dashArray: '1, 10' }).addTo(map); 
-        L.polyline([destHub.coords, dest.coords], { color: '#f59e0b', weight: 2, dashArray: '5, 5' }).addTo(map); 
+        else L.polyline(middleMilePath, { color: '#ef4444', weight: 4, opacity: 0.8 }).addTo(map); 
+        L.polyline([destHub.coords, dest.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5', opacity: 0.6 }).addTo(map); 
 
         map.fitBounds([origin.coords, dest.coords, ...middleMilePath], { padding: [50, 50] });
     });
@@ -304,7 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             segments[currentSegment].push(path[i]);
         }
-        segments.forEach(seg => L.polyline(seg, { color: '#2563eb', weight: 5, opacity: 0.9 }).addTo(map));
+        // Change Sea Path to SOLID RED for "Red Line" requirement
+        segments.forEach(seg => L.polyline(seg, { color: '#dc2626', weight: 5, opacity: 0.9 }).addTo(map));
     }
 
     function calculateDistance(coords1, coords2) {
