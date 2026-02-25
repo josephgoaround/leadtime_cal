@@ -4,21 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LeadTime Intelligence | Global Logistics Pathfinder</title>
+    <meta name="description" content="Advanced global logistics lead time simulator and route visualization platform. Analyze sea and air transit times with precision Dijkstra routing.">
+    <meta name="keywords" content="logistics, lead time calculator, sea freight, air cargo, routing, supply chain, maritime pathfinder">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-6930584793965742">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6930584793965742" crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-50 font-sans text-gray-900 leading-normal">
-    <div class="container mx-auto p-4 max-w-6xl">
-        <header class="flex justify-between items-center mb-8 py-6 border-b border-gray-200">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
-                <p class="text-gray-500 text-sm font-medium" data-i18n="subtitle">Global Logistics & Customs AI Pathfinder</p>
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-[2000]">
+        <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
+            <div class="flex items-center gap-8">
+                <a href="#" class="block">
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="#analyzer" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors" data-i18n="navAnalyzer">Analyzer</a>
+                    <a href="#how-it-works" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors" data-i18n="navHowItWorks">How it Works</a>
+                    <a href="#about" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors" data-i18n="navAbout">About</a>
+                </nav>
             </div>
             <div class="flex items-center gap-3">
-                <div class="flex bg-gray-100 p-1 rounded-lg mr-2">
+                <div class="hidden sm:flex bg-gray-100 p-1 rounded-lg mr-2">
                     <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
                     <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">KRW</button>
                     <button id="curr-eur" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">EUR</button>
@@ -28,7 +37,13 @@
                     <button id="lang-en" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">EN</button>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
+
+    <main id="analyzer" class="container mx-auto p-4 max-w-6xl mt-8">
+        <div class="mb-8">
+            <p class="text-gray-500 text-sm font-medium" data-i18n="subtitle">Global Logistics & Customs AI Pathfinder</p>
+        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
@@ -158,7 +173,80 @@
         </div>
 
         <div id="disqus_thread" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mt-12"></div>
-    </div>
+
+        <!-- SEO Content Sections for AdSense -->
+        <section id="how-it-works" class="mt-16 space-y-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-4" data-i18n="howItWorksTitle">How LeadTime Intelligence Works</h2>
+                <p class="text-gray-600 leading-relaxed" data-i18n="howItWorksDesc">Our platform leverages advanced graph-based algorithms to simulate global logistics routes with unprecedented precision.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.382V7.618a2 2 0 011.096-1.789L9 3m0 17l9.904-4.952A2 2 0 0020 13.268V5.732a2 2 0 00-1.096-1.789L9 3m0 17V3"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2" data-i18n="step1Title">Dijkstra Routing</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="step1Desc">We use the Dijkstra algorithm on a custom maritime network of 250+ nodes to calculate the shortest and safest sea paths, avoiding landmasses entirely.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2" data-i18n="step2Title">Real-time Factors</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="step2Desc">Our engine incorporates port congestion, HS code clearance times, and geopolitical risks like Suez Canal detours into every calculation.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2" data-i18n="step3Title">Cost Projection</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="step3Desc">Get benchmark market rates based on distance and mode, providing a baseline for your logistics procurement and planning.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="mt-20 p-10 bg-indigo-900 rounded-3xl text-white relative overflow-hidden">
+            <div class="relative z-10 max-w-3xl">
+                <h2 class="text-3xl font-bold mb-6" data-i18n="aboutTitle">About LeadTime Intelligence</h2>
+                <p class="text-indigo-100 leading-relaxed mb-8" data-i18n="aboutDesc">LeadTime Intelligence is a professional-grade logistics simulation tool designed for SCM professionals, freight forwarders, and global traders. Our mission is to provide transparency in global shipping by offering data-driven insights into transit times and costs.</p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="bg-white/10 backdrop-blur px-4 py-2 rounded-lg border border-white/20 text-sm font-semibold">30+ Global Hubs</div>
+                    <div class="bg-white/10 backdrop-blur px-4 py-2 rounded-lg border border-white/20 text-sm font-semibold">AI Routing Engine</div>
+                    <div class="bg-white/10 backdrop-blur px-4 py-2 rounded-lg border border-white/20 text-sm font-semibold">Multi-Currency Support</div>
+                </div>
+            </div>
+            <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-500/20 to-transparent pointer-events-none"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-20 pt-16 pb-8">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <h2 class="text-xl font-extrabold tracking-tight mb-4">LeadTime<span class="text-indigo-600">Intelligence</span></h2>
+                    <p class="text-gray-500 text-sm max-w-sm leading-relaxed" data-i18n="footerTagline">Empowering global supply chains with intelligent routing and predictive analytics for a faster, more transparent world.</p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-gray-900 uppercase tracking-widest mb-6" data-i18n="footerNavTitle">Platform</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#analyzer" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navAnalyzer">Analyzer</a></li>
+                        <li><a href="#how-it-works" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navHowItWorks">How it Works</a></li>
+                        <li><a href="#about" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navAbout">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-gray-900 uppercase tracking-widest mb-6" data-i18n="footerLegalTitle">Legal</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navPrivacy">Privacy Policy</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navTerms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">© 2026 LEADTIME INTELLIGENCE. ALL RIGHTS RESERVED.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="main.js?v=1.2"></script>
