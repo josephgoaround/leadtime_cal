@@ -39,9 +39,29 @@ h1, h2, h3, .font-poppins {
     animation-play-state: paused;
 }
 
-/* --- Smooth Transitions --- */
+/* --- Route Flow Animation --- */
+.leaflet-ant-path {
+    stroke-dasharray: 10, 10;
+    animation: ant-path-animation 30s linear infinite;
+}
+
+@keyframes ant-path-animation {
+    from { stroke-dashoffset: 1000; }
+    to { stroke-dashoffset: 0; }
+}
+
+/* --- Interactive Timeline Styling --- */
+.timeline-item:hover .timeline-dot {
+    transform: scale(1.3);
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.4);
+}
+
+.timeline-dot {
+    transition: all 0.2s ease-in-out;
+}
+
 .tab-pane {
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.4s ease-out;
 }
 
 @keyframes fadeIn {
