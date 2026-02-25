@@ -177,8 +177,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const commodityDelays = { general: 1, rf: 2, dg: 4, special: 5 };
 
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
+        maxZoom: 13
+    }).addTo(map);
+    
+    // Add Ocean Reference layer for labels
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Esri',
         maxZoom: 13
     }).addTo(map);
 
