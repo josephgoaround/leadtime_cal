@@ -87,15 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const waypoints = {
         "suez": [30.5852, 32.2654],
         "panama": [9.352, -79.920],
-        "malacca": [2.2, 102.2],
+        "malacca": [1.2, 103.8],
         "gibraltar": [35.9, -5.5],
         "cape": [-34.35, 18.47],
         "bab_el_mandeb": [12.6, 43.3],
         "south_tip_india": [5.9, 80.5],
         "pacific_mid": [20.0, -160.0],
-        // Air Waypoints to avoid Russia
-        "turkey_air": [39.0, 35.0], 
-        "alaska_air": [64.0, -150.0] 
+        "good_hope": [-34.35, 18.47],
+        "cape_verde": [15.0, -25.0],
+        "horn_africa": [10.0, 52.0],
+        "south_australia": [-38.0, 130.0],
+        "english_channel": [50.5, -0.5]
     };
 
     function getSeaRoute(originHub, destHub, activeRisks) {
@@ -105,59 +107,65 @@ document.addEventListener('DOMContentLoaded', () => {
         const oLat = originHub.coords[0];
         const dLat = destHub.coords[0];
 
-        // Trans-Pacific Check (LAX to Asia/Oceania)
-        if (oLon < -100 && dLon > 100) {
-             path.push(waypoints.pacific_mid);
-        } 
-        else if (oLon > 100 && dLon < -100) {
+        // 1. Determine Path via Waypoints to avoid Land
+        
+        // TRANS-PACIFIC (LA/Shanghai/Busan/Tokyo/Sydney)
+        if ((oLon < -100 && dLon > 100) || (oLon > 100 && dLon < -100)) {
              path.push(waypoints.pacific_mid);
         }
-        // Asia to Europe
+        
+        // ASIA <-> EUROPE (Rotterdam/Hamburg/London <-> Shanghai/Busan/Tokyo/Singapore)
         else if ((oLon > 60 && dLon < 20) || (oLon < 20 && dLon > 60)) {
-            // Check Red Sea Risk
             const useCape = globalRisks.redSeaCrisis.active;
-            
-            if (oLon > 60) { // East to West (Asia -> Europe)
+            if (oLon > 60) { // East to West
                 path.push(waypoints.malacca);
+                path.push(waypoints.south_tip_india);
                 if (useCape) {
-                    path.push(waypoints.south_tip_india);
-                    path.push(waypoints.cape); // Reroute via Cape
+                    path.push(waypoints.good_hope);
+                    path.push(waypoints.cape_verde);
                     activeRisks.push(globalRisks.redSeaCrisis);
                 } else {
-                    path.push(waypoints.south_tip_india);
                     path.push(waypoints.bab_el_mandeb);
                     path.push(waypoints.suez);
                 }
                 path.push(waypoints.gibraltar);
-            } else { // West to East (Europe -> Asia)
+                path.push(waypoints.english_channel);
+            } else { // West to East
+                path.push(waypoints.english_channel);
                 path.push(waypoints.gibraltar);
                 if (useCape) {
-                    path.push(waypoints.cape); // Reroute via Cape
-                    path.push(waypoints.south_tip_india);
+                    path.push(waypoints.cape_verde);
+                    path.push(waypoints.good_hope);
                     activeRisks.push(globalRisks.redSeaCrisis);
                 } else {
                     path.push(waypoints.suez);
                     path.push(waypoints.bab_el_mandeb);
-                    path.push(waypoints.south_tip_india);
                 }
+                path.push(waypoints.south_tip_india);
                 path.push(waypoints.malacca);
             }
         }
-        // US East Coast to Asia via Panama
-        else if (oLon > -80 && oLon < -60 && dLon > 100) {
-            path.push(waypoints.panama);
+
+        // US EAST COAST <-> ASIA (NYC <-> Shanghai/Busan)
+        else if ((oLon > -80 && oLon < -60 && dLon > 100) || (oLon > 100 && dLon > -80 && dLon < -60)) {
+            if (oLon < 0) { // East Coast to Asia
+                path.push(waypoints.panama);
+                path.push(waypoints.pacific_mid);
+            } else { // Asia to East Coast
+                path.push(waypoints.pacific_mid);
+                path.push(waypoints.panama);
+            }
             if (globalRisks.panamaDrought.active) activeRisks.push(globalRisks.panamaDrought);
-            path.push(waypoints.pacific_mid);
         }
-        // Asia to US East Coast via Panama
-        else if (oLon > 100 && dLon > -80 && dLon < -60) {
-            path.push(waypoints.pacific_mid);
-            path.push(waypoints.panama);
-            if (globalRisks.panamaDrought.active) activeRisks.push(globalRisks.panamaDrought);
+
+        // EUROPE <-> US EAST (London/Rotterdam <-> NYC)
+        else if (oLon < 20 && oLon > -10 && dLon < -60 && dLon > -80) {
+            path.push(waypoints.english_channel);
         }
-        // Europe to South America
-        else if (oLon < 20 && oLon > -10 && dLat < -10 && dLon < -30) {
-            path.push(waypoints.gibraltar);
+
+        // ASIA <-> AUSTRALIA
+        else if (oLon > 100 && dLat < -10) {
+            path.push(waypoints.malacca);
         }
 
         path.push(destHub.coords);
@@ -173,10 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let startLat = originCoords[0];
         let endLat = destCoords[0];
 
-        // Check for Russia Airspace Avoidance (Europe <-> East Asia)
         let avoidRussia = false;
         if (globalRisks.russiaAirspace.active) {
-            // Simple heuristic: if flying between Europe (Lon -10 to 30) and East Asia (Lon 100+), risk applies
             const isEurope = (startLon > -10 && startLon < 30) || (endLon > -10 && endLon < 30);
             const isEastAsia = (startLon > 100) || (endLon > 100);
             if (isEurope && isEastAsia) {
@@ -195,17 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let lat = startLat + (endLat - startLat) * f;
             const lon = startLon + (endLon - startLon) * f;
             
-            // Standard Great Circle Arc
             const dist = calculateDistance(originCoords, destCoords);
             let offset = Math.sin(Math.PI * f) * (dist / 12000) * 15;
 
-            // Apply Russia Avoidance Logic
             if (avoidRussia) {
-                // If the path tries to go too high north (into Russia), push it south
-                // Very rough approximation for visualization
-                if (lat > 45) {
-                    offset -= 20; // Push south significantly
-                }
+                if (lat > 45) offset -= 20; 
             }
             
             path.push([lat + offset, lon]);
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let middleMilePath = [];
         let middleMileDist = 0;
-        let activeRisks = []; // Track risks triggered by this specific route
+        let activeRisks = []; 
 
         if (transportMode === 'sea') {
             middleMilePath = getSeaRoute(originHub, destHub, activeRisks);
@@ -243,7 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             middleMilePath = getAirRoute(originHub.coords, destHub.coords, activeRisks);
-            // Re-calculate distance roughly from path for air to include detour
             for (let i = 0; i < middleMilePath.length - 1; i++) {
                 middleMileDist += calculateDistance(middleMilePath[i], middleMilePath[i+1]);
             }
@@ -258,11 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const handlingTime = { sea: 5, air: 2 }; 
         leadTime += handlingTime[transportMode];
 
-        // Apply Time Penalties from Risks
         activeRisks.forEach(risk => {
-            if (risk === globalRisks.redSeaCrisis) leadTime += 12; // Extra days for Cape route
-            if (risk === globalRisks.panamaDrought) leadTime += 5; // Waiting time
-            if (risk === globalRisks.russiaAirspace) leadTime += 1; // Slight delay for air detour
+            if (risk === globalRisks.redSeaCrisis) leadTime += 12; 
+            if (risk === globalRisks.panamaDrought) leadTime += 5; 
+            if (risk === globalRisks.russiaAirspace) leadTime += 1; 
         });
 
         switch (cargoType) {
@@ -270,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'Dangerous Goods': leadTime *= 1.3; break;
         }
 
-        // Generate Risk Alert HTML
         let riskAlertHtml = '';
         if (activeRisks.length > 0) {
             riskAlertHtml = `
@@ -313,16 +310,18 @@ document.addEventListener('DOMContentLoaded', () => {
         L.marker(originHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>${transportMode.toUpperCase()} Hub:</b> ${originHub.name}`);
         L.marker(destHub.coords, { icon: hubIcon }).addTo(map).bindPopup(`<b>${transportMode.toUpperCase()} Hub:</b> ${destHub.name}`);
 
-        L.polyline([origin.coords, originHub.coords], { color: 'green', weight: 2, dashArray: '5, 5' }).addTo(map); 
+        // FIRST MILE (Land only)
+        L.polyline([origin.coords, originHub.coords], { color: '#10b981', weight: 2, dashArray: '5, 5' }).addTo(map); 
         
+        // MIDDLE MILE (Sea or Air)
         if (transportMode === 'sea') {
-            // Split polyline if it crosses the antimeridian
             drawSeaPath(middleMilePath);
         } else {
             L.polyline(middleMilePath, { color: '#ef4444', weight: 3, opacity: 0.7, dashArray: '1, 10' }).addTo(map); 
         }
 
-        L.polyline([destHub.coords, destination.coords], { color: 'orange', weight: 2, dashArray: '5, 5' }).addTo(map); 
+        // LAST MILE (Land only)
+        L.polyline([destHub.coords, destination.coords], { color: '#f59e0b', weight: 2, dashArray: '5, 5' }).addTo(map); 
 
         map.fitBounds([origin.coords, destination.coords, ...middleMilePath], { padding: [50, 50] });
     });
@@ -344,17 +343,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         segments.forEach(seg => {
-            L.polyline(seg, { color: '#2563eb', weight: 4, opacity: 0.8 }).addTo(map);
+            L.polyline(seg, { color: '#2563eb', weight: 5, opacity: 0.9 }).addTo(map);
         });
     }
 
     function calculateDistance(coords1, coords2) {
         const R = 6371; 
         const dLat = (coords2[0] - coords1[0]) * Math.PI / 180;
-        const dLon = (coords2[1] - coords1[1]) * Math.PI / 180;
-        if (Math.abs(dLon) > Math.PI) {
-            // handle wrap around
-        }
+        let dLon = (coords2[1] - coords1[1]) * Math.PI / 180;
+        
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                   Math.cos(coords1[0] * Math.PI / 180) * Math.cos(coords2[0] * Math.PI / 180) *
                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
