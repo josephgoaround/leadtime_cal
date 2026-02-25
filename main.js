@@ -177,7 +177,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const commodityDelays = { general: 1, rf: 2, dg: 4, special: 5 };
 
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
+        maxZoom: 13
+    }).addTo(map);
 
     const originSelect = document.getElementById('origin'), destinationSelect = document.getElementById('destination'), modeSelect = document.getElementById('transport-mode'), hscodeSelect = document.getElementById('hscode'), resultContainer = document.getElementById('feed-container');
 
@@ -310,16 +313,35 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             ${route.isRedSeaDisrupted && modeSelect.value === 'sea' ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${t.riskMsgSuez} (+${activeGlobalRisks.redSea.delay} Days Delay Auto-Applied)</div>` : ''}`;
         
-        renderMap(route.routePath);
+        renderMap(route.routePath, modeSelect.value);
         await fetchSummarizedNews(hubs[oId], hubs[dId]);
         document.getElementById('executive-actions').classList.remove('hidden');
     }
 
-    function renderMap(path) {
+    function renderMap(path, mode) {
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
-        L.marker(path[0]).addTo(map); L.marker(path[path.length - 1]).addTo(map);
-        L.polyline(path, { color: '#ef4444', weight: 4, opacity: 0.8, dashArray: '10, 10' }).addTo(map);
-        map.fitBounds(path, { padding: [50, 50] });
+        
+        const startIcon = L.divIcon({ className: 'custom-div-icon', html: `<div class="w-3 h-3 bg-white border-2 border-indigo-600 rounded-full shadow-lg"></div>` });
+        const endIcon = L.divIcon({ className: 'custom-div-icon', html: `<div class="w-3 h-3 bg-indigo-600 border-2 border-white rounded-full shadow-lg"></div>` });
+
+        L.marker(path[0], {icon: startIcon}).addTo(map);
+        L.marker(path[path.length - 1], {icon: endIcon}).addTo(map);
+
+        const color = mode === 'sea' ? '#1e40af' : '#06b6d4'; 
+        
+        // Background glow line
+        L.polyline(path, { color: color, weight: 8, opacity: 0.15 }).addTo(map);
+        
+        // Main path line
+        L.polyline(path, { 
+            color: color, 
+            weight: 3, 
+            opacity: 0.8, 
+            dashArray: mode === 'sea' ? '1, 8' : '10, 10',
+            lineCap: 'round'
+        }).addTo(map);
+
+        map.fitBounds(path, { padding: [80, 80] });
     }
 
     function startLiveUpdates() {
