@@ -106,23 +106,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const seaEdges = [
-        ["incheon_exit", "yellow_sea_mid"], ["pusan_exit", "jeju_s"], ["yellow_sea_mid", "jeju_s"], ["jeju_s", "shanghai_gate"], ["shanghai_gate", "ningbo_exit"], ["shanghai_gate", "qingdao_exit"], ["jeju_s", "kyushu_s"],
-        ["kyushu_s", "tokyo_exit"], ["shanghai_gate", "taipei_gate"], ["taipei_gate", "kaohsiung_exit"], ["kaohsiung_exit", "luzon_strait"], ["taipei_gate", "luzon_strait"], ["luzon_strait", "hongkong_exit"],
+        ["incheon_exit", "yellow_sea_mid"], ["pusan_exit", "jeju_s"], ["yellow_sea_mid", "jeju_s"], ["jeju_s", "shanghai_exit"], ["shanghai_exit", "ningbo_exit"], ["shanghai_exit", "qingdao_exit"], ["jeju_s", "kyushu_s"],
+        ["kyushu_s", "tokyo_exit"], ["shanghai_gate", "taipei_exit"], ["taipei_exit", "kaohsiung_exit"], ["kaohsiung_exit", "luzon_strait"], ["taipei_exit", "luzon_strait"], ["luzon_strait", "hongkong_exit"],
         ["hongkong_exit", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "bangkok_exit"], ["vietnam_s", "manila_exit"], ["vietnam_s", "singapore_gate"], ["singapore_gate", "jakarta_exit"], ["jakarta_exit", "sunda_strait"],
         ["singapore_gate", "port_kelang_exit"], ["port_kelang_exit", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"], ["andaman_sea", "srilanka_s"],
         ["srilanka_s", "mumbai_exit"], ["srilanka_s", "arabian_sea_mid"], ["mumbai_exit", "arabian_sea_mid"], ["arabian_sea_mid", "dubai_exit"], ["dubai_exit", "jebel_ali_gate"], ["dubai_exit", "bab_el_mandeb"],
         ["bab_el_mandeb", "red_sea_mid"], ["red_sea_mid", "jeddah_exit"], ["red_sea_mid", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "piraeus_exit"], ["suez_n", "med_mid"], ["med_mid", "valencia_exit"], ["med_mid", "gibraltar"],
         ["gibraltar", "algeciras_gate"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"], ["finisterre", "bay_of_biscay"], ["bay_of_biscay", "le_havre_gate"], ["bay_of_biscay", "english_channel"], ["english_channel", "felixstowe_gate"], ["english_channel", "rotterdam_exit"], ["rotterdam_exit", "antwerp_gate"], ["rotterdam_exit", "hamburg_exit"],
         ["srilanka_s", "good_hope"], ["good_hope", "durban_exit"], ["good_hope", "cape_town_exit"], ["good_hope", "west_africa_2"], ["west_africa_2", "west_africa_1"], ["west_africa_1", "canary_islands"], ["canary_islands", "portugal_w"],
-        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_gate"], ["nyc_gate", "savannah_gate"], ["savannah_gate", "florida_s"], ["florida_s", "houston_gate"], ["florida_s", "bahamas_n"], ["bahamas_n", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_exit"], ["lax_exit", "oakland_gate"], ["lax_exit", "vancouver_exit"],
-        ["canary_islands", "brazil_e"], ["brazil_e", "santos_gate"], ["santos_gate", "buenos_aires_exit"], ["santos_gate", "cape_horn"],
+        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_exit"], ["nyc_exit", "savannah_gate"], ["savannah_gate", "florida_s"], ["florida_s", "houston_gate"], ["florida_s", "bahamas_n"], ["bahamas_n", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_exit"], ["lax_exit", "oakland_gate"], ["lax_exit", "vancouver_exit"],
+        ["canary_islands", "brazil_e"], ["brazil_e", "santos_exit"], ["santos_exit", "buenos_aires_exit"], ["santos_exit", "cape_horn"],
         ["tokyo_exit", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_exit"], ["singapore_gate", "sunda_strait"], ["sunda_strait", "indonesia_south"], ["indonesia_south", "sydney_gate"]
     ];
 
     const hubs = {
-        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_gate", country: "South Korea" },
-        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_gate", country: "South Korea" },
-        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_gate", country: "China" },
+        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_exit", country: "South Korea" },
+        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_exit", country: "South Korea" },
+        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_exit", country: "China" },
         "chn-nbo": { name: "Ningbo", coords: [29.86, 121.54], exit: "ningbo_exit", country: "China" },
         "chn-shz": { name: "Shenzhen", coords: [22.54, 114.05], exit: "hongkong_exit", country: "China" },
         "chn-hkg": { name: "Hong Kong", coords: [22.31, 114.16], exit: "hongkong_exit", country: "Hong Kong" },
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "usa-sav": { name: "Savannah", coords: [32.08, -81.09], exit: "savannah_gate", country: "USA" },
         "usa-hou": { name: "Houston", coords: [29.76, -95.36], exit: "houston_gate", country: "USA" },
         "can-yvr": { name: "Vancouver", coords: [49.28, -123.12], exit: "vancouver_exit", country: "Canada" },
-        "bra-sao": { name: "Santos", coords: [-23.96, -46.33], exit: "santos_gate", country: "Brazil" },
+        "bra-sao": { name: "Santos", coords: [-23.96, -46.33], exit: "santos_exit", country: "Brazil" },
         "aus-syd": { name: "Sydney", coords: [-33.86, 151.20], exit: "sydney_gate", country: "Australia" }
     };
 
@@ -162,18 +162,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultContainer = document.getElementById('result');
 
     function populate() {
-        const mode = modeSelect.value;
         const curO = originSelect.value, curD = destinationSelect.value;
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
         Object.entries(hubs).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([id,h]) => {
             originSelect.add(new Option(`${h.name}, ${h.country}`, id));
             destinationSelect.add(new Option(`${h.name}, ${h.country}`, id));
         });
-        if(curO) originSelect.value = curO; if(curD) destinationSelect.value = curD;
+        if(curO && hubs[curO]) originSelect.value = curO;
+        if(curD && hubs[curD]) destinationSelect.value = curD;
     }
     populate();
 
     function findMaritimePath(start, end, redSeaRisk) {
+        if (!seaNodes[start] || !seaNodes[end]) return [];
         let distances = {}; let previous = {}; let nodes = new Set();
         Object.keys(seaNodes).forEach(node => { distances[node] = Infinity; nodes.add(node); });
         distances[start] = 0;
@@ -199,11 +200,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return path;
     }
 
-    function solveRoute(oId, dId, mode, sandbox) {
+    function solveRoute(oId, dId, mode) {
         const o = hubs[oId], d = hubs[dId];
         let rawPath = [o.coords];
+        const isRedSea = document.getElementById('risk-redsea').checked;
+        
         if (mode === 'sea') {
-            rawPath = rawPath.concat(findMaritimePath(o.exit, d.exit, document.getElementById('risk-redsea').checked));
+            const maritimePath = findMaritimePath(o.exit, d.exit, isRedSea);
+            if (maritimePath.length > 0) rawPath = rawPath.concat(maritimePath);
         }
         rawPath.push(d.coords);
 
@@ -220,18 +224,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const speed = mode === 'sea' ? 16 : 850;
         const totalD = (dist / (speed * 1.852 * 24)) + (mode === 'sea' ? 7 : 2);
         
-        // Approximate Cost Logic
         let cost = 0;
         if (mode === 'sea') {
-            cost = 1200 + (dist * 0.15); // Base $1200 + $0.15 per NM (approx)
-            if (document.getElementById('risk-redsea').checked) cost += 800; // Risk Surcharge
+            cost = 1200 + (dist * 0.15);
+            if (isRedSea) cost += 800;
         } else {
-            cost = 500 + (dist * 1.25); // Base $500 + $1.25 per KM
+            cost = 500 + (dist * 1.25);
         }
 
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + totalD);
-        return { totalD, eta, path: finalPath, dist, cost, risks: document.getElementById('risk-redsea').checked && mode === 'sea' ? ["riskMsgSuez"] : [] };
+        return { totalD, eta, path: finalPath, dist, cost, risks: isRedSea && mode === 'sea' ? ["riskMsgSuez"] : [] };
     }
 
     function getDist(c1, c2) {
