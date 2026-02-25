@@ -68,21 +68,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const rates = { KRW: 1350, EUR: 0.92, USD: 1 };
     const annualICC = 0.15;
 
+    // --- Strategic Global Database ---
     const portCities = {
         "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", country: "South Korea", dutyRate: 0.10 },
         "Port of Shanghai": { coords: [31.2304, 121.4737], hub: "chn-sha", country: "China", dutyRate: 0.15 },
         "Port of Singapore": { coords: [1.3521, 103.8198], hub: "sgp-sin", country: "Singapore", dutyRate: 0.07 },
         "Port of Rotterdam": { coords: [51.9225, 4.4792], hub: "nld-rot", country: "Netherlands", dutyRate: 0.12 },
         "Port of New York": { coords: [40.7128, -74.0060], hub: "usa-nyc", country: "USA", dutyRate: 0.05 },
+        "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", country: "USA", dutyRate: 0.05 },
         "Port of Santos": { coords: [-23.9618, -46.3322], hub: "bra-ssz", country: "Brazil", dutyRate: 0.25 },
-        "Nhava Sheva (Mumbai)": { coords: [18.9498, 72.9481], hub: "ind-bom", country: "India", dutyRate: 0.20 }
+        "Port of Ho Chi Minh": { coords: [10.7626, 106.6602], hub: "vnm-hcm", country: "Vietnam", dutyRate: 0.18 },
+        "Port of Manzanillo": { coords: [19.0522, -104.3158], hub: "mex-mzo", country: "Mexico", dutyRate: 0.12 }
     };
 
     const airportCities = {
         "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", dutyRate: 0.10 },
         "PVG (Shanghai)": { coords: [31.1443, 121.8083], hub: "chn-pvg", country: "China", dutyRate: 0.15 },
+        "SIN (Singapore)": { coords: [1.3644, 103.9915], hub: "sgp-sin-air", country: "Singapore", dutyRate: 0.07 },
         "FRA (Frankfurt)": { coords: [50.0379, 8.5622], hub: "deu-fra", country: "Germany", dutyRate: 0.12 },
-        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", dutyRate: 0.05 }
+        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", dutyRate: 0.05 },
+        "MEX (Mexico City)": { coords: [19.4361, -99.0719], hub: "mex-mex", country: "Mexico", dutyRate: 0.12 }
     };
 
     const hubs = {
@@ -95,8 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
         "deu-fra": { name: "Frankfurt Intl", coords: [50.0379, 8.5622] },
         "usa-nyc": { name: "Port of NY/NJ", coords: [40.6892, -74.0445] },
         "usa-jfk": { name: "John F. Kennedy", coords: [40.6413, -73.7781] },
+        "vnm-hcm": { name: "Cat Lai Port", coords: [10.7589, 106.7914] },
+        "mex-mzo": { name: "Manzanillo Port", coords: [19.0522, -104.3158] },
+        "mex-mex": { name: "Benito Juarez Intl", coords: [19.4361, -99.0719] },
         "bra-ssz": { name: "Port of Santos", coords: [-23.9618, -46.3322] },
-        "ind-bom": { name: "Nhava Sheva", coords: [18.8922, 72.9481] }
+        "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764] },
+        "sgp-sin-air": { name: "Changi Airport", coords: [1.3644, 103.9915] }
     };
 
     const waypoints = { "pacific_mid": [20.0, -160.0], "good_hope": [-34.35, 18.47], "cape_verde": [15.0, -25.0], "suez": [29.9, 32.5] };
@@ -169,15 +178,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalD = transitD + inlandD + handlingD + cDelay;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
 
-        // --- Financial Analysis ---
-        const baseFreight = totalDist * (mode==='sea'?0.15:4.5) * weight;
-        const inventoryCost = (value * annualICC / 365) * totalD;
-        const estDuty = value * (dest.dutyRate || 0.10);
-        const totalImpactUSD = baseFreight + inventoryCost + estDuty;
+        // --- Strategic Recommendation Engine ---
+        const airCostEst = totalDist * 4.5 * weight;
+        const seaCostEst = totalDist * 0.15 * weight;
+        const airTimeEst = (totalDist / 20000) + 2 + 2; // Simple air model
+        const iccSavings = (value * annualICC / 365) * (totalD - airTimeEst);
+        
+        let recommendation = "";
+        if (mode === 'sea' && iccSavings > (airCostEst - seaCostEst)) {
+            recommendation = currentLang==='ko' ? "AI 제언: 화물 가치가 높아 항공 운송 전환 시 금융 비용 절감이 운임 상승분보다 큽니다. 항공 운송을 적극 권장합니다." : "AI Strategic Advise: Cargo value is high enough that switching to AIR will save more in ICC than the freight premium. Recommend switching.";
+        } else if (mode === 'sea' && risks.length > 0) {
+            recommendation = currentLang==='ko' ? "리스크 경보: 현재 경로에 중대한 지연 요소가 있습니다. 비즈니스 연속성을 위해 긴급 물량은 항공 분할 선적을 고려하십시오." : "Risk Alert: Major disruptions detected. Consider split-shipment via AIR for urgent stock.";
+        }
 
-        // --- ESG Breakdown ---
         const co2KgTransit = Math.round((mDist * (mode==='sea'?25:500) * weight) / 1000);
-        const co2KgInland = Math.round(((fDist + lDist) * 80 * weight) / 1000); // Trucking avg 80g
+        const co2KgInland = Math.round(((fDist + lDist) * 80 * weight) / 1000);
         const totalCo2 = co2KgTransit + co2KgInland;
         const trees = Math.ceil(totalCo2 / 22);
 
@@ -202,15 +217,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="text-5xl font-black text-indigo-900">${Math.round(totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
                         <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString(currentLang==='ko'?'ko-KR':'en-US')}</p>
                     </div>
+                    
+                    ${recommendation ? `
+                        <div class="p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl">
+                            <p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">${t.aiRec}</p>
+                            <p class="text-xs font-semibold text-gray-700 leading-relaxed">${recommendation}</p>
+                        </div>
+                    ` : ''}
+
                     <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.journeyLog}</p><div class="space-y-4 text-xs font-semibold text-gray-700"><p>• ${originName} Departure</p><p>• Main Transit (~${Math.round(transitD)} Days)</p><p>• ${destName} Final Arrival</p></div></div>
                 </div>
 
                 <div id="tab-content-finance" class="tab-pane hidden space-y-4">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
-                        <div class="flex justify-between text-sm"><span>${t.freightCost}</span><span class="font-bold">${convert(baseFreight)}</span></div>
-                        <div class="flex justify-between text-sm"><span>${t.inventoryCost}</span><span class="font-bold text-orange-500">${convert(inventoryCost)}</span></div>
-                        <div class="flex justify-between text-sm"><span>${t.dutyTax}</span><span class="font-bold text-blue-500">${convert(estDuty)}</span></div>
-                        <div class="border-t pt-3 flex justify-between font-black text-gray-900 text-lg"><span>${t.totalImpact}</span><span>${convert(totalImpactUSD)}</span></div>
+                        <div class="flex justify-between text-sm"><span>${t.freightCost}</span><span class="font-bold">${convert(totalDist * (mode==='sea'?0.15:4.5) * weight)}</span></div>
+                        <div class="flex justify-between text-sm"><span>${t.inventoryCost}</span><span class="font-bold text-orange-500">${convert((value * annualICC / 365) * totalD)}</span></div>
+                        <div class="flex justify-between text-sm"><span>${t.dutyTax}</span><span class="font-bold text-blue-500">${convert(value * (dest.dutyRate || 0.1))}</span></div>
+                        <div class="border-t pt-3 flex justify-between font-black text-gray-900 text-lg"><span>${t.totalImpact}</span><span>${convert((totalDist * (mode==='sea'?0.15:4.5) * weight) + (value * annualICC / 365) * totalD + (value * (dest.dutyRate || 0.1)))}</span></div>
                     </div>
                 </div>
 
@@ -218,10 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
                         <p class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-2">${t.esgOffset}</p>
                         <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${trees}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
-                        <div class="mt-4 pt-4 border-t border-indigo-800 text-[9px] flex justify-between">
-                            <span>Main Transit: ${co2KgTransit.toLocaleString()}kg</span>
-                            <span>Inland: ${co2KgInland.toLocaleString()}kg</span>
-                        </div>
                     </div>
                 </div>
             </div>`;
@@ -246,12 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (health > 70) { statusText.innerText = "Network Stable"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500"; }
         else { statusText.innerText = "Elevated Alert"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
         
-        let dynamicNews = `<span>Route intelligence active for ${o.country} to ${d.country}.</span>`;
-        if (d.country === "Brazil") dynamicNews += "<span>Brazil's Port Santos facing labor negotiation delays.</span>";
-        if (d.country === "India") dynamicNews += "<span>Nhava Sheva digital customs pilot reducing paperwork by 20%.</span>";
-        newsTicker.innerHTML = dynamicNews + "<span>Shanghai Port automation improving efficiency.</span><span>EU CBAM regulations in transition phase.</span>";
+        let dynamicNews = `<span>Market analysis active for ${o.country} to ${d.country} trade lane.</span>`;
+        if (d.country === "Vietnam") dynamicNews += "<span>Vietnam hubs expanding capacity to meet 2026 electronics export surge.</span>";
+        if (d.country === "Mexico") dynamicNews += "<span>Mexico Port Manzanillo nearing 92% capacity due to US near-shoring.</span>";
+        newsTicker.innerHTML = dynamicNews + "<span>Shanghai Port automation efficiency at record highs.</span>";
 
-        feedContainer.innerHTML = (risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Alert: ${risks.join(' & ')}.</div>` : '') + `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">${d.country} duty estimate based on ${Math.round(d.dutyRate*100)}% standard rate for general cargo.</div>`;
+        feedContainer.innerHTML = (risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Warning: ${risks.join(' & ')}. Impacting schedules by up to 12 days.</div>` : '') + `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">Duty notice: Standard rate for ${d.country} applied. Verify HTS codes before booking.</div>`;
     }
 
     function renderMap(path, o, d, oH, dH, oN, dN, sandbox) {
