@@ -76,58 +76,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentLang = 'en';
 
-    // 정밀 해상 노드 (내륙 침범 방지용 좌표망)
+    // 1. 초정밀 해상 노드 (육지 완전 회피 그리드)
     const seaNodes = {
-        // Korea & NE Asia
-        "pusan_exit": [34.0, 130.0], "incheon_exit": [37.0, 124.0], "shanghai_exit": [31.0, 123.0],
-        "jeju_s": [32.5, 127.0], "tokyo_exit": [34.5, 140.5], "taipei_exit": [25.5, 122.5],
-        // SE Asia
-        "luzon_strait": [20.0, 121.0], "hongkong_exit": [21.5, 114.5], "vietnam_s": [8.5, 107.0],
-        "singapore": [1.2, 104.0], "malacca_w": [6.0, 95.0], "indonesia_s": [-10.0, 115.0],
+        // Korea Coastal (Detailed Bypass)
+        "pusan_gate": [35.0, 129.1], "geoje_s": [34.5, 128.8], "namhae_s": [34.1, 127.8], "jeju_nw": [33.8, 125.8], "jeju_s": [32.5, 126.5], "incheon_gate": [37.2, 126.1], "yellow_sea_mid": [35.5, 124.5],
+        // NE Asia
+        "shanghai_gate": [31.2, 122.5], "shanghai_outer": [30.5, 123.5], "kyushu_s": [30.5, 131.0], "tokyo_gate": [35.0, 140.0], "tokyo_outer": [34.0, 141.0], "taipei_gate": [25.2, 122.0], "taipei_outer": [25.5, 123.0], "luzon_strait": [20.0, 121.5], "hongkong_gate": [22.1, 114.3], "hongkong_outer": [21.5, 115.0],
+        // SE Asia (Detailed Malacca)
+        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "gulf_thailand": [6.5, 102.5], "malacca_east": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0], "indonesia_south": [-10.0, 115.0], "sunda_strait": [-6.2, 105.5],
         // Indian Ocean
-        "srilanka": [5.0, 80.0], "mumbai_exit": [18.5, 72.0], "dubai_exit": [25.5, 56.0],
-        "bab_el_mandeb": [12.5, 43.5], "red_sea_mid": [20.0, 38.5], "suez": [29.9, 32.5],
+        "srilanka_s": [5.5, 80.5], "mumbai_gate": [18.8, 72.5], "mumbai_outer": [18.5, 71.0], "dubai_gate": [25.2, 55.5], "dubai_outer": [25.8, 56.8], "arabian_sea_mid": [15.0, 62.0], "bab_el_mandeb": [12.6, 43.3], "red_sea_1": [17.0, 40.5], "red_sea_2": [21.0, 38.0], "red_sea_3": [25.0, 36.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
         // Europe & Africa
-        "med_mid": [34.0, 20.0], "gibraltar": [36.0, -5.5], "portugal_w": [40.0, -11.0],
-        "finisterre": [44.0, -10.0], "english_channel": [50.0, -2.0], "rotterdam_exit": [52.5, 4.0],
-        "hamburg_exit": [54.5, 8.5], "good_hope": [-35.5, 20.0], "west_africa": [0.0, -15.0],
+        "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "portugal_w": [39.0, -11.0], "finisterre": [44.5, -10.0], "bay_of_biscay": [46.5, -6.5], "english_channel": [49.8, -3.5], "rotterdam_gate": [52.0, 3.8], "hamburg_gate": [54.0, 8.2], "good_hope": [-36.0, 20.0], "west_africa_1": [15.0, -19.0], "west_africa_2": [0.0, -12.0], "canary_islands": [28.0, -17.0],
         // Americas
-        "nyc_exit": [40.5, -73.0], "florida": [24.5, -81.0], "panama_e": [9.5, -79.5],
-        "panama_w": [8.5, -79.6], "mexico_w": [18.0, -106.0], "lax_exit": [33.5, -119.0],
-        "vancouver_exit": [48.5, -126.0], "brazil_ne": [-5.0, -34.0], "santos_exit": [-24.5, -45.5],
-        // Pacific Waypoints
-        "pacific_mid": [30.0, 175.0], "pacific_east": [35.0, -140.0], "sydney_exit": [-34.0, 152.0]
+        "nyc_gate": [40.2, -73.5], "florida_s": [24.2, -81.0], "bahamas_n": [27.0, -78.5], "caribbean_mid": [16.0, -76.0], "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "mexico_w": [18.5, -106.0], "lax_gate": [33.5, -118.5], "lax_outer": [32.5, -120.0], "vancouver_gate": [49.0, -123.8], "vancouver_outer": [48.5, -126.5], "brazil_e": [-6.0, -34.0], "santos_gate": [-24.2, -46.0], "santos_outer": [-25.5, -45.0], "cape_horn": [-57.5, -67.0],
+        // Mid Oceans (Antimeridian Handling)
+        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "atlantic_mid": [32.0, -45.0], "sydney_gate": [-33.9, 151.5], "sydney_outer": [-35.0, 153.0]
     };
 
-    // 해상 전용 연결망 (육지를 가로지르는 연결 없음)
+    // 2. 정밀 해상 연결망 (육지 절대 침범 불가)
     const seaEdges = [
-        ["incheon_exit", "jeju_s"], ["pusan_exit", "jeju_s"], ["jeju_s", "shanghai_exit"],
-        ["jeju_s", "tokyo_exit"], ["shanghai_exit", "taipei_exit"], ["taipei_exit", "luzon_strait"],
-        ["taipei_exit", "hongkong_exit"], ["hongkong_exit", "vietnam_s"], ["vietnam_s", "singapore"],
-        ["luzon_strait", "singapore"], ["singapore", "malacca_w"], ["malacca_w", "srilanka"],
-        ["srilanka", "mumbai_exit"], ["srilanka", "dubai_exit"], ["dubai_exit", "bab_el_mandeb"],
-        ["bab_el_mandeb", "red_sea_mid"], ["red_sea_mid", "suez"], ["suez", "med_mid"],
-        ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"],
-        ["finisterre", "english_channel"], ["english_channel", "rotterdam_exit"], ["rotterdam_exit", "hamburg_exit"],
-        ["srilanka", "good_hope"], ["good_hope", "west_africa"], ["west_africa", "portugal_w"],
-        ["portugal_w", "nyc_exit"], ["nyc_exit", "florida"], ["florida", "panama_e"],
-        ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_exit"],
-        ["lax_exit", "vancouver_exit"], ["tokyo_exit", "pacific_mid"], ["pacific_mid", "pacific_east"],
-        ["pacific_east", "lax_exit"], ["singapore", "indonesia_s"], ["indonesia_s", "sydney_exit"],
-        ["pacific_mid", "sydney_exit"], ["west_africa", "brazil_ne"], ["brazil_ne", "santos_exit"]
+        // Korea Bypass
+        ["incheon_gate", "yellow_sea_mid"], ["yellow_sea_mid", "jeju_nw"], ["jeju_nw", "jeju_s"], ["pusan_gate", "geoje_s"], ["geoje_s", "namhae_s"], ["namhae_s", "jeju_nw"], ["jeju_s", "shanghai_gate"], ["jeju_s", "kyushu_s"],
+        // Asia Network
+        ["shanghai_gate", "shanghai_outer"], ["shanghai_outer", "taipei_outer"], ["taipei_gate", "taipei_outer"], ["taipei_outer", "luzon_strait"], ["taipei_outer", "kyushu_s"], ["kyushu_s", "tokyo_outer"], ["tokyo_gate", "tokyo_outer"], ["luzon_strait", "hongkong_outer"], ["hongkong_gate", "hongkong_outer"], ["hongkong_outer", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "gulf_thailand"], ["gulf_thailand", "malacca_east"], ["vietnam_s", "malacca_east"], ["malacca_east", "singapore_gate"], ["singapore_gate", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"],
+        // Indian Ocean & Suez
+        ["andaman_sea", "srilanka_s"], ["srilanka_s", "mumbai_outer"], ["mumbai_gate", "mumbai_outer"], ["srilanka_s", "arabian_sea_mid"], ["mumbai_outer", "arabian_sea_mid"], ["dubai_outer", "arabian_sea_mid"], ["dubai_gate", "dubai_outer"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "med_mid"], ["srilanka_s", "good_hope"],
+        // Europe & Africa
+        ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"], ["finisterre", "bay_of_biscay"], ["bay_of_biscay", "english_channel"], ["english_channel", "rotterdam_gate"], ["rotterdam_gate", "hamburg_gate"], ["good_hope", "west_africa_2"], ["west_africa_2", "west_africa_1"], ["west_africa_1", "canary_islands"], ["canary_islands", "portugal_w"],
+        // Americas
+        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_gate"], ["nyc_gate", "bahamas_n"], ["bahamas_n", "florida_s"], ["florida_s", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_outer"], ["lax_gate", "lax_outer"], ["lax_outer", "vancouver_outer"], ["vancouver_gate", "vancouver_outer"], ["canary_islands", "brazil_e"], ["brazil_e", "santos_outer"], ["santos_gate", "santos_outer"], ["santos_outer", "cape_horn"],
+        // Pacific (Antimeridian)
+        ["tokyo_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_outer"], ["singapore_gate", "indonesia_south"], ["indonesia_south", "sydney_outer"], ["sydney_gate", "sydney_outer"], ["pacific_mid_w", "sydney_outer"]
     ];
 
     const hubs = {
-        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_exit" },
-        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_exit" },
-        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_exit" },
-        "jpn-tyo": { name: "Tokyo", coords: [35.67, 139.65], exit: "tokyo_exit" },
-        "sgp-sin": { name: "Singapore", coords: [1.26, 103.83], exit: "singapore" },
-        "nld-rot": { name: "Rotterdam", coords: [51.92, 4.47], exit: "rotterdam_exit" },
-        "deu-ham": { name: "Hamburg", coords: [53.55, 9.99], exit: "hamburg_exit" },
-        "usa-lax": { name: "Los Angeles", coords: [33.75, -118.27], exit: "lax_exit" },
-        "usa-nyc": { name: "New York", coords: [40.71, -74.00], exit: "nyc_exit" },
-        "aus-syd": { name: "Sydney", coords: [-33.86, 151.20], exit: "sydney_exit" }
+        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_gate" },
+        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_gate" },
+        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_gate" },
+        "jpn-tyo": { name: "Tokyo", coords: [35.67, 139.65], exit: "tokyo_gate" },
+        "chn-hkg": { name: "Hong Kong", coords: [22.31, 114.16], exit: "hongkong_gate" },
+        "twn-tpe": { name: "Taipei", coords: [25.03, 121.56], exit: "taipei_gate" },
+        "sgp-sin": { name: "Singapore", coords: [1.26, 103.83], exit: "singapore_gate" },
+        "nld-rot": { name: "Rotterdam", coords: [51.92, 4.47], exit: "rotterdam_gate" },
+        "deu-ham": { name: "Hamburg", coords: [53.55, 9.99], exit: "hamburg_gate" },
+        "usa-lax": { name: "Los Angeles", coords: [33.75, -118.27], exit: "lax_gate" },
+        "usa-nyc": { name: "New York", coords: [40.71, -74.00], exit: "nyc_gate" },
+        "aus-syd": { name: "Sydney", coords: [-33.86, 151.20], exit: "sydney_gate" }
     };
 
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
@@ -139,35 +134,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultContainer = document.getElementById('result');
 
     function populate() {
-        const mode = modeSelect.value;
         const curO = originSelect.value, curD = destinationSelect.value;
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
         Object.entries(hubs).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([id,h]) => {
-            const label = `${h.name}, ${h.country || ''}`;
-            originSelect.add(new Option(label, id));
-            destinationSelect.add(new Option(label, id));
+            originSelect.add(new Option(h.name, id));
+            destinationSelect.add(new Option(h.name, id));
         });
         if(curO) originSelect.value = curO; if(curD) destinationSelect.value = curD;
     }
     populate();
 
-    // 다익스트라(Dijkstra) 기반 최단 해상 경로 탐색
     function findMaritimePath(start, end, redSeaRisk) {
-        let distances = {};
-        let previous = {};
-        let nodes = new Set();
-
-        Object.keys(seaNodes).forEach(node => {
-            distances[node] = Infinity;
-            nodes.add(node);
-        });
+        let distances = {}; let previous = {}; let nodes = new Set();
+        Object.keys(seaNodes).forEach(node => { distances[node] = Infinity; nodes.add(node); });
         distances[start] = 0;
 
         while (nodes.size > 0) {
-            let closest = Array.from(nodes).reduce((minNode, node) => 
-                distances[node] < distances[minNode] ? node : minNode
-            );
-
+            let closest = Array.from(nodes).reduce((min, n) => distances[n] < distances[min] ? n : min);
             if (closest === end || distances[closest] === Infinity) break;
             nodes.delete(closest);
 
@@ -175,57 +158,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-
-                // 리스크 구간 차단
-                if (redSeaRisk && (neighbor === "red_sea_mid" || neighbor === "bab_el_mandeb")) return;
+                if (redSeaRisk && (neighbor === "red_sea_1" || neighbor === "bab_el_mandeb" || neighbor === "suez_s")) return;
 
                 let d = getDist(seaNodes[closest], seaNodes[neighbor]);
                 let alt = distances[closest] + d;
-                if (alt < distances[neighbor]) {
-                    distances[neighbor] = alt;
-                    previous[neighbor] = closest;
-                }
+                if (alt < distances[neighbor]) { distances[neighbor] = alt; previous[neighbor] = closest; }
             });
         }
-
-        let path = [];
-        let curr = end;
-        while (curr) {
-            path.unshift(seaNodes[curr]);
-            curr = previous[curr];
-        }
+        let path = []; let curr = end;
+        while (curr) { path.unshift(seaNodes[curr]); curr = previous[curr]; }
         return path;
     }
 
     function solveRoute(oId, dId, mode, sandbox) {
         const o = hubs[oId], d = hubs[dId];
         let rawPath = [o.coords];
-        
         if (mode === 'sea') {
-            const maritimePath = findMaritimePath(o.exit, d.exit, sandbox.redSea);
-            rawPath = rawPath.concat(maritimePath);
+            rawPath = rawPath.concat(findMaritimePath(o.exit, d.exit, document.getElementById('risk-redsea').checked));
         }
         rawPath.push(d.coords);
 
-        // Antimeridian 보정 (그리기용)
         let finalPath = [rawPath[0]];
         for (let i = 1; i < rawPath.length; i++) {
             let prev = finalPath[i - 1], cur = [...rawPath[i]];
             let diff = cur[1] - prev[1];
-            if (diff > 180) cur[1] -= 360;
-            else if (diff < -180) cur[1] += 360;
+            if (diff > 180) cur[1] -= 360; else if (diff < -180) cur[1] += 360;
             finalPath.push(cur);
         }
-
         let dist = 0;
         for (let i = 0; i < finalPath.length - 1; i++) dist += getDist(finalPath[i], finalPath[i+1]);
-        
         const speed = mode === 'sea' ? 16 : 850;
         const totalD = (dist / (speed * 1.852 * 24)) + (mode === 'sea' ? 7 : 2);
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + totalD);
-
-        return { totalD, eta, path: finalPath, dist, risks: sandbox.redSea && mode === 'sea' ? ["riskMsgSuez"] : [] };
+        return { totalD, eta, path: finalPath, dist, risks: document.getElementById('risk-redsea').checked && mode === 'sea' ? ["riskMsgSuez"] : [] };
     }
 
     function getDist(c1, c2) {
@@ -246,9 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const oId = originSelect.value, dId = destinationSelect.value;
         if(!oId || !dId || oId === dId) return;
-        const route = solveRoute(oId, dId, modeSelect.value, {
-            redSea: document.getElementById('risk-redsea').checked
-        });
+        const route = solveRoute(oId, dId, modeSelect.value);
         const t = translations[currentLang];
         resultContainer.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
