@@ -1,5 +1,24 @@
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Global Risk Scenarios (Simulating Real-time Intelligence for 2026)
+    const globalRisks = {
+        redSeaCrisis: {
+            active: true,
+            description: "Red Sea/Suez Canal Avoidance due to geopolitical instability.",
+            impact: "Route deviated via Cape of Good Hope (+10-14 days)."
+        },
+        panamaDrought: {
+            active: true,
+            description: "Severe drought conditions at Panama Canal.",
+            impact: "Transit capacity reduced; extended waiting times applied (+5 days)."
+        },
+        russiaAirspace: {
+            active: true,
+            description: "Russian Airspace Closure for Western carriers.",
+            impact: "Flight paths rerouted via Southern Corridor or Polar/Alaska routes."
+        }
+    };
+
     const locations = {
         "New York": { coords: [40.7128, -74.0060], country: "USA", hubs: { sea: "usa-nyc", air: "usa-jfk" }, scmIssues: "Port labor negotiations on East Coast; Driver shortages in regional trucking." },
         "Los Angeles": { coords: [34.0522, -118.2437], country: "USA", hubs: { sea: "usa-lax", air: "usa-lax-air" }, scmIssues: "Ongoing congestion at San Pedro Bay; Warehouse capacity limits." },
@@ -73,10 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
         "cape": [-34.35, 18.47],
         "bab_el_mandeb": [12.6, 43.3],
         "south_tip_india": [5.9, 80.5],
-        "pacific_mid": [20.0, -160.0] // Honolulu area for trans-pacific
+        "pacific_mid": [20.0, -160.0],
+        // Air Waypoints to avoid Russia
+        "turkey_air": [39.0, 35.0], 
+        "alaska_air": [64.0, -150.0] 
     };
 
-    function getSeaRoute(originHub, destHub) {
+    function getSeaRoute(originHub, destHub, activeRisks) {
         let path = [originHub.coords];
         const oLon = originHub.coords[1];
         const dLon = destHub.coords[1];
@@ -90,31 +112,48 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (oLon > 100 && dLon < -100) {
              path.push(waypoints.pacific_mid);
         }
-        // Asia to Europe via Suez
+        // Asia to Europe
         else if ((oLon > 60 && dLon < 20) || (oLon < 20 && dLon > 60)) {
-            if (oLon > 60) { // East to West
+            // Check Red Sea Risk
+            const useCape = globalRisks.redSeaCrisis.active;
+            
+            if (oLon > 60) { // East to West (Asia -> Europe)
                 path.push(waypoints.malacca);
-                path.push(waypoints.south_tip_india);
-                path.push(waypoints.bab_el_mandeb);
-                path.push(waypoints.suez);
+                if (useCape) {
+                    path.push(waypoints.south_tip_india);
+                    path.push(waypoints.cape); // Reroute via Cape
+                    activeRisks.push(globalRisks.redSeaCrisis);
+                } else {
+                    path.push(waypoints.south_tip_india);
+                    path.push(waypoints.bab_el_mandeb);
+                    path.push(waypoints.suez);
+                }
                 path.push(waypoints.gibraltar);
-            } else { // West to East
+            } else { // West to East (Europe -> Asia)
                 path.push(waypoints.gibraltar);
-                path.push(waypoints.suez);
-                path.push(waypoints.bab_el_mandeb);
-                path.push(waypoints.south_tip_india);
+                if (useCape) {
+                    path.push(waypoints.cape); // Reroute via Cape
+                    path.push(waypoints.south_tip_india);
+                    activeRisks.push(globalRisks.redSeaCrisis);
+                } else {
+                    path.push(waypoints.suez);
+                    path.push(waypoints.bab_el_mandeb);
+                    path.push(waypoints.south_tip_india);
+                }
                 path.push(waypoints.malacca);
             }
         }
         // US East Coast to Asia via Panama
         else if (oLon > -80 && oLon < -60 && dLon > 100) {
             path.push(waypoints.panama);
+            if (globalRisks.panamaDrought.active) activeRisks.push(globalRisks.panamaDrought);
             path.push(waypoints.pacific_mid);
         }
         // Asia to US East Coast via Panama
         else if (oLon > 100 && dLon > -80 && dLon < -60) {
             path.push(waypoints.pacific_mid);
             path.push(waypoints.panama);
+            if (globalRisks.panamaDrought.active) activeRisks.push(globalRisks.panamaDrought);
         }
         // Europe to South America
         else if (oLon < 20 && oLon > -10 && dLat < -10 && dLon < -30) {
@@ -125,13 +164,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return path;
     }
 
-    function getAirRoute(originCoords, destCoords) {
+    function getAirRoute(originCoords, destCoords, activeRisks) {
         const path = [];
         const steps = 30;
         
-        // Handle Antimeridian for Air
         let startLon = originCoords[1];
         let endLon = destCoords[1];
+        let startLat = originCoords[0];
+        let endLat = destCoords[0];
+
+        // Check for Russia Airspace Avoidance (Europe <-> East Asia)
+        let avoidRussia = false;
+        if (globalRisks.russiaAirspace.active) {
+            // Simple heuristic: if flying between Europe (Lon -10 to 30) and East Asia (Lon 100+), risk applies
+            const isEurope = (startLon > -10 && startLon < 30) || (endLon > -10 && endLon < 30);
+            const isEastAsia = (startLon > 100) || (endLon > 100);
+            if (isEurope && isEastAsia) {
+                avoidRussia = true;
+                activeRisks.push(globalRisks.russiaAirspace);
+            }
+        }
         
         if (Math.abs(startLon - endLon) > 180) {
             if (startLon > 0) endLon += 360;
@@ -140,11 +192,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i <= steps; i++) {
             const f = i / steps;
-            const lat = originCoords[0] + (destCoords[0] - originCoords[0]) * f;
+            let lat = startLat + (endLat - startLat) * f;
             const lon = startLon + (endLon - startLon) * f;
             
+            // Standard Great Circle Arc
             const dist = calculateDistance(originCoords, destCoords);
-            const offset = Math.sin(Math.PI * f) * (dist / 12000) * 15; 
+            let offset = Math.sin(Math.PI * f) * (dist / 12000) * 15;
+
+            // Apply Russia Avoidance Logic
+            if (avoidRussia) {
+                // If the path tries to go too high north (into Russia), push it south
+                // Very rough approximation for visualization
+                if (lat > 45) {
+                    offset -= 20; // Push south significantly
+                }
+            }
+            
             path.push([lat + offset, lon]);
         }
         return path;
@@ -171,15 +234,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let middleMilePath = [];
         let middleMileDist = 0;
+        let activeRisks = []; // Track risks triggered by this specific route
 
         if (transportMode === 'sea') {
-            middleMilePath = getSeaRoute(originHub, destHub);
+            middleMilePath = getSeaRoute(originHub, destHub, activeRisks);
             for (let i = 0; i < middleMilePath.length - 1; i++) {
                 middleMileDist += calculateDistance(middleMilePath[i], middleMilePath[i+1]);
             }
         } else {
-            middleMilePath = getAirRoute(originHub.coords, destHub.coords);
-            middleMileDist = calculateDistance(originHub.coords, destHub.coords);
+            middleMilePath = getAirRoute(originHub.coords, destHub.coords, activeRisks);
+            // Re-calculate distance roughly from path for air to include detour
+            for (let i = 0; i < middleMilePath.length - 1; i++) {
+                middleMileDist += calculateDistance(middleMilePath[i], middleMilePath[i+1]);
+            }
         }
 
         const firstMileDist = calculateDistance(origin.coords, originHub.coords);
@@ -191,13 +258,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const handlingTime = { sea: 5, air: 2 }; 
         leadTime += handlingTime[transportMode];
 
+        // Apply Time Penalties from Risks
+        activeRisks.forEach(risk => {
+            if (risk === globalRisks.redSeaCrisis) leadTime += 12; // Extra days for Cape route
+            if (risk === globalRisks.panamaDrought) leadTime += 5; // Waiting time
+            if (risk === globalRisks.russiaAirspace) leadTime += 1; // Slight delay for air detour
+        });
+
         switch (cargoType) {
             case 'Refrigerated': leadTime *= 1.1; break;
             case 'Dangerous Goods': leadTime *= 1.3; break;
         }
 
+        // Generate Risk Alert HTML
+        let riskAlertHtml = '';
+        if (activeRisks.length > 0) {
+            riskAlertHtml = `
+                <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                    <h4 class="font-bold text-red-700 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Critical Route Adjustments Applied
+                    </h4>
+                    <ul class="mt-2 space-y-1 text-sm text-red-700">
+                        ${activeRisks.map(risk => `<li>• <strong>${risk.description}</strong>: ${risk.impact}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
         resultDiv.innerHTML = `
             <div class="space-y-4">
+                ${riskAlertHtml}
                 <p class="text-2xl font-bold text-blue-600">Estimated Lead Time: ${Math.round(leadTime)} days</p>
                 <div class="text-sm text-gray-500 mb-2">Total Distance: ${Math.round(middleMileDist + firstMileDist + lastMileDist).toLocaleString()} km</div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
