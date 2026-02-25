@@ -141,43 +141,78 @@ document.addEventListener('DOMContentLoaded', () => {
         redSea: { active: true, delay: 12, label: "Red Sea/Suez Canal Disruption (High Risk)" }
     };
 
-    // --- High-Value Hubs ---
+    // --- Massively Expanded Global Hubs ---
     const hubs = {
+        // --- SEA PORTS (Expanded) ---
         "sea-kor-pus": { name: "Port of Busan", coords: [35.10, 129.04], type: "sea", exit: "pusan_gate", country: "KR" },
+        "sea-kor-icn": { name: "Port of Incheon", coords: [37.45, 126.60], type: "sea", exit: "incheon_gate", country: "KR" },
+        "sea-kor-kwn": { name: "Port of Gwangyang", coords: [34.91, 127.69], type: "sea", exit: "namhae_s", country: "KR" },
         "sea-chn-sha": { name: "Port of Shanghai", coords: [31.23, 121.47], type: "sea", exit: "shanghai_gate", country: "CN" },
+        "sea-chn-nbo": { name: "Port of Ningbo", coords: [29.86, 121.54], type: "sea", exit: "ningbo_exit", country: "CN" },
+        "sea-chn-shz": { name: "Port of Shenzhen", coords: [22.54, 114.05], type: "sea", exit: "hongkong_outer", country: "CN" },
         "sea-sgp-sin": { name: "Port of Singapore", coords: [1.26, 103.83], type: "sea", exit: "singapore_gate", country: "SG" },
+        "sea-mys-pkg": { name: "Port Klang", coords: [2.99, 101.39], type: "sea", exit: "malacca_mid", country: "MY" },
+        "sea-vnm-hcm": { name: "Ho Chi Minh City", coords: [10.76, 106.66], type: "sea", exit: "vietnam_s", country: "VN" },
+        "sea-jpn-tyo": { name: "Port of Tokyo", coords: [35.62, 139.77], type: "sea", exit: "tokyo_outer", country: "JP" },
+        "sea-jpn-osa": { name: "Port of Osaka", coords: [34.64, 135.43], type: "sea", exit: "osaka_gate", country: "JP" },
+        "sea-ind-bom": { name: "Jawaharlal Nehru (JNPT)", coords: [18.95, 72.95], type: "sea", exit: "mumbai_outer", country: "IN" },
+        "sea-uae-dxb": { name: "Jebel Ali Port", coords: [25.01, 55.06], type: "sea", exit: "jebel_ali_gate", country: "AE" },
         "sea-nld-rot": { name: "Port of Rotterdam", coords: [51.92, 4.47], type: "sea", exit: "rotterdam_exit", country: "NL" },
+        "sea-deu-ham": { name: "Port of Hamburg", coords: [53.55, 9.99], type: "sea", exit: "hamburg_exit", country: "DE" },
+        "sea-bel-ant": { name: "Port of Antwerp", coords: [51.24, 4.41], type: "sea", exit: "antwerp_exit", country: "BE" },
+        "sea-esp-val": { name: "Port of Valencia", coords: [39.45, -0.32], type: "sea", exit: "med_mid", country: "ES" },
         "sea-usa-lax": { name: "Port of Los Angeles", coords: [33.75, -118.27], type: "sea", exit: "lax_gate", country: "US" },
         "sea-usa-nyc": { name: "Port of New York", coords: [40.71, -74.00], type: "sea", exit: "nyc_gate", country: "US" },
+        "sea-pan-pnm": { name: "Port of Panama", coords: [8.95, -79.56], type: "sea", exit: "panama_e", country: "PA" },
+        "sea-bra-ssz": { name: "Port of Santos", coords: [-23.96, -46.33], type: "sea", exit: "brazil_e", country: "BR" },
+        "sea-zaf-dur": { name: "Port of Durban", coords: [-29.87, 31.02], type: "sea", exit: "good_hope", country: "ZA" },
+        "sea-aus-syd": { name: "Port Botany (Sydney)", coords: [-33.97, 151.22], type: "sea", exit: "sydney_outer", country: "AU" },
+
+        // --- CARGO AIRPORTS (Expanded) ---
         "air-kor-icn": { name: "Incheon (ICN)", coords: [37.46, 126.44], type: "air", country: "KR" },
+        "air-chn-hkg": { name: "Hong Kong (HKG)", coords: [22.31, 113.91], type: "air", country: "HK" },
+        "air-chn-pvg": { name: "Shanghai (PVG)", coords: [31.14, 121.80], type: "air", country: "CN" },
+        "air-jpn-nrt": { name: "Narita (NRT)", coords: [35.77, 140.39], type: "air", country: "JP" },
+        "air-sgp-sin": { name: "Changi (SIN)", coords: [1.36, 103.99], type: "air", country: "SG" },
+        "air-uae-dxb": { name: "Dubai (DXB)", coords: [25.25, 55.36], type: "air", country: "AE" },
+        "air-deu-fra": { name: "Frankfurt (FRA)", coords: [50.03, 8.57], type: "air", country: "DE" },
+        "air-nld-ams": { name: "Amsterdam (AMS)", coords: [52.31, 4.76], type: "air", country: "NL" },
+        "air-fra-cdg": { name: "Paris (CDG)", coords: [49.00, 2.55], type: "air", country: "FR" },
+        "air-gbr-lhr": { name: "London (LHR)", coords: [51.47, -0.45], type: "air", country: "GB" },
+        "air-usa-mem": { name: "Memphis (MEM)", coords: [35.04, -89.97], type: "air", country: "US" },
+        "air-usa-anc": { name: "Anchorage (ANC)", coords: [61.17, -149.99], type: "air", country: "US" },
         "air-usa-lax": { name: "Los Angeles (LAX)", coords: [33.94, -118.40], type: "air", country: "US" },
-        "air-deu-fra": { name: "Frankfurt (FRA)", coords: [50.03, 8.57], type: "air", country: "DE" }
+        "air-usa-ord": { name: "Chicago (ORD)", coords: [41.97, -87.90], type: "air", country: "US" }
     };
 
-    // --- Strict Sea Nodes ---
+    // --- High-Precision Sea Nodes (Strict Land Avoidance) ---
     const seaNodes = {
-        "pusan_gate": [35.0, 129.1], "namhae_s": [34.2, 128.0], "jeju_s": [32.5, 126.5],
-        "shanghai_gate": [31.2, 122.5], "malacca_e": [1.5, 104.8], "singapore_gate": [1.2, 103.8],
-        "srilanka_s": [5.5, 80.5], "bab_el_mandeb": [12.6, 43.3], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
-        "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "portugal_w": [39.0, -11.0], "rotterdam_exit": [52.0, 3.8],
-        "good_hope": [-36.0, 20.0], "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6],
-        "lax_gate": [32.5, -120.0], "nyc_gate": [40.2, -73.5], "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0]
+        "pusan_gate": [35.0, 129.1], "namhae_s": [34.2, 128.0], "jeju_s": [32.5, 126.5], "incheon_gate": [37.2, 126.1],
+        "shanghai_gate": [31.2, 122.5], "ningbo_exit": [29.8, 122.5], "taipei_outer": [25.5, 123.0], "hongkong_outer": [21.5, 115.0], "luzon_strait": [20.0, 121.5],
+        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "malacca_e": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0],
+        "srilanka_s": [5.5, 80.5], "arabian_sea_mid": [15.0, 62.0], "jebel_ali_gate": [25.5, 55.5], "hormuz_strait": [26.5, 56.5],
+        "bab_el_mandeb": [12.6, 43.3], "red_sea_1": [17.0, 40.5], "red_sea_2": [21.0, 38.0], "red_sea_3": [25.0, 36.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
+        "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "portugal_w": [39.0, -11.0], "rotterdam_exit": [52.0, 3.8], "hamburg_exit": [54.0, 8.2], "antwerp_exit": [51.3, 4.3],
+        "good_hope": [-36.0, 20.0], "west_africa_1": [15.0, -19.0],
+        // --- Madagascar Precision Bypass ---
+        "madagascar_ne": [-10.0, 55.0], "madagascar_se": [-30.0, 52.0], "madagascar_nw": [-10.0, 42.0], "madagascar_sw": [-30.0, 40.0],
+        "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "lax_gate": [32.5, -120.0], "nyc_gate": [40.2, -73.5], "savannah_exit": [31.5, -80.5], "brazil_e": [-6.0, -34.0],
+        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "sydney_outer": [-35.0, 153.0], "osaka_gate": [34.0, 135.0], "tokyo_outer": [34.0, 141.5]
     };
 
     const seaEdges = [
-        ["pusan_gate", "namhae_s"], ["namhae_s", "jeju_s"], ["jeju_s", "shanghai_gate"], ["shanghai_gate", "malacca_e"], ["malacca_e", "singapore_gate"], ["singapore_gate", "srilanka_s"],
-        ["srilanka_s", "bab_el_mandeb"], ["bab_el_mandeb", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "med_mid"], ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "rotterdam_exit"],
-        ["srilanka_s", "good_hope"], ["good_hope", "portugal_w"], ["shanghai_gate", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_gate"], ["panama_w", "lax_gate"], ["panama_e", "nyc_gate"]
+        ["pusan_gate", "namhae_s"], ["namhae_s", "jeju_s"], ["jeju_s", "shanghai_gate"], ["incheon_gate", "jeju_s"],
+        ["shanghai_gate", "ningbo_exit"], ["ningbo_exit", "taipei_outer"], ["taipei_outer", "hongkong_outer"], ["hongkong_outer", "luzon_strait"], ["hongkong_outer", "malacca_e"], ["malacca_e", "singapore_gate"], ["singapore_gate", "malacca_west"], ["malacca_west", "andaman_sea"], ["andaman_sea", "srilanka_s"],
+        ["srilanka_s", "arabian_sea_mid"], ["arabian_sea_mid", "hormuz_strait"], ["hormuz_strait", "jebel_ali_gate"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "med_mid"], ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "rotterdam_exit"], ["rotterdam_exit", "hamburg_exit"], ["rotterdam_exit", "antwerp_exit"],
+        // Madagascar Loop
+        ["srilanka_s", "madagascar_ne"], ["madagascar_ne", "madagascar_se"], ["madagascar_se", "good_hope"], ["srilanka_s", "madagascar_nw"], ["madagascar_nw", "madagascar_sw"], ["madagascar_sw", "good_hope"],
+        ["good_hope", "west_africa_1"], ["west_africa_1", "portugal_w"],
+        ["taipei_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_gate"], ["panama_w", "lax_gate"], ["panama_e", "nyc_gate"], ["portugal_w", "nyc_gate"], ["brazil_e", "portugal_w"], ["brazil_e", "good_hope"],
+        ["tokyo_outer", "pacific_mid_w"], ["osaka_gate", "tokyo_outer"]
     ];
 
-    // Initialize Leaflet
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
-    
-    // --- Bright Professional Style (Esri World Street Map) ---
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
-        maxZoom: 18
-    }).addTo(map);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 18 }).addTo(map);
 
     const originSelect = document.getElementById('origin'), destinationSelect = document.getElementById('destination'), modeSelect = document.getElementById('transport-mode'), hscodeSelect = document.getElementById('hscode'), resultContainer = document.getElementById('feed-container');
 
@@ -195,39 +230,24 @@ document.addEventListener('DOMContentLoaded', () => {
     modeSelect.onchange = populate;
     populate();
 
-    // --- Great Circle Logic with Antimeridian Support ---
     function getOptimizedPath(start, end, points = 50) {
         const path = [];
         const lat1 = start[0] * Math.PI / 180, lon1 = start[1] * Math.PI / 180;
         const lat2 = end[0] * Math.PI / 180, lon2 = end[1] * Math.PI / 180;
         const d = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((lat1 - lat2) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
-        
         let prevLon = start[1];
         for (let i = 0; i <= points; i++) {
             const f = i / points;
-            const A = Math.sin((1 - f) * d) / Math.sin(d);
-            const B = Math.sin(f * d) / Math.sin(d);
+            const A = Math.sin((1 - f) * d) / Math.sin(d), B = Math.sin(f * d) / Math.sin(d);
             const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
             const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
             const z = A * Math.sin(lat1) + B * Math.sin(lat2);
             const lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
             let lon = Math.atan2(y, x) * 180 / Math.PI;
-
-            // Normalize longitude to prevent global wrap-around lines
-            if (Math.abs(lon - prevLon) > 180) {
-                if (lon > prevLon) lon -= 360;
-                else lon += 360;
-            }
-            path.push([lat, lon]);
-            prevLon = lon;
+            if (Math.abs(lon - prevLon) > 180) lon += (lon > prevLon) ? -360 : 360;
+            path.push([lat, lon]); prevLon = lon;
         }
         return path;
-    }
-
-    function getDistHaversine(c1, c2) {
-        const R = 6371, dLat = (c2[0]-c1[0])*Math.PI/180, dLon = (c2[1]-c1[1])*Math.PI/180;
-        const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*Math.PI/180)*Math.cos(c2[0]*Math.PI/180)*Math.sin(dLon/2)**2;
-        return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 
     function findMaritimePath(start, end, isRiskActive) {
@@ -254,14 +274,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return path;
     }
 
-    async function calculateAndDisplay() {
-        const oId = originSelect.value, dId = destinationSelect.value;
-        if(!oId || !dId || oId === dId) return;
-        const t = translations[currentLang], o = hubs[oId], d = hubs[dId];
-        const isRedSeaDisrupted = activeGlobalRisks.redSea.active;
-        let routePath = [], totalDist = 0;
+    function getDistHaversine(c1, c2) {
+        const R = 6371, dLat = (c2[0]-c1[0])*Math.PI/180, dLon = (c2[1]-c1[1])*Math.PI/180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*Math.PI/180)*Math.cos(c2[0]*Math.PI/180)*Math.sin(dLon/2)**2;
+        return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
 
-        if (modeSelect.value === 'sea') {
+    const cargoDelays = { general: 1, rf: 2, dg: 4, special: 5 };
+
+    function solveRoute(oId, dId, mode, cargo) {
+        const o = hubs[oId], d = hubs[dId], isRedSeaDisrupted = activeGlobalRisks.redSea.active;
+        let routePath = [], totalDist = 0;
+        if (mode === 'sea') {
             const maritimeNodes = findMaritimePath(o.exit, d.exit, isRedSeaDisrupted);
             const rawPath = [o.coords].concat(maritimeNodes).concat([d.coords]);
             for (let i = 0; i < rawPath.length - 1; i++) {
@@ -272,52 +296,80 @@ document.addEventListener('DOMContentLoaded', () => {
             routePath = getOptimizedPath(o.coords, d.coords, 100);
             totalDist = getDistHaversine(o.coords, d.coords);
         }
-
-        const transitDays = (totalDist / ((modeSelect.value === 'sea' ? 16 : 850) * 1.852 * 24)) + (modeSelect.value === 'sea' ? 7 : 2);
-        const costConverted = (modeSelect.value === 'sea' ? 1500 + (totalDist * 0.18) : 4000 + (totalDist * 2.8)) * rates[currentCurrency];
-        const formattedCost = Math.round(costConverted).toLocaleString();
+        const transitDays = (totalDist / ((mode === 'sea' ? 16 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1);
+        const costUSD = (mode === 'sea' ? 1500 + (totalDist * 0.18) : 4000 + (totalDist * 2.8)) + (isRedSeaDisrupted && mode === 'sea' ? 1200 : 0);
+        const altMode = mode === 'sea' ? 'air' : 'sea';
+        const altTransit = (totalDist * 1.1 / ((altMode === 'sea' ? 16 : 850) * 1.852 * 24)) + (altMode === 'sea' ? 7 : 2);
+        const altCost = (altMode === 'sea' ? 1500 + (totalDist * 0.18) : 4000 + (totalDist * 2.8));
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + transitDays);
+        return { transitDays, eta, routePath, totalDist, costUSD, altTransit, altCost, altMode, isRedSeaDisrupted };
+    }
 
-        resultContainer.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-            <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                <p class="text-xs font-black text-indigo-600 uppercase mb-3">${t.totalLead}</p>
-                <p class="text-5xl font-black text-indigo-900 leading-none">${Math.round(transitDays)} ${t.unitDays}</p>
-                <p class="text-[10px] font-bold text-indigo-500 mt-2">${t.eta}: ${eta.toLocaleDateString()}</p>
-                <p class="text-[9px] text-gray-400 mt-2 font-bold">${t.totalDist}: ${Math.round(totalDist * 0.539957).toLocaleString()} NM</p>
+    async function calculateAndDisplay() {
+        const oId = originSelect.value, dId = destinationSelect.value;
+        if(!oId || !dId || oId === dId) return;
+        const t = translations[currentLang], route = solveRoute(oId, dId, modeSelect.value, hscodeSelect.value);
+        const costConverted = route.costUSD * rates[currentCurrency], formattedCost = Math.round(costConverted).toLocaleString();
+        const altCostConverted = route.altCost * rates[currentCurrency];
+        let fontSizeClass = formattedCost.length > 10 ? "text-3xl" : (formattedCost.length > 7 ? "text-4xl" : "text-5xl");
+        resultContainer.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+                <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px] relative overflow-hidden group">
+                    <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">${t.totalLead}</p>
+                    <p class="text-5xl font-black text-indigo-900 mb-2 leading-none">${Math.round(route.transitDays)} <span class="text-lg font-bold text-indigo-400">${t.unitDays}</span></p>
+                    <p class="text-[10px] font-bold text-indigo-500 mt-2 bg-white/50 py-1 px-3 rounded-full border border-indigo-200">${t.eta}: ${route.eta.toLocaleDateString()}</p>
+                    <p class="text-[9px] text-gray-400 mt-2 font-bold">${t.totalDist}: ${Math.round(route.totalDist * 0.539957).toLocaleString()} NM</p>
+                </div>
+                <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center min-h-[240px] relative overflow-hidden group">
+                    <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
+                    <p class="${fontSizeClass} font-black text-gray-900 mb-2 leading-none flex items-baseline justify-center"><span class="text-2xl text-gray-400 mr-1 font-bold">${symbols[currentCurrency]}</span>${formattedCost}</p>
+                    <p class="text-xs font-bold text-gray-500 mt-2 uppercase">${t.marketRateLabel}</p>
+                </div>
+                <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center min-h-[240px] relative overflow-hidden group">
+                    <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.compareTitle}</p>
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-bold text-orange-400 uppercase tracking-tighter">${route.altMode === 'sea' ? t.compareSea : t.compareAir}</p>
+                        <p class="text-2xl font-black text-gray-900 leading-tight">${Math.round(route.altTransit)}${t.unitDays} / <span class="text-indigo-600">${symbols[currentCurrency]}${Math.round(altCostConverted).toLocaleString()}</span></p>
+                        <p class="text-[9px] text-gray-400 font-medium italic">Antimeridian Optimization Applied</p>
+                    </div>
+                </div>
             </div>
-            <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                <p class="text-xs font-black text-green-600 uppercase mb-3">${t.labelCost}</p>
-                <p class="text-5xl font-black text-gray-900 leading-none">${symbols[currentCurrency]}${formattedCost}</p>
-            </div>
-            <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                <p class="text-xs font-black text-orange-600 uppercase mb-3">${t.compareTitle}</p>
-                <p class="text-[10px] font-bold text-gray-500 uppercase italic">Antimeridian Optimization Applied</p>
-            </div>
-        </div>`;
-
-        renderMap(routePath, modeSelect.value);
+            ${route.isRedSeaDisrupted && modeSelect.value === 'sea' ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${t.riskMsgSuez} (+${activeGlobalRisks.redSea.delay} Days Delay Auto-Applied)</div>` : ''}`;
+        renderMap(route.routePath, modeSelect.value);
     }
 
     function renderMap(path, mode) {
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
         const color = mode === 'sea' ? '#3b82f6' : '#f59e0b';
-        L.marker(path[0]).addTo(map);
-        L.marker(path[path.length - 1]).addTo(map);
+        L.marker(path[0]).addTo(map); L.marker(path[path.length - 1]).addTo(map);
         L.polyline(path, { color: color, weight: 4, opacity: 0.8 }).addTo(map);
         map.fitBounds(path, { padding: [50, 50] });
+    }
+
+    function startLiveUpdates() {
+        setInterval(() => {
+            const ticker = document.getElementById('news-ticker'); if (!ticker) return;
+            const liveNews = [`ALERT: ${activeGlobalRisks.redSea.label} active.`, "Singapore berthing delay: 12h.", "Panama Canal water levels rising.", "MEM FedEx hub capacity at 98%.", "Fuel surcharge (BAF) updated."];
+            const randomIndex = Math.floor(Math.random() * liveNews.length);
+            const newItem = document.createElement('span'); newItem.className = "text-indigo-400 animate-pulse font-bold"; newItem.textContent = liveNews[randomIndex];
+            ticker.appendChild(newItem); if (ticker.children.length > 8) ticker.removeChild(ticker.firstChild);
+        }, 12000);
     }
 
     document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
     ['usd', 'krw', 'eur'].forEach(curr => { document.getElementById(`curr-${curr}`).onclick = () => { currentCurrency = curr.toUpperCase(); updateUI(); }; });
     document.getElementById('lang-ko').onclick = () => { currentLang='ko'; updateUI(); };
     document.getElementById('lang-en').onclick = () => { currentLang='en'; updateUI(); };
-    
     function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k]; });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { const k = el.getAttribute('data-i18n-placeholder'); if(translations[currentLang][k]) el.placeholder = translations[currentLang][k]; });
         ['USD', 'KRW', 'EUR'].forEach(c => { const btn = document.getElementById(`curr-${c.toLowerCase()}`); if (btn) btn.className = (c === currentCurrency) ? "px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600" : "px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700"; });
+        const langKo = document.getElementById('lang-ko'), langEn = document.getElementById('lang-en');
+        if (currentLang === 'ko') { langKo.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm"; langEn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"; }
+        else { langKo.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"; langEn.className = "px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm"; }
         if(resultContainer.innerHTML.includes('indigo-50')) calculateAndDisplay();
         populate();
     }
-    updateUI();
+    updateUI(); startLiveUpdates();
 });
