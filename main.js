@@ -2,110 +2,136 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- i18n Dictionary ---
     const translations = {
         en: {
-            subtitle: "Global Logistics & Customs AI Pathfinder",
-            formTitle: "Shipment Config",
+            subtitle: "Global Logistics AI Pathfinder",
+            formTitle: "Route Config",
             labelMode: "Transport Mode",
             labelDate: "Departure Date",
-            labelService: "Service Level",
-            labelOrigin: "Departure",
-            labelDest: "Arrival",
-            btnAnalyze: "RUN INTELLIGENCE ANALYSIS",
-            tabOverview: "Overview",
-            tabFinance: "Financials",
-            tabRisk: "Risk & ESG",
-            tabStrategy: "Strategic Comp",
+            labelOrigin: "Departure City",
+            labelDest: "Arrival City",
+            btnAnalyze: "RUN ROUTE ANALYSIS",
+            tabOverview: "Summary",
+            tabStrategy: "Timeline",
             totalLead: "Total Lead Time",
-            reliability: "Network Health",
             eta: "Estimated ETA",
-            totalImpact: "Total Landed Spend",
-            journeyLog: "Journey Milestones",
-            aiRec: "Strategic SCM Advisory",
-            esgOffset: "Sustainability Impact",
-            carbonTax: "Est. Carbon Tax (Future)",
-            treesMsg: "trees to offset this shipment",
-            volatility: "Lane Reliability Score",
-            recentTitle: "Recent Analyses",
-            shareBtn: "Share Link",
-            copySummary: "Copy Summary",
-            exportCsv: "Export CSV",
-            compTitle: "As-Is vs To-Be Strategy",
-            disclaimer: "• 16kts avg. speed. Strategic advice based on 2026 geo-trends."
+            aiRec: "Routing Intelligence",
+            disclaimer: "• 16kts avg. sea speed. Routes strictly maritime optimized."
         },
         ko: {
-            subtitle: "글로벌 물류 및 통관 AI 경로 분석기",
-            formTitle: "운송 설정",
+            subtitle: "글로벌 물류 AI 경로 분석기",
+            formTitle: "경로 설정",
             labelMode: "운송 수단",
             labelDate: "출발 예정일",
-            labelService: "서비스 등급",
-            labelCargo: "화물 종류",
-            labelOrigin: "출발지",
-            labelDest: "도착지",
-            btnAnalyze: "물류 분석 실행",
-            tabOverview: "종합 요약",
-            tabFinance: "비용 분석",
-            tabRisk: "리스크/ESG",
-            tabStrategy: "전략 비교",
+            labelOrigin: "출발 도시",
+            labelDest: "도착 도시",
+            btnAnalyze: "경로 분석 실행",
+            tabOverview: "요약",
+            tabStrategy: "타임라인",
             totalLead: "총 리드타임",
-            reliability: "네트워크 건전성",
             eta: "최종 도착 예정일",
-            totalImpact: "총 수입 원가 합계",
-            journeyLog: "여정 주요 마일스톤",
-            aiRec: "전략적 SCM 제언",
-            esgOffset: "지속가능성 영향",
-            carbonTax: "예상 탄소세 (미래)",
-            treesMsg: "탄소 상쇄를 위한 소나무 수",
-            volatility: "노선 정시 신뢰도 점수",
-            recentTitle: "최근 분석 기록",
-            shareBtn: "링크 공유",
-            copySummary: "요약 복사",
-            exportCsv: "CSV 내보내기",
-            compTitle: "현재 노선 vs 전략적 대안",
-            disclaimer: "• 16노트 평균속도 기준. 전략 제언은 2026년 지오트렌드를 반영합니다."
+            aiRec: "라우팅 인텔리전스",
+            disclaimer: "• 해상 평균 16노트 기준. 육지 침범 없는 현실적 항로 반영."
         }
     };
 
     let currentLang = 'en';
-    let currentCurrency = 'USD';
-    const rates = { KRW: 1350, EUR: 0.92, USD: 1 };
-    const annualICC = 0.15;
 
-    // --- Enterprise Hub Intelligence ---
+    // --- Global Hubs Expansion (70+ Cities) ---
     const hubs = {
-        "kor-pus": { name: "Busan Port", coords: [35.1069, 129.0453], status: "green", congestion: "Low", type: "Sea", country: "South Korea" },
-        "kor-icn": { name: "Incheon Intl", coords: [37.4602, 126.4407], status: "green", congestion: "Stable", type: "Air", country: "South Korea" },
-        "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833], status: "red", congestion: "High", type: "Sea", country: "China" },
-        "sgp-sin": { name: "Singapore Hub", coords: [1.2644, 103.8398], status: "yellow", congestion: "Medium", type: "Sea", country: "Singapore" },
-        "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450], status: "yellow", congestion: "Medium", type: "Sea", country: "Netherlands" },
-        "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764], status: "red", congestion: "High", type: "Sea", country: "USA" },
-        "mex-man": { name: "Manzanillo Hub", coords: [19.0522, -104.3158], status: "green", congestion: "Low", type: "Sea", country: "Mexico" },
-        "vnm-hcm": { name: "Ho Chi Minh Port", coords: [10.7626, 106.6602], status: "green", congestion: "Stable", type: "Sea", country: "Vietnam" }
+        // ASIA
+        "kor-pus": { name: "Busan", coords: [35.1069, 129.0453], type: "Both", country: "South Korea", region: "NE_ASIA" },
+        "kor-icn": { name: "Incheon", coords: [37.4602, 126.4407], type: "Both", country: "South Korea", region: "NE_ASIA" },
+        "chn-sha": { name: "Shanghai", coords: [31.2304, 121.4737], type: "Both", country: "China", region: "NE_ASIA" },
+        "chn-hkg": { name: "Hong Kong", coords: [22.3193, 114.1694], type: "Both", country: "Hong Kong", region: "SE_ASIA" },
+        "chn-szn": { name: "Shenzhen", coords: [22.5431, 114.0579], type: "Sea", country: "China", region: "SE_ASIA" },
+        "chn-tjn": { name: "Tianjin", coords: [38.9667, 117.7833], type: "Sea", country: "China", region: "NE_ASIA" },
+        "sgp-sin": { name: "Singapore", coords: [1.3521, 103.8198], type: "Both", country: "Singapore", region: "SE_ASIA" },
+        "jpn-tyo": { name: "Tokyo", coords: [35.6762, 139.6503], type: "Both", country: "Japan", region: "NE_ASIA" },
+        "jpn-osa": { name: "Osaka", coords: [34.6937, 135.5023], type: "Both", country: "Japan", region: "NE_ASIA" },
+        "jpn-fuk": { name: "Fukuoka", coords: [33.5904, 130.4017], type: "Both", country: "Japan", region: "NE_ASIA" },
+        "vnm-hcm": { name: "Ho Chi Minh City", coords: [10.8231, 106.6297], type: "Both", country: "Vietnam", region: "SE_ASIA" },
+        "vnm-han": { name: "Haiphong", coords: [20.8449, 106.6881], type: "Sea", country: "Vietnam", region: "SE_ASIA" },
+        "ind-bom": { name: "Mumbai", coords: [19.0760, 72.8777], type: "Both", country: "India", region: "SOUTH_ASIA" },
+        "ind-maa": { name: "Chennai", coords: [13.0827, 80.2707], type: "Both", country: "India", region: "SOUTH_ASIA" },
+        "ind-del": { name: "Delhi", coords: [28.6139, 77.2090], type: "Air", country: "India", region: "SOUTH_ASIA" },
+        "tha-bkk": { name: "Bangkok", coords: [13.7563, 100.5018], type: "Both", country: "Thailand", region: "SE_ASIA" },
+        "mys-kul": { name: "Kuala Lumpur", coords: [3.1390, 101.6869], type: "Both", country: "Malaysia", region: "SE_ASIA" },
+        "twn-tpe": { name: "Taipei", coords: [25.0330, 121.5654], type: "Both", country: "Taiwan", region: "NE_ASIA" },
+        "phl-mnl": { name: "Manila", coords: [14.5995, 120.9842], type: "Both", country: "Philippines", region: "SE_ASIA" },
+        "idn-jk": { name: "Jakarta", coords: [-6.2088, 106.8456], type: "Both", country: "Indonesia", region: "SE_ASIA" },
+
+        // EUROPE
+        "nld-rot": { name: "Rotterdam", coords: [51.9225, 4.4792], type: "Both", country: "Netherlands", region: "EUROPE_NORTH" },
+        "deu-ham": { name: "Hamburg", coords: [53.5511, 9.9937], type: "Both", country: "Germany", region: "EUROPE_NORTH" },
+        "deu-fra": { name: "Frankfurt", coords: [50.1109, 8.6821], type: "Air", country: "Germany", region: "EUROPE_NORTH" },
+        "gbr-lhr": { name: "London", coords: [51.5074, -0.1278], type: "Both", country: "UK", region: "EUROPE_NORTH" },
+        "gbr-fxt": { name: "Felixstowe", coords: [51.9620, 1.3510], type: "Sea", country: "UK", region: "EUROPE_NORTH" },
+        "fra-cdg": { name: "Paris", coords: [48.8566, 2.3522], type: "Both", country: "France", region: "EUROPE_NORTH" },
+        "fra-mrs": { name: "Marseille", coords: [43.2965, 5.3698], type: "Sea", country: "France", region: "EUROPE_SOUTH" },
+        "bel-anr": { name: "Antwerp", coords: [51.2194, 4.4025], type: "Sea", country: "Belgium", region: "EUROPE_NORTH" },
+        "ita-goa": { name: "Genoa", coords: [44.4056, 8.9463], type: "Sea", country: "Italy", region: "EUROPE_SOUTH" },
+        "ita-mil": { name: "Milan", coords: [45.4642, 9.1900], type: "Air", country: "Italy", region: "EUROPE_SOUTH" },
+        "esp-bcn": { name: "Barcelona", coords: [41.3851, 2.1734], type: "Both", country: "Spain", region: "EUROPE_SOUTH" },
+        "esp-vlc": { name: "Valencia", coords: [39.4699, -0.3763], type: "Sea", country: "Spain", region: "EUROPE_SOUTH" },
+        "tur-ist": { name: "Istanbul", coords: [41.0082, 28.9784], type: "Both", country: "Turkey", region: "EUROPE_SOUTH" },
+        "grc-pir": { name: "Piraeus", coords: [37.9475, 23.6461], type: "Sea", country: "Greece", region: "EUROPE_SOUTH" },
+
+        // NORTH AMERICA
+        "usa-lax": { name: "Los Angeles", coords: [34.0522, -118.2437], type: "Both", country: "USA", region: "US_WEST" },
+        "usa-nyc": { name: "New York", coords: [40.7128, -74.0060], type: "Both", country: "USA", region: "US_EAST" },
+        "usa-chi": { name: "Chicago", coords: [41.8781, -87.6298], type: "Air", country: "USA", region: "US_MID" },
+        "usa-sav": { name: "Savannah", coords: [32.0809, -81.0912], type: "Sea", country: "USA", region: "US_EAST" },
+        "usa-hou": { name: "Houston", coords: [29.7604, -95.3698], type: "Both", country: "USA", region: "US_EAST" },
+        "usa-sea": { name: "Seattle", coords: [47.6062, -122.3321], type: "Both", country: "USA", region: "US_WEST" },
+        "can-yvr": { name: "Vancouver", coords: [49.2827, -123.1207], type: "Both", country: "Canada", region: "US_WEST" },
+        "can-yyz": { name: "Toronto", coords: [43.6532, -79.3832], type: "Air", country: "Canada", region: "US_EAST" },
+        "can-mon": { name: "Montreal", coords: [45.5017, -73.5673], type: "Both", country: "Canada", region: "US_EAST" },
+        "mex-mex": { name: "Mexico City", coords: [19.4326, -99.1332], type: "Air", country: "Mexico", region: "MEXICO" },
+        "mex-man": { name: "Manzanillo", coords: [19.0522, -104.3158], type: "Sea", country: "Mexico", region: "MEXICO" },
+        "mex-ver": { name: "Veracruz", coords: [19.1738, -96.1342], type: "Sea", country: "Mexico", region: "MEXICO" },
+
+        // SOUTH AMERICA
+        "bra-sao": { name: "Santos", coords: [-23.9608, -46.3339], type: "Sea", country: "Brazil", region: "SA_EAST" },
+        "bra-rio": { name: "Rio de Janeiro", coords: [-22.9068, -43.1729], type: "Both", country: "Brazil", region: "SA_EAST" },
+        "arg-bue": { name: "Buenos Aires", coords: [-34.6037, -58.3816], type: "Both", country: "Argentina", region: "SA_EAST" },
+        "chl-val": { name: "Valparaiso", coords: [-33.0472, -71.6127], type: "Sea", country: "Chile", region: "SA_WEST" },
+        "col-ctg": { name: "Cartagena", coords: [10.3910, -75.4794], type: "Sea", country: "Colombia", region: "SA_NORTH" },
+
+        // MIDDLE EAST / AFRICA
+        "uae-dxb": { name: "Dubai", coords: [25.2048, 55.2708], type: "Both", country: "UAE", region: "MIDDLE_EAST" },
+        "uae-auh": { name: "Abu Dhabi", coords: [24.4539, 54.3773], type: "Both", country: "UAE", region: "MIDDLE_EAST" },
+        "sau-jed": { name: "Jeddah", coords: [21.5433, 39.1728], type: "Both", country: "Saudi Arabia", region: "MIDDLE_EAST" },
+        "egy-psu": { name: "Port Said", coords: [31.2653, 32.3019], type: "Sea", country: "Egypt", region: "MIDDLE_EAST" },
+        "zaf-cpt": { name: "Cape Town", coords: [-33.9249, 18.4241], type: "Both", country: "South Africa", region: "AFRICA" },
+        "zaf-dur": { name: "Durban", coords: [-29.8587, 31.0218], type: "Both", country: "South Africa", region: "AFRICA" },
+        "mar-cas": { name: "Casablanca", coords: [33.5731, -7.5898], type: "Both", country: "Morocco", region: "AFRICA" },
+        "nga-lag": { name: "Lagos", coords: [6.4550, 3.3841], type: "Both", country: "Nigeria", region: "AFRICA" },
+
+        // OCEANIA
+        "aus-syd": { name: "Sydney", coords: [-33.8688, 151.2093], type: "Both", country: "Australia", region: "OCEANIA" },
+        "aus-mel": { name: "Melbourne", coords: [-37.8136, 144.9631], type: "Both", country: "Australia", region: "OCEANIA" },
+        "aus-bne": { name: "Brisbane", coords: [-27.4698, 153.0251], type: "Both", country: "Australia", region: "OCEANIA" },
+        "nzl-akl": { name: "Auckland", coords: [-36.8485, 174.7633], type: "Both", country: "New Zealand", region: "OCEANIA" }
     };
 
-    const portCities = {
-        "Port of Busan": { hub: "kor-pus", country: "South Korea" },
-        "Port of Shanghai": { hub: "chn-sha", country: "China" },
-        "Port of Singapore": { hub: "sgp-sin", country: "Singapore" },
-        "Port of Rotterdam": { hub: "nld-rot", country: "Netherlands" },
-        "Port of Los Angeles": { hub: "usa-lax", country: "USA" },
-        "Port of Manzanillo": { hub: "mex-man", country: "Mexico" },
-        "Port of Ho Chi Minh": { hub: "vnm-hcm", country: "Vietnam" }
-    };
-
-    const airportCities = {
-        "ICN (Incheon)": { hub: "kor-icn", country: "South Korea" },
-        "JFK (New York)": { hub: "usa-jfk", country: "USA" }
-    };
-
-    const cargoMetadata = {
-        general: { duty: 0.08, vat: 0.10 },
-        electronics: { duty: 0.0, vat: 0.10 },
-        textiles: { duty: 0.12, vat: 0.10 }
-    };
-
-    const waypoints = { "pacific_mid": [20.0, -160.0], "suez": [29.9, 32.5], "good_hope": [-34.35, 18.47] };
-    const riskZones = {
-        "redsea": { coords: [18.0, 40.0], radius: 1200000, color: 'red', label: "Conflict Area" },
-        "panama": { coords: [9.1, -79.7], radius: 600000, color: 'orange', label: "Drought Delay" }
+    // --- Key Maritime Waypoints (The "Skeleton" for realistic paths) ---
+    const nav = {
+        "malacca": [1.2, 103.8],
+        "bab_el_mandeb": [12.6, 43.3],
+        "suez_canal": [29.9, 32.5],
+        "gibraltar": [35.9, -5.3],
+        "panama_canal": [9.1, -79.7],
+        "good_hope": [-35.0, 20.0],
+        "cape_horn": [-56.0, -67.0],
+        "english_channel": [50.0, -1.0],
+        "bering_strait": [66.0, -169.0],
+        "pacific_mid": [20.0, -165.0],
+        "atlantic_mid": [30.0, -40.0],
+        "indian_mid": [-15.0, 75.0],
+        "south_atlantic_mid": [-25.0, -15.0],
+        "south_pacific_mid": [-30.0, -130.0],
+        "around_india": [5.0, 78.0],
+        "around_japan": [35.0, 145.0],
+        "caribbean": [15.0, -75.0]
     };
 
     const modeSelect = document.getElementById('transport-mode');
@@ -114,68 +140,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateInput = document.getElementById('departure-date');
     const resultContainer = document.getElementById('result');
     const executiveActions = document.getElementById('executive-actions');
-    const newsTicker = document.getElementById('news-ticker');
 
     dateInput.valueAsDate = new Date();
 
     function populate() {
         const mode = modeSelect.value;
-        const cities = mode === 'sea' ? portCities : airportCities;
+        const currentOrigin = originSelect.value;
+        const currentDest = destinationSelect.value;
+
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
-        Object.keys(cities).sort().forEach(c => {
-            originSelect.add(new Option(c, c)); destinationSelect.add(new Option(c, c));
-        });
+        Object.entries(hubs)
+            .filter(([id, hub]) => mode === 'air' ? hub.type !== 'Sea' : hub.type !== 'Air')
+            .sort((a, b) => a[1].name.localeCompare(b[1].name))
+            .forEach(([id, hub]) => {
+                const label = `${hub.name}, ${hub.country}`;
+                originSelect.add(new Option(label, id));
+                destinationSelect.add(new Option(label, id));
+            });
+        
+        if (currentOrigin && hubs[currentOrigin]) originSelect.value = currentOrigin;
+        if (currentDest && hubs[currentDest]) destinationSelect.value = currentDest;
     }
 
     modeSelect.onchange = populate;
     populate();
 
-    const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+    const map = L.map('map', { worldCopyJump: true, minZoom: 2 }).setView([20, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
     function calculateAndDisplay() {
         const mode = modeSelect.value;
-        const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
-        const value = parseFloat(document.getElementById('cargo-value').value) || 50000;
-        const category = document.getElementById('cargo-category').value;
-        const departureDate = new Date(dateInput.value);
-        const originName = originSelect.value;
-        const destName = destinationSelect.value;
-
-        if (originName === destName || !originName || !destName) return;
-
-        const oHub = hubs[portCities[originName]?.hub || airportCities[originName]?.hub];
-        const dHub = hubs[portCities[destName]?.hub || airportCities[destName]?.hub];
-        
+        const oId = originSelect.value;
+        const dId = destinationSelect.value;
         const sandbox = {
             redSea: document.getElementById('risk-redsea').checked,
             panama: document.getElementById('risk-panama').checked,
             strike: document.getElementById('risk-strike').checked
         };
 
-        const result = solveRoute(oHub, dHub, mode, weight, value, category, sandbox);
+        if (oId === dId) return;
+        const oHub = hubs[oId];
+        const dHub = hubs[dId];
         
-        // --- Strategy Logic: Near-shoring Alternative ---
-        let alternative = null;
-        if (oHub.country === "China" && dHub.country === "USA") {
-            alternative = solveRoute(hubs["mex-man"], dHub, "sea", weight, value, category, {redSea: false, panama: false, strike: false});
-            alternative.strategyLabel = "Mexico Near-shoring";
-        } else if (mode === "sea") {
-            alternative = solveRoute(oHub, dHub, "air", weight, value, category, sandbox);
-            alternative.strategyLabel = "Air Freight Priority";
-        }
-
+        const route = solveRoute(oHub, dHub, mode, sandbox);
         const t = translations[currentLang];
-        const convert = (val) => {
-            const sym = { USD: '$', KRW: '₩', EUR: '€' };
-            return `${sym[currentCurrency]}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
-        };
 
         resultContainer.innerHTML = `
             <div class="space-y-4 animate-fade-in">
                 <div class="flex bg-gray-100 p-1 rounded-xl">
                     <button onclick="switchTab('overview')" id="tab-overview" class="flex-1 py-2 text-[9px] font-bold rounded-lg bg-white shadow-sm text-indigo-600">${t.tabOverview}</button>
-                    <button onclick="switchTab('finance')" id="tab-finance" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabFinance}</button>
                     <button onclick="switchTab('strategy')" id="tab-strategy" class="flex-1 py-2 text-[9px] font-bold rounded-lg text-gray-500">${t.tabStrategy}</button>
                 </div>
 
@@ -183,84 +198,163 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
                         <div class="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
                         <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
-                        <p class="text-5xl font-black text-indigo-900">${Math.round(result.totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
-                        <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${result.eta.toLocaleDateString()}</p>
+                        <p class="text-5xl font-black text-indigo-900">${Math.round(route.totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
+                        <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${route.eta.toLocaleDateString()}</p>
                     </div>
-                    ${result.recommendation ? `<div class="p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl shadow-sm"><p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">${t.aiRec}</p><p class="text-xs font-semibold text-gray-700 leading-relaxed">${result.recommendation}</p></div>` : ''}
-                </div>
-
-                <div id="tab-content-finance" class="tab-pane hidden space-y-4">
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between"><span>Freight + Handling</span><span class="font-bold">${convert(result.freight)}</span></div>
-                            <div class="flex justify-between text-orange-500"><span>ICC (Capital tying)</span><span class="font-bold">${convert(result.icc)}</span></div>
-                            <div class="border-t pt-2 flex justify-between font-black text-gray-900 text-lg"><span>Landed Cost</span><span>${convert(result.totalSpend)}</span></div>
-                        </div>
-                    </div>
+                    ${route.risks.length > 0 ? `<div class="p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl shadow-sm"><p class="text-[10px] font-bold text-red-600 uppercase mb-1">Navigation Alerts</p><p class="text-xs font-semibold text-gray-700">${route.risks.join('<br>')}</p></div>` : ''}
                 </div>
 
                 <div id="tab-content-strategy" class="tab-pane hidden space-y-4">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.compTitle}</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <p class="text-[8px] font-bold text-gray-400 uppercase mb-1">Current Route</p>
-                                <p class="text-xl font-black text-gray-800">${Math.round(result.totalD)} <span class="text-[10px]">Days</span></p>
-                                <p class="text-xs font-bold text-gray-500">${convert(result.totalSpend)}</p>
-                            </div>
-                            <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100">
-                                <p class="text-[8px] font-bold text-indigo-400 uppercase mb-1">${alternative.strategyLabel}</p>
-                                <p class="text-xl font-black text-indigo-600">${Math.round(alternative.totalD)} <span class="text-[10px]">Days</span></p>
-                                <p class="text-xs font-bold text-indigo-500">${convert(alternative.totalSpend)}</p>
-                            </div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Route Milestones</p>
+                        <div class="space-y-3">
+                            ${route.milestones.map(m => `
+                                <div class="flex items-center gap-3">
+                                    <div class="w-2 h-2 rounded-full bg-indigo-600"></div>
+                                    <div class="flex-1 border-b border-gray-100 pb-1">
+                                        <div class="flex justify-between text-[11px] font-bold">
+                                            <span>${m.name}</span>
+                                            <span class="text-indigo-600">+${m.days}d</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                 </div>
             </div>`;
 
         executiveActions.classList.remove('hidden');
-        renderMap(result.path, oHub, dHub, result.risks, sandbox);
-        updateTicker(oHub, dHub, result.risks);
-        
-        window.currentAnalysis = { originName, destName, mode, totalD: result.totalD, eta: result.eta, convert, totalSpend: result.totalSpend, reliability: result.reliability, risks: result.risks };
+        renderMap(route.path, oHub, dHub);
     }
 
-    function solveRoute(o, d, mode, weight, value, category, sandbox) {
+    function solveRoute(o, d, mode, sandbox) {
         let path = [o.coords];
         let risks = [];
-        let transitD = 0;
-        let handlingD = (mode==='sea' ? 5 : 2);
+        let milestones = [];
 
         if (mode === 'sea') {
-            if (sandbox.redSea) { path.push(waypoints.good_hope); risks.push("Red Sea Redirect"); }
-            else if (dist(o.coords, d.coords) > 8000) path.push(waypoints.suez);
+            // --- ADVANCED MARITIME ROUTING LOGIC ---
+            const r1 = o.region;
+            const r2 = d.region;
+
+            // Helper to check region pair
+            const match = (regA, regB) => (r1 === regA && r2 === regB) || (r1 === regB && r2 === regA);
+            const from = (reg) => r1 === reg;
+            const to = (reg) => r2 === reg;
+
+            // Asia <-> Europe
+            if (match('NE_ASIA', 'EUROPE_NORTH') || match('SE_ASIA', 'EUROPE_NORTH') || match('NE_ASIA', 'EUROPE_SOUTH') || match('SE_ASIA', 'EUROPE_SOUTH')) {
+                path.push(nav.malacca);
+                if (sandbox.redSea) {
+                    path.push(nav.good_hope);
+                    risks.push("Suez Closed: Rerouting via Cape of Good Hope (+12 days)");
+                } else {
+                    path.push(nav.bab_el_mandeb);
+                    path.push(nav.suez_canal);
+                }
+                if (r1.includes('NORTH') || r2.includes('NORTH')) path.push(nav.gibraltar);
+            }
+            // Asia <-> US East Coast
+            else if ((from('NE_ASIA') || from('SE_ASIA')) && to('US_EAST')) {
+                if (sandbox.panama) {
+                    path.push(nav.malacca);
+                    path.push(nav.bab_el_mandeb);
+                    path.push(nav.suez_canal);
+                    path.push(nav.gibraltar);
+                    path.push(nav.atlantic_mid);
+                    risks.push("Panama Congestion: Rerouting via Suez Canal (+8 days)");
+                } else {
+                    path.push(nav.pacific_mid);
+                    path.push(nav.panama_canal);
+                    path.push(nav.caribbean);
+                }
+            }
+            // Asia <-> US West Coast
+            else if ((from('NE_ASIA') || from('SE_ASIA')) && to('US_WEST')) {
+                path.push(nav.pacific_mid);
+            }
+            // Europe <-> US East Coast
+            else if (r1.includes('EUROPE') && to('US_EAST')) {
+                path.push(nav.atlantic_mid);
+            }
+            // Europe <-> US West Coast
+            else if (r1.includes('EUROPE') && to('US_WEST')) {
+                if (sandbox.panama) {
+                    path.push(nav.gibraltar);
+                    path.push(nav.south_atlantic_mid);
+                    path.push(nav.cape_horn);
+                    path.push(nav.south_pacific_mid);
+                    risks.push("Panama Closed: Rerouting via Cape Horn (+18 days)");
+                } else {
+                    path.push(nav.gibraltar);
+                    path.push(nav.atlantic_mid);
+                    path.push(nav.panama_canal);
+                }
+            }
+            // US East <-> US West (Sea)
+            else if (match('US_EAST', 'US_WEST')) {
+                path.push(nav.caribbean);
+                path.push(nav.panama_canal);
+            }
+            // Asia <-> Australia
+            else if ((from('NE_ASIA') || from('SE_ASIA')) && to('OCEANIA')) {
+                path.push(nav.malacca);
+            }
+            // Default: Generic Ocean Midpoint to avoid land-cutting on very long hauls
+            else {
+                path.push(nav.indian_mid); 
+            }
+        } else {
+            // Air: Direct Great Circle
+            path.push(d.coords);
         }
+        
         path.push(d.coords);
 
-        let mDist = 0; for(let i=0; i<path.length-1; i++) mDist += dist(path[i], path[i+1]);
-        const speeds = { sea: 711, air: 20000 };
-        transitD = mDist / speeds[mode];
-        if (risks.includes("Red Sea Redirect")) transitD += 12;
-        if (sandbox.strike) handlingD += 7;
+        // Calculate Distance and Days
+        let totalDist = 0;
+        for (let i = 0; i < path.length - 1; i++) {
+            totalDist += getDist(path[i], path[i+1]);
+        }
 
-        const totalD = transitD + (1000/500) + handlingD + 2;
-        const eta = new Date(dateInput.value); eta.setDate(eta.getDate() + totalD);
+        const speed = mode === 'sea' ? 16 * 1.852 * 24 : 850 * 24; // km/day
+        let transitD = totalDist / speed;
         
-        const freight = mDist * (mode==='sea'?0.15:4.5) * weight;
-        const icc = (value * annualICC / 365) * totalD;
-        const totalSpend = freight + icc + (value * cargoMetadata[category].duty);
-        const reliability = Math.max(25, 98 - (risks.length * 20));
+        // Add Risk Penalties
+        if (risks.some(r => r.includes("Good Hope"))) transitD += 12;
+        if (risks.some(r => r.includes("Suez Canal") && r.includes("Panama"))) transitD += 8;
+        if (sandbox.strike) transitD += 5;
 
-        let rec = "";
-        if (mode === 'sea' && icc > freight) rec = "AI Rec: High-value cargo. Switching to AIR saves more in capital costs.";
+        milestones.push({ name: "Origin Port/Airport Ops", days: mode === 'sea' ? 3 : 1 });
+        milestones.push({ name: "International Transit", days: Math.max(1, Math.round(transitD)) });
+        milestones.push({ name: "Destination Handling", days: mode === 'sea' ? 4 : 1 });
 
-        return { totalD, eta, freight, icc, totalSpend, reliability, risks, path, recommendation: rec };
+        let totalD = milestones.reduce((sum, m) => sum + m.days, 0);
+        const eta = new Date(dateInput.value); eta.setDate(eta.getDate() + totalD);
+
+        return { totalD, eta, path, risks, milestones };
     }
 
-    function updateTicker(o, d, risks) {
-        let news = `<span>Live Analysis: ${o.name} to ${d.name}.</span>`;
-        if (risks.includes("Red Sea Redirect")) news += "<span>Alert: Suez volumes down 42% YoY. Rerouting via Good Hope.</span>";
-        newsTicker.innerHTML = news + "<span>Global air capacity rising.</span><span>EU CBAM implementation starts.</span>";
+    function getDist(c1, c2) {
+        const R = 6371;
+        const dLat = (c2[0]-c1[0])*Math.PI/180;
+        const dLon = (c2[1]-c1[1])*Math.PI/180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*Math.PI/180)*Math.cos(c2[0]*Math.PI/180)*Math.sin(dLon/2)**2;
+        return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function renderMap(path, oH, dH) {
+        map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline || l instanceof L.Circle) map.removeLayer(l); });
+        
+        const dot = () => L.divIcon({ html: `<div class="w-3 h-3 rounded-full border-2 border-white shadow-md bg-indigo-600"></div>`, className: 'custom-div-icon', iconSize: [12, 12] });
+        L.marker(oH.coords, {icon: dot()}).addTo(map).bindPopup(`<b>Origin:</b> ${oH.name}`);
+        L.marker(dH.coords, {icon: dot()}).addTo(map).bindPopup(`<b>Dest:</b> ${dH.name}`);
+        
+        const latlngs = path.map(c => [c[0], c[1]]);
+        L.polyline(latlngs, {color: '#4f46e5', weight: 4, className: 'leaflet-ant-path', lineJoin: 'round'}).addTo(map);
+        
+        map.fitBounds(latlngs, {padding: [50, 50]});
     }
 
     window.switchTab = (tab) => {
@@ -270,33 +364,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(`tab-${tab}`).classList.add('bg-white', 'shadow-sm', 'text-indigo-600');
     };
 
-    function renderMap(path, oH, dH, risks, sandbox) {
-        map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline || l instanceof L.Circle) map.removeLayer(l); });
-        
-        if (sandbox.redSea) L.circle(riskZones.redsea.coords, { radius: riskZones.redsea.radius, color: 'red', fillOpacity: 0.1, weight: 1 }).addTo(map);
-        if (sandbox.panama) L.circle(riskZones.panama.coords, { radius: riskZones.panama.radius, color: 'orange', fillOpacity: 0.1, weight: 1 }).addTo(map);
-
-        const dot = (color) => L.divIcon({ html: `<div class="w-4 h-4 rounded-full border-2 border-white shadow-md bg-${color}-500"></div>`, className: 'custom-div-icon', iconSize: [16, 16] });
-        L.marker(oH.coords, {icon: dot(oH.status)}).addTo(map).bindPopup(oH.name);
-        L.marker(dH.coords, {icon: dot(dH.status)}).addTo(map).bindPopup(dH.name);
-        
-        L.polyline(path, {color: '#4f46e5', weight: 5, className: 'leaflet-ant-path'}).addTo(map);
-        map.fitBounds([oH.coords, dH.coords], {padding: [50, 50]});
-    }
-
-    function dist(c1, c2) {
-        const R = 6371; const dLat = (c2[0]-c1[0])*Math.PI/180; const dLon = (c2[1]-c1[1])*Math.PI/180;
-        const a = Math.sin(dLat/2)**2 + Math.cos(c1[0]*Math.PI/180)*Math.cos(c2[0]*Math.PI/180)*Math.sin(dLon/2)**2;
-        return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    }
-
     document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
     document.getElementById('lang-ko').onclick = () => { currentLang='ko'; updateUI(); };
     document.getElementById('lang-en').onclick = () => { currentLang='en'; updateUI(); };
+    
     function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k];
         });
+        populate();
     }
     updateUI();
 });

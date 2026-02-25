@@ -51,47 +51,15 @@
                                 <input type="date" id="departure-date" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Weight (Tons)</label>
-                                <input type="number" id="cargo-weight" value="1" min="0.1" step="0.1" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Cargo Value (USD)</label>
-                                <input type="number" id="cargo-value" value="50000" min="0" step="1000" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
-                            </div>
-                        </div>
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Inland Mode</label>
-                                <select id="inland-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold text-gray-700">
-                                    <option value="truck">🚛 Truck</option>
-                                    <option value="rail">🚆 Rail</option>
-                                </select>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelOrigin">Departure</label>
+                                <select id="origin" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold"></select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelService">Service Level</label>
-                                <select id="service-tier" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold text-gray-700">
-                                    <option value="standard">Standard</option>
-                                    <option value="premium">✨ Premium</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">HS Code (First 4-6 digits)</label>
-                                <input type="text" id="hs-code" placeholder="e.g. 8517.13" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold text-gray-700">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelCargo">Cargo Category</label>
-                                <select id="cargo-category" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold text-gray-700">
-                                    <option value="general">General Cargo</option>
-                                    <option value="electronics">💻 Electronics</option>
-                                    <option value="textiles">👕 Textiles</option>
-                                    <option value="chemicals">🧪 Chemicals (DG)</option>
-                                </select>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelDest">Arrival</label>
+                                <select id="destination" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold"></select>
                             </div>
                         </div>
                         
