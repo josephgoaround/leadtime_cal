@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rates = { KRW: 1350, EUR: 0.92, USD: 1 };
     const annualICC = 0.15;
 
-    // --- Enterprise Global Database ---
     const portCities = {
         "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", country: "South Korea", duty: 0.10, status: "green" },
         "Port of Shanghai": { coords: [31.2304, 121.4737], hub: "chn-sha", country: "China", duty: 0.15, status: "red" },
@@ -80,17 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
         "Port of Rotterdam": { coords: [51.9225, 4.4792], hub: "nld-rot", country: "Netherlands", duty: 0.12, status: "yellow" },
         "Port of Hamburg": { coords: [53.5511, 9.9937], hub: "deu-ham", country: "Germany", duty: 0.12, status: "green" },
         "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", country: "USA", duty: 0.05, status: "red" },
-        "Port of Santos": { coords: [-23.9618, -46.3322], hub: "bra-ssz", country: "Brazil", duty: 0.25, status: "red" },
-        "Port of Durban": { coords: [-29.8587, 31.0218], hub: "zaf-dur", country: "South Africa", duty: 0.15, status: "yellow" },
-        "Port of Sydney": { coords: [-33.8688, 151.2093], hub: "aus-syd", country: "Australia", duty: 0.05, status: "green" }
+        "Port of Santos": { coords: [-23.9618, -46.3322], hub: "bra-ssz", country: "Brazil", duty: 0.25, status: "red" }
     };
 
     const airportCities = {
         "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", duty: 0.10, status: "green" },
         "PVG (Shanghai)": { coords: [31.1443, 121.8083], hub: "chn-pvg", country: "China", duty: 0.15, status: "red" },
         "FRA (Frankfurt)": { coords: [50.0379, 8.5622], hub: "deu-fra", country: "Germany", duty: 0.12, status: "yellow" },
-        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", duty: 0.05, status: "yellow" },
-        "GRU (Sao Paulo)": { coords: [-23.4356, -46.4731], hub: "bra-gru", country: "Brazil", duty: 0.25, status: "red" }
+        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", duty: 0.05, status: "yellow" }
     };
 
     const hubs = {
@@ -99,9 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833] },
         "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450] },
         "usa-lax": { name: "Port of LA", coords: [33.7542, -118.2764] },
-        "aus-syd": { name: "Port Botany", coords: [-33.9711, 151.2151] },
-        "bra-ssz": { name: "Santos Hub", coords: [-23.9618, -46.3322] },
-        "sgp-sin": { name: "Singapore Hub", coords: [1.2644, 103.8398] }
+        "sgp-sin": { name: "Singapore Hub", coords: [1.2644, 103.8398] },
+        "deu-fra": { name: "Frankfurt Intl", coords: [50.0379, 8.5622] },
+        "usa-jfk": { name: "John F. Kennedy", coords: [40.6413, -73.7781] }
     };
 
     const customsChecklists = {
@@ -120,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateInput = document.getElementById('departure-date');
     const networkBadge = document.getElementById('network-status-badge');
     const feedContainer = document.getElementById('feed-container');
-    const newsTicker = document.getElementById('news-ticker');
+    const recentContainer = document.getElementById('recent-searches');
 
     dateInput.valueAsDate = new Date();
 
@@ -147,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const destName = destinationSelect.value;
         const departureDate = new Date(dateInput.value);
 
-        if (originName === destName) return;
+        if (originName === destName || !originName || !destName) return;
 
         const sandbox = {
             redSea: document.getElementById('risk-redsea').checked,
@@ -186,31 +182,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sandbox.panama && totalDist > 10000) { handlingD += 5; risks.push("Panama Delay"); }
 
         const cDelay = (dest.country === "China" || dest.country === "Brazil" ? 6 : 2);
-        const totalD = transitD + (fDist+lDist)/speeds.truck + handlingD + cDelay;
+        const totalD = transitD + (fDist+lDist)/500 + handlingD + cDelay;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
 
-        // --- Strategic Recommendation Engine ---
-        let recommendation = "";
-        const airCost = totalDist * 4.5 * weight;
-        const seaCost = totalDist * 0.15 * weight;
-        const iccSavings = (value * annualICC / 365) * (totalD - 5); // Assumes air is 5 days
-        
-        if (mode === 'sea' && iccSavings > (airCost - seaCost)) {
-            recommendation = currentLang==='ko' ? "고가치 화물 분석: 항공 전환 시 재고 금융 비용 절감이 운임 상승분보다 큽니다. 항공 운송을 권장합니다." : "High-value detected: Switching to AIR saves more in ICC than the freight premium. Recommend Mode Switch.";
-        } else if (mode === 'sea' && risks.length > 0) {
-            recommendation = currentLang==='ko' ? "리스크 전략: 현재 경로 지연 우려가 큽니다. 긴급 물량에 대해 항공 분할 선적(Split Shipment)을 검토하십시오." : "Risk Strategic: Major route delays detected. Consider split-shipment via AIR for urgent inventory.";
-        }
-
+        // Analysis Calculations
         const baseFreight = totalDist * (mode==='sea'?0.15:4.5) * weight;
         const inventoryCost = (value * annualICC / 365) * totalD;
         const estDuty = value * (dest.duty || 0.10);
         const totalImpact = baseFreight + inventoryCost + estDuty;
-        
+        const co2Kg = Math.round((totalDist * (mode==='sea'?25:500) * weight) / 1000);
+        const health = Math.max(25, 98 - risks.length * 25);
+
+        // Strategic Advice
+        let recommendation = "";
+        if (mode === 'sea' && inventoryCost > (baseFreight * 2)) recommendation = currentLang === 'ko' ? "고가치 화물: 리드타임 지연으로 인한 금융 손실이 큽니다. 항공 운송으로의 전환을 강력 추천합니다." : "High-value detected: Financial loss from delay exceeds freight savings. Recommend switching to AIR.";
+
         const t = translations[currentLang];
-        const convert = (val) => {
-            const sym = { USD: '$', EUR: '€', KRW: '₩' };
-            return `${sym[currentCurrency]}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
-        };
+        const convert = (val) => `${currentCurrency==='KRW'?'₩':'$'}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
 
         document.getElementById('result').innerHTML = `
             <div class="space-y-4 animate-fade-in">
@@ -228,16 +216,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString()}</p>
                     </div>
                     ${recommendation ? `<div class="p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-r-xl"><p class="text-[10px] font-bold text-indigo-600 uppercase mb-1">${t.aiRec}</p><p class="text-xs font-semibold text-gray-700 leading-relaxed">${recommendation}</p></div>` : ''}
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.journeyLog}</p><div class="space-y-4 text-xs font-semibold text-gray-700"><p>• ${originName} Departure</p><p>• Main Transit (~${Math.round(transitD)} Days)</p>${tHub ? `<p class="text-indigo-500">• Transshipment Hub: ${tHub.name}</p>` : ''}<p>• ${destName} Final Arrival</p></div></div>
                 </div>
 
                 <div id="tab-content-finance" class="tab-pane hidden space-y-4">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
                         <div class="space-y-2 text-xs">
-                            <div class="flex justify-between"><span>Freight Cost</span><span class="font-bold">${convert(baseFreight)}</span></div>
-                            <div class="flex justify-between text-orange-500"><span>ICC (Financial Loss)</span><span class="font-bold">${convert(inventoryCost)}</span></div>
-                            <div class="flex justify-between text-blue-500"><span>Est. Duty/Tax</span><span class="font-bold">${convert(estDuty)}</span></div>
-                            <div class="border-t pt-2 flex justify-between font-black text-gray-900 text-lg"><span>Total Spend</span><span>${convert(totalImpact)}</span></div>
+                            <div class="flex justify-between"><span>Freight</span><span class="font-bold">${convert(baseFreight)}</span></div>
+                            <div class="flex justify-between text-orange-500"><span>ICC (Capital)</span><span class="font-bold">${convert(inventoryCost)}</span></div>
+                            <div class="flex justify-between text-blue-500"><span>Duty/Tax</span><span class="font-bold">${convert(estDuty)}</span></div>
+                            <div class="border-t pt-2 flex justify-between font-black text-gray-900 text-lg"><span>Total</span><span>${convert(totalImpact)}</span></div>
                         </div>
                         <div class="h-3 w-full bg-gray-100 rounded-full flex overflow-hidden">
                             <div style="width: ${(baseFreight/totalImpact)*100}%" class="bg-indigo-500"></div>
@@ -248,13 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div id="tab-content-risk" class="tab-pane hidden space-y-4">
-                    <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl">
+                    <div class="bg-indigo-900 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
                         <p class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest mb-2">${t.esgOffset}</p>
-                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${Math.ceil((totalDist * (mode==='sea'?25:500) * weight / 1000) / 22)}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">${t.volatility}</p>
-                        <svg viewBox="0 0 275 40" class="w-full h-8 stroke-current text-indigo-500 fill-none"><path d="M 0,20 L 50,15 L 100,25 L 150,10 L 200,30 L 275,20" stroke-width="2" /></svg>
+                        <div class="flex items-end gap-2"><span class="text-4xl font-black text-green-400">${Math.ceil(co2Kg / 22)}</span><p class="text-[10px] text-indigo-100 pb-1">${t.treesMsg}</p></div>
                     </div>
                 </div>
 
@@ -266,20 +249,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         </ul>
                     </div>
                 </div>
-
-                <div class="grid grid-cols-2 gap-2 pt-2">
-                    <button onclick="exportCSV()" class="bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-black transition-all flex items-center justify-center gap-2 text-[10px] uppercase">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        ${t.exportCsv}
-                    </button>
-                    <button onclick="copyShareLink()" class="bg-white border-2 border-indigo-100 text-indigo-600 font-bold py-3 rounded-xl hover:bg-indigo-50 transition-all flex items-center justify-center gap-2 text-[10px] uppercase">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-5.368 3 3 0 000 5.368zm0 10.736a3 3 0 100-5.368 3 3 0 000 5.368z"></path></svg>
-                        ${t.shareBtn}
-                    </button>
-                </div>
             </div>`;
 
-        updateIntelligence(origin, dest, risks, Math.max(25, 98 - risks.length * 25));
+        updateIntelligence(origin, dest, risks, health);
         renderMap(path, origin, dest, oHub, dHub, originName, destName, tHub);
         saveToHistory(originName, destName, mode);
     }
@@ -292,34 +264,27 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.classList.add('bg-white', 'shadow-sm', 'text-indigo-600'); btn.classList.remove('text-gray-500');
     };
 
-    window.exportCSV = () => {
-        const rows = [["Metric", "Value"], ["Route", `${originSelect.value} to ${destinationSelect.value}`], ["Mode", modeSelect.value], ["Total Spend", document.querySelector('#tab-content-finance div:last-child span:last-child').innerText]];
-        const csv = rows.map(r => r.join(",")).join("\n");
-        const link = document.createElement("a"); link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-        link.download = "leadtime_analysis.csv"; link.click();
-    };
-
-    window.copyShareLink = () => { navigator.clipboard.writeText(window.location.href); alert(translations[currentLang].shareMsg || "Link copied!"); };
-
     function updateIntelligence(o, d, risks, health) {
         networkBadge.classList.remove('hidden');
         const statusText = networkBadge.querySelector('span:last-child');
         const statusDot = networkBadge.querySelector('span:first-child span:last-child');
         if (health > 70) { statusText.innerText = "Network Stable"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500"; }
         else { statusText.innerText = "Elevated Alert"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
-        
-        let ticker = `<span>Route intelligence active for ${o.country} corridor.</span>`;
-        if (d.country === "South Korea") ticker += "<span>Busan terminal automation reducing gate-in times by 12%.</span>";
-        newsTicker.innerHTML = ticker + "<span>Shanghai automation efficiency at 92%.</span><span>Global air cargo demand rising.</span>";
-        feedContainer.innerHTML = (risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Warning: ${risks.join(' & ')}. Impacting schedules.</div>` : '') + `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">Market Brief: Routes to ${d.country} are stable. Standard audit protocols in place.</div>`;
+        feedContainer.innerHTML = (risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Warning: ${risks.join(' & ')}.</div>` : '') + `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">Standard regional monitoring active for ${d.country}.</div>`;
     }
 
     function renderMap(path, o, d, oH, dH, oN, dN, tH) {
         map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) map.removeLayer(l); });
-        const pin = (color) => L.divIcon({ html: `<div class="w-4 h-4 rounded-full border-2 border-white shadow-md bg-${color}-500"></div>`, className: 'custom-div-icon', iconSize: [16, 16] });
+        
+        const pin = (color) => L.divIcon({
+            html: `<div class="w-4 h-4 rounded-full border-2 border-white shadow-md bg-${color}-500"></div>`,
+            className: 'custom-div-icon', iconSize: [16, 16]
+        });
+
         L.marker(o.coords, {icon: pin(o.status)}).addTo(map).bindPopup(oN);
         L.marker(d.coords, {icon: pin(d.status)}).addTo(map).bindPopup(dN);
         if (tH) L.marker(tH.coords, {icon: pin('indigo')}).addTo(map).bindPopup(`<b>${tH.name} Hub</b>`);
+
         L.polyline([o.coords, oH.coords], {color: '#ef4444', weight: 2, dashArray: '5, 5'}).addTo(map);
         path.forEach((p, i) => { if(i>0 && Math.abs(path[i-1][1]-p[1])<180) L.polyline([path[i-1], p], {color: '#dc2626', weight: 5}).addTo(map); });
         map.fitBounds([o.coords, d.coords], {padding: [50, 50]});
