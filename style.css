@@ -1,64 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
+
 body {
-    font-family: 'Inter', 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-poppins {
+    font-family: 'Poppins', sans-serif;
 }
 
 #map {
-    border-radius: 1rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    height: 400px;
+    height: 450px;
     width: 100%;
     z-index: 1;
 }
 
-@media (min-width: 1024px) {
-    #map {
-        height: 550px;
-    }
-}
-
-.leaflet-popup-content-wrapper {
-    border-radius: 0.75rem;
-    padding: 5px;
-}
-
-/* Custom Marker Pulsing Effects */
-.marker-pin-green { background: #10b981; }
-.marker-pin-yellow { background: #f59e0b; }
-.marker-pin-red { background: #ef4444; }
-
-.custom-div-icon i {
-    color: white;
-    font-size: 10px;
-}
-
-/* Map Legend */
-.map-legend {
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    font-size: 10px;
-    font-weight: bold;
-    color: #4b5563;
-    border: 1px solid #eee;
-}
-
-/* Print Styles */
-@media print {
-    .no-print, header, form, #dynamic-scm-feed, #recent-searches, #share-btn, #copy-summary-btn, #export-csv-btn {
-        display: none !important;
-    }
-    body { background: white; }
-    .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
-    #result { display: block !important; width: 100% !important; }
-    #map { height: 400px !important; border: 1px solid #eee; break-inside: avoid; }
-}
-
+/* --- News Ticker Animation --- */
 @keyframes marquee {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
+    100% { transform: translateX(-50%); }
 }
+
 .animate-marquee {
     display: inline-flex;
     animation: marquee 30s linear infinite;
+    width: max-content;
+}
+
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+
+/* --- Smooth Transitions --- */
+.tab-pane {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* --- Leaflet Customizations --- */
+.leaflet-container {
+    background: #f8fafc;
+}
+.custom-div-icon {
+    background: none;
+    border: none;
+}
+
+/* --- Print Styles --- */
+@media print {
+    .lg:col-span-4, header, #dynamic-scm-feed {
+        display: none !important;
+    }
+    #map {
+        height: 300px;
+    }
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
 }
