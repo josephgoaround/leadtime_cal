@@ -10,15 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "Cargo Category",
             labelOrigin: "Departure",
             labelDest: "Arrival",
+            cargoGen: "General Cargo",
+            cargoRef: "Refrigerated",
+            cargoDG: "Dangerous Goods",
             btnAnalyze: "RUN INTELLIGENCE ANALYSIS",
             feedTitle: "Route-Specific Intelligence",
             totalLead: "Total Est. Lead Time",
             reliability: "Network Health Index",
             eta: "Estimated ETA",
             costTitle: "Cost Breakdown (EST)",
-            btnPrint: "Download PDF Report",
-            legendInland: "Inland Segment",
-            legendTransit: "Main Transit",
             disclaimer: "• 16kts avg. speed applied. External delays not guaranteed."
         },
         ko: {
@@ -30,15 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "화물 종류",
             labelOrigin: "출발지",
             labelDest: "도착지",
+            cargoGen: "일반 화물",
+            cargoRef: "냉장/냉동",
+            cargoDG: "위험물 (DG)",
             btnAnalyze: "물류 분석 실행",
             feedTitle: "경로별 맞춤 인텔리전스",
             totalLead: "총 예상 리드타임",
             reliability: "네트워크 건전성 지수",
             eta: "최종 도착 예정일",
             costTitle: "상세 예상 비용 분석",
-            btnPrint: "PDF 보고서 다운로드",
-            legendInland: "육상 운송 구간",
-            legendTransit: "본선 운송 구간",
             disclaimer: "• 컨테이너선 평균 16노트 기준. 기상 및 혼잡에 따른 지연은 제외되었습니다."
         }
     };
@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLang = 'en';
     let currentCurrency = 'USD';
     const exchangeRate = 1350;
+
+    const globalRisks = {
+        redSeaCrisis: { active: true, description: "Red Sea/Suez Canal Avoidance", impact: "+12 days via Cape" },
+        panamaDrought: { active: true, description: "Panama Canal Drought Restrictions", impact: "+5 days waiting" },
+        russiaAirspace: { active: true, description: "Russian Airspace Closure", impact: "+1 day detour" }
+    };
 
     const portCities = {
         "Port of New York": { coords: [40.7128, -74.0060], hub: "usa-nyc", country: "USA", scmIssues: "Port labor negotiations." },
@@ -58,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const airportCities = {
         "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", scmIssues: "Terminal upgrades." },
         "LAX (Los Angeles)": { coords: [33.9416, -118.4085], hub: "usa-lax-air", country: "USA", scmIssues: "High storage fees." },
-        "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", scmIssues: "E-commerce surges." }
+        "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", scmIssues: "E-commerce surges." },
+        "LHR (London)": { coords: [51.4700, -0.4543], hub: "gbr-lhr", country: "UK", scmIssues: "Customs delays." }
     };
 
     const hubs = {
@@ -69,7 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833] },
         "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450] },
         "kor-pus": { name: "Busan Port", coords: [35.1069, 129.0453] },
-        "kor-icn": { name: "Incheon Intl Airport", coords: [37.4602, 126.4407] }
+        "kor-icn": { name: "Incheon Intl Airport", coords: [37.4602, 126.4407] },
+        "gbr-lhr": { name: "London Heathrow", coords: [51.4700, -0.4543] }
     };
 
     const waypoints = { "pacific_mid": [20.0, -160.0], "good_hope": [-34.35, 18.47], "cape_verde": [15.0, -25.0] };
@@ -80,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const destinationSelect = document.getElementById('destination');
     const dateInput = document.getElementById('departure-date');
     const networkBadge = document.getElementById('network-status-badge');
+    const feedContainer = document.getElementById('feed-container');
 
     dateInput.valueAsDate = new Date();
 
@@ -88,12 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const cities = mode === 'sea' ? portCities : airportCities;
         subModeSelect.innerHTML = '';
         (mode==='sea' ? ["FCL (Full Container)", "LCL (Shared)"] : ["Express Priority", "Standard Cargo"]).forEach(s => {
-            const opt = document.createElement('option'); opt.value = s; opt.textContent = s; subModeSelect.appendChild(opt);
+            const opt = new Option(s, s); subModeSelect.add(opt);
         });
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
         Object.keys(cities).sort().forEach(c => {
-            const o1 = new Option(c, c); originSelect.add(o1);
-            const o2 = new Option(c, c); destinationSelect.add(o2);
+            originSelect.add(new Option(c, c));
+            destinationSelect.add(new Option(c, c));
         });
     }
 
@@ -103,25 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const map = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
 
-    function addMapLegend() {
-        const t = translations[currentLang];
-        const legend = L.control({ position: 'bottomright' });
-        legend.onAdd = function() {
-            const div = L.DomUtil.create('div', 'map-legend');
-            div.innerHTML = `
-                <div class="legend-item"><span style="width:12px;height:2px;background:#ef4444;display:inline-block;margin-right:5px;border:1px dashed #ef4444"></span> ${t.legendInland}</div>
-                <div class="legend-item"><span style="width:12px;height:4px;background:#dc2626;display:inline-block;margin-right:5px"></span> ${t.legendTransit}</div>
-            `;
-            return div;
-        };
-        legend.addTo(map);
-    }
-    addMapLegend();
-
     function calculateAndDisplay() {
         const mode = modeSelect.value; const originName = originSelect.value; const destName = destinationSelect.value;
         if (originName === destName) return;
 
+        const weight = parseFloat(document.getElementById('cargo-weight').value) || 1;
+        const volume = parseFloat(document.getElementById('cargo-volume').value) || 1;
         const cityData = mode === 'sea' ? portCities : airportCities;
         const origin = cityData[originName]; const dest = cityData[destName];
         const oHub = hubs[origin.hub]; const dHub = hubs[dest.hub];
@@ -144,12 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalD = transitD + inlandD + handlingD + cDelay;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
 
-        // --- Refined Cost Calculation ---
-        const baseRate = totalDist * (mode==='sea'?0.15:4.5);
+        // --- Payload Based Cost ---
+        const payableWeight = mode === 'air' ? Math.max(weight * 1000, volume * 167) / 1000 : Math.max(weight, volume / 1.0);
+        const baseRate = totalDist * (mode==='sea'?0.15:4.5) * payableWeight;
         const riskPremium = risks.length * (mode==='sea'?500:1000);
-        const terminalFees = (mode==='sea'?350:150);
-        const totalCostUSD = baseRate + riskPremium + terminalFees;
+        const totalCostUSD = baseRate + riskPremium;
         
+        const health = Math.max(25, 98 - (risks.length * 25) - (dest.country === "China" ? 10 : 0));
         const convert = (val) => currentCurrency === 'USD' ? `$${Math.round(val).toLocaleString()}` : `₩${Math.round(val * exchangeRate).toLocaleString()}`;
         const t = translations[currentLang];
 
@@ -164,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="text-right">
                             <p class="text-lg font-bold text-gray-800">${convert(totalCostUSD)}</p>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase">${Math.round(totalDist).toLocaleString()} km</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">${Math.round(totalDist).toLocaleString()} km</p>
                         </div>
                     </div>
                     <div class="h-1.5 w-full bg-gray-100 rounded-full flex overflow-hidden">
@@ -175,23 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">${t.costTitle}</p>
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-xs font-medium"><span>Freight Base</span><span>${convert(baseRate)}</span></div>
-                        <div class="flex justify-between text-xs font-medium text-red-500"><span>Risk Surcharge</span><span>+${convert(riskPremium)}</span></div>
-                        <div class="flex justify-between text-xs font-medium"><span>Terminal/Port Fees</span><span>${convert(terminalFees)}</span></div>
-                        <div class="border-t pt-2 flex justify-between font-bold text-gray-800"><span>Estimated Total</span><span>${convert(totalCostUSD)}</span></div>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.reliability}</p>
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl font-black ${health > 70 ? 'text-green-500' : health > 40 ? 'text-yellow-500' : 'text-red-500'}">${health}%</div>
+                        <div class="flex-1 bg-gray-100 h-2 rounded-full overflow-hidden"><div style="width: ${health}%" class="${health > 70 ? 'bg-green-500' : health > 40 ? 'bg-yellow-500' : 'bg-red-500'} h-full"></div></div>
                     </div>
                 </div>
-
-                <button id="print-btn" class="w-full bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-black transition-all flex items-center justify-center text-sm shadow-xl">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    ${t.btnPrint}
-                </button>
             </div>`;
 
-        document.getElementById('print-btn').onclick = () => window.print();
-        updateIntelligence(origin, dest, risks, Math.max(30, 98 - risks.length*25));
+        updateIntelligence(origin, dest, risks, health);
         renderMap(path, origin, dest, oHub, dHub, originName, destName);
     }
 
@@ -200,12 +189,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const statusText = networkBadge.querySelector('span:last-child');
         const statusDot = networkBadge.querySelector('span:first-child span:last-child');
         if (health > 70) { statusText.innerText = "Network Stable"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500"; }
-        else { statusText.innerText = "Elevated Risk"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
+        else { statusText.innerText = "Elevated Alert"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
 
-        const feed = document.getElementById('feed-container');
-        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Affected by ${risks.join(', ')}. Alternate routes calculated.</div>` : '';
-        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700">${d.country} customs is currently under high alert for ${o.country} cargo.</div>`;
-        feed.innerHTML = briefing;
+        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Impacted by ${risks.join(' & ')}.</div>` : '';
+        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700">Customs alert for ${d.country}: expect documentation audits for ${o.country} cargo.</div>`;
+        feedContainer.innerHTML = briefing;
     }
 
     function setLang(lang) {
@@ -213,15 +201,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const k = el.getAttribute('data-i18n'); if(translations[lang][k]) el.textContent = translations[lang][k];
         });
-        document.getElementById('lang-ko').className = `px-3 py-1.5 rounded-md text-xs font-bold transition-all ${lang==='ko'?'bg-indigo-600 text-white shadow-sm':'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`;
-        document.getElementById('lang-en').className = `px-3 py-1.5 rounded-md text-xs font-bold transition-all ${lang==='en'?'bg-indigo-600 text-white shadow-sm':'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`;
-        populate();
+        document.getElementById('lang-ko').className = `px-3 py-1.5 rounded-md text-xs font-bold transition-all ${lang==='ko'?'bg-indigo-600 text-white shadow-sm':'bg-white border border-gray-200 text-gray-600'}`;
+        document.getElementById('lang-en').className = `px-3 py-1.5 rounded-md text-xs font-bold transition-all ${lang==='en'?'bg-indigo-600 text-white shadow-sm':'bg-white border border-gray-200 text-gray-600'}`;
     }
 
     document.getElementById('lang-ko').onclick = () => setLang('ko');
     document.getElementById('lang-en').onclick = () => setLang('en');
-    document.getElementById('curr-usd').onclick = function() { currentCurrency = 'USD'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-krw').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500 hover:text-gray-700'; calculateAndDisplay(); };
-    document.getElementById('curr-krw').onclick = function() { currentCurrency = 'KRW'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-usd').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500 hover:text-gray-700'; calculateAndDisplay(); };
+    document.getElementById('curr-usd').onclick = function() { currentCurrency = 'USD'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-krw').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500'; calculateAndDisplay(); };
+    document.getElementById('curr-krw').onclick = function() { currentCurrency = 'KRW'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-usd').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500'; calculateAndDisplay(); };
 
     function dist(c1, c2) {
         const R = 6371; const dLat = (c2[0]-c1[0])*Math.PI/180; const dLon = (c2[1]-c1[1])*Math.PI/180;
@@ -263,5 +250,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
-    setLang('en');
 });
