@@ -21,60 +21,44 @@ body {
     padding: 5px;
 }
 
-/* Map Legend Custom Control */
+/* Custom Marker Pulsing Effects */
+.marker-pin-green { background: #10b981; }
+.marker-pin-yellow { background: #f59e0b; }
+.marker-pin-red { background: #ef4444; }
+
+.custom-div-icon i {
+    color: white;
+    font-size: 10px;
+}
+
+/* Map Legend */
 .map-legend {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    font-size: 11px;
-    font-weight: 700;
-    color: #1f2937;
-    border: 1px solid #f3f4f6;
-}
-
-.legend-item {
-    display: flex;
-    items-center: center;
-    gap: 8px;
-    margin-bottom: 4px;
-}
-
-/* AdSense Container Styles */
-.adsense-container {
-    width: 100%;
-    clear: both;
-    overflow: hidden;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 10px;
+    font-weight: bold;
+    color: #4b5563;
+    border: 1px solid #eee;
 }
 
 /* Print Styles */
 @media print {
-    .no-print, header, form, .adsense-container, #dynamic-scm-feed, .mt-16, .bg-gray-900, #disqus_thread, #share-btn {
+    .no-print, header, form, #dynamic-scm-feed, #recent-searches, #share-btn, #copy-summary-btn, #export-csv-btn {
         display: none !important;
     }
-    body {
-        background: white;
-        padding: 0;
-    }
-    .container {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 20px !important;
-    }
-    #result {
-        display: block !important;
-        width: 100% !important;
-    }
-    #map {
-        height: 400px !important;
-        border: 1px solid #eee;
-        break-inside: avoid;
-        margin-top: 20px;
-    }
-    .rounded-xl, .rounded-2xl {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        border: 1px solid #eee !important;
-    }
+    body { background: white; }
+    .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
+    #result { display: block !important; width: 100% !important; }
+    #map { height: 400px !important; border: 1px solid #eee; break-inside: avoid; }
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+    display: inline-flex;
+    animation: marquee 30s linear infinite;
 }
