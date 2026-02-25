@@ -18,31 +18,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Categorized Locations
+    // Categorized Locations - Expanded Database
     const portCities = {
-        "Port of New York": { coords: [40.7128, -74.0060], hub: "usa-nyc", country: "USA", scmIssues: "Port labor negotiations; Driver shortages." },
-        "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", country: "USA", scmIssues: "San Pedro Bay congestion." },
-        "Port of Shanghai": { coords: [31.2304, 121.4737], hub: "chn-sha", country: "China", scmIssues: "Strict export inspections." },
-        "Port of Rotterdam": { coords: [51.9225, 4.4792], hub: "nld-rot", country: "Netherlands", scmIssues: "Customs clearance backlogs." },
-        "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", country: "South Korea", scmIssues: "Labor union strikes." },
-        "Port of Singapore": { coords: [1.3521, 103.8198], hub: "sgp-sin", country: "Singapore", scmIssues: "Vessel bunching at hub." },
-        "Port of Hamburg": { coords: [53.5511, 9.9937], hub: "deu-ham", country: "Germany", scmIssues: "Rail capacity constraints." },
-        "Port of Jebel Ali (Dubai)": { coords: [25.0112, 55.0617], hub: "are-dxb-sea", country: "UAE", scmIssues: "Geopolitical tensions." },
-        "Port of Mumbai": { coords: [18.9647, 72.8347], hub: "ind-bom", country: "India", scmIssues: "Infrastructure bottlenecks." },
-        "Port of Santos": { coords: [-23.9608, -46.3331], hub: "bra-ssz", country: "Brazil", scmIssues: "Heavy bureaucracy." }
+        "Port of New York": { coords: [40.7128, -74.0060], hub: "usa-nyc", scmIssues: "Port labor negotiations; Driver shortages." },
+        "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", scmIssues: "San Pedro Bay congestion." },
+        "Port of Shanghai": { coords: [31.2304, 121.4737], hub: "chn-sha", scmIssues: "Strict export inspections." },
+        "Port of Rotterdam": { coords: [51.9225, 4.4792], hub: "nld-rot", scmIssues: "Customs clearance backlogs." },
+        "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", scmIssues: "Labor union strikes." },
+        "Port of Singapore": { coords: [1.3521, 103.8198], hub: "sgp-sin", scmIssues: "Vessel bunching at hub." },
+        "Port of Hamburg": { coords: [53.5511, 9.9937], hub: "deu-ham", scmIssues: "Rail capacity constraints." },
+        "Port of Jebel Ali (Dubai)": { coords: [25.0112, 55.0617], hub: "are-dxb-sea", scmIssues: "Geopolitical tensions." },
+        "Port of Mumbai": { coords: [18.9647, 72.8347], hub: "ind-bom", scmIssues: "Infrastructure bottlenecks." },
+        "Port of Santos": { coords: [-23.9608, -46.3331], hub: "bra-ssz", scmIssues: "Heavy bureaucracy." },
+        "Port of Tokyo": { coords: [35.6895, 139.6917], hub: "jpn-tyo", scmIssues: "High storage costs." },
+        "Port of Hong Kong": { coords: [22.3193, 114.1694], hub: "hkg-hkg-sea", scmIssues: "Transshipment delays." },
+        "Port of Savannah": { coords: [32.0835, -81.0998], hub: "usa-sav", scmIssues: "Intermodal rail backlog." }
     };
 
     const airportCities = {
-        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", scmIssues: "Cargo terminal modernization." },
-        "LAX (Los Angeles)": { coords: [33.9416, -118.4085], hub: "usa-lax-air", country: "USA", scmIssues: "Tight warehouse capacity." },
-        "PVG (Shanghai)": { coords: [31.1444, 121.8053], hub: "chn-pvg", country: "China", scmIssues: "Frequent flight cancellations." },
-        "AMS (Amsterdam/Rotterdam)": { coords: [52.3105, 4.7683], hub: "nld-ams", country: "Netherlands", scmIssues: "Schiphol flight caps." },
-        "ICN (Seoul/Busan)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", scmIssues: "E-commerce volume spikes." },
-        "SIN (Singapore Changi)": { coords: [1.3644, 103.9915], hub: "sgp-sin-air", country: "Singapore", scmIssues: "Tight cold-chain space." },
-        "LHR (London Heathrow)": { coords: [51.4700, -0.4543], hub: "gbr-lhr", country: "UK", scmIssues: "Post-Brexit customs delays." },
-        "DXB (Dubai)": { coords: [25.2532, 55.3657], hub: "are-dxb-air", country: "UAE", scmIssues: "High transshipment volume." },
-        "BOM (Mumbai)": { coords: [19.0896, 72.8656], hub: "ind-bom-air", country: "India", scmIssues: "Documentation backlogs." },
-        "GRU (Sao Paulo/Santos)": { coords: [-23.4356, -46.4731], hub: "bra-sao-air", country: "Brazil", scmIssues: "Customs strike risk." }
+        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", scmIssues: "Cargo terminal modernization." },
+        "LAX (Los Angeles)": { coords: [33.9416, -118.4085], hub: "usa-lax-air", scmIssues: "Tight warehouse capacity." },
+        "PVG (Shanghai)": { coords: [31.1444, 121.8053], hub: "chn-pvg", scmIssues: "Frequent flight cancellations." },
+        "AMS (Amsterdam)": { coords: [52.3105, 4.7683], hub: "nld-ams", scmIssues: "Schiphol flight caps." },
+        "ICN (Seoul)": { coords: [37.4602, 126.4407], hub: "kor-icn", scmIssues: "E-commerce volume spikes." },
+        "SIN (Singapore)": { coords: [1.3644, 103.9915], hub: "sgp-sin-air", scmIssues: "Tight cold-chain space." },
+        "LHR (London)": { coords: [51.4700, -0.4543], hub: "gbr-lhr", scmIssues: "Post-Brexit customs delays." },
+        "DXB (Dubai)": { coords: [25.2532, 55.3657], hub: "are-dxb-air", scmIssues: "High transshipment volume." },
+        "BOM (Mumbai)": { coords: [19.0896, 72.8656], hub: "ind-bom-air", scmIssues: "Documentation backlogs." },
+        "GRU (Sao Paulo)": { coords: [-23.4356, -46.4731], hub: "bra-sao-air", scmIssues: "Customs strike risk." },
+        "CDG (Paris)": { coords: [49.0097, 2.5479], hub: "fra-cdg", scmIssues: "Labor unrest potential." },
+        "FRA (Frankfurt)": { coords: [50.0379, 8.5622], hub: "deu-fra", scmIssues: "Night flight restrictions." },
+        "HKG (Hong Kong)": { coords: [22.3080, 113.9185], hub: "hkg-hkg-air", scmIssues: "Security screening peaks." }
     };
 
     const hubs = {
@@ -65,7 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
         "ind-bom": { name: "Mumbai Port", coords: [18.9647, 72.8347] },
         "ind-bom-air": { name: "Mumbai Airport", coords: [19.0896, 72.8656] },
         "bra-ssz": { name: "Santos Port", coords: [-23.9883, -46.3089] },
-        "bra-sao-air": { name: "Guarulhos Airport", coords: [-23.4356, -46.4731] }
+        "bra-sao-air": { name: "Guarulhos Airport", coords: [-23.4356, -46.4731] },
+        "jpn-tyo": { name: "Tokyo Port", coords: [35.6333, 139.7833] },
+        "hkg-hkg-sea": { name: "Hong Kong Port", coords: [22.3193, 114.1694] },
+        "hkg-hkg-air": { name: "Hong Kong Intl", coords: [22.3080, 113.9185] },
+        "usa-sav": { name: "Port of Savannah", coords: [32.1202, -81.1315] },
+        "fra-cdg": { name: "Paris CDG Airport", coords: [49.0097, 2.5479] },
+        "deu-fra": { name: "Frankfurt Airport", coords: [50.0379, 8.5622] }
     };
 
     const originSelect = document.getElementById('origin');
@@ -79,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         originSelect.innerHTML = '';
         destinationSelect.innerHTML = '';
 
-        for (const city in currentCities) {
+        Object.keys(currentCities).sort().forEach(city => {
             const opt1 = document.createElement('option');
             opt1.value = city;
             opt1.textContent = city;
@@ -89,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             opt2.value = city;
             opt2.textContent = city;
             destinationSelect.appendChild(opt2);
-        }
+        });
     }
 
     modeSelect.addEventListener('change', populateCities);
@@ -237,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstMileDist = calculateDistance(origin.coords, originHub.coords);
         const lastMileDist = calculateDistance(destHub.coords, dest.coords);
 
-        const speeds = { sea: 711, air: 20000, land: 500 }; // sea: 16 knots (approx 711km/day)
+        const speeds = { sea: 711, air: 20000, land: 500 }; 
         let leadTime = (firstMileDist / speeds.land) + (middleMileDist / speeds[mode]) + (lastMileDist / speeds.land);
         leadTime += (mode === 'sea' ? 5 : 2);
 
@@ -250,6 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cargoType === 'Refrigerated') leadTime *= 1.1;
         if (cargoType === 'Dangerous Goods') leadTime *= 1.3;
 
+        const totalDist = Math.round(middleMileDist + firstMileDist + lastMileDist);
+
         let riskAlertHtml = '';
         if (activeRisks.length > 0) {
             riskAlertHtml = `
@@ -259,8 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
-
-        const totalDist = Math.round(middleMileDist + firstMileDist + lastMileDist);
 
         resultDiv.innerHTML = `
             <div class="space-y-4">
@@ -297,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
         L.marker(originHub.coords, { icon: hubIcon }).addTo(map).bindPopup(originHub.name);
         L.marker(destHub.coords, { icon: hubIcon }).addTo(map).bindPopup(destHub.name);
 
-        // All paths changed to high-visibility RED as requested
         L.polyline([origin.coords, originHub.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5', opacity: 0.6 }).addTo(map); 
         if (mode === 'sea') drawSeaPath(middleMilePath);
         else L.polyline(middleMilePath, { color: '#ef4444', weight: 4, opacity: 0.8 }).addTo(map); 
@@ -316,7 +327,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             segments[currentSegment].push(path[i]);
         }
-        // Change Sea Path to SOLID RED for "Red Line" requirement
         segments.forEach(seg => L.polyline(seg, { color: '#dc2626', weight: 5, opacity: 0.9 }).addTo(map));
     }
 
