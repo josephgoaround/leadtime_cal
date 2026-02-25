@@ -1,30 +1,43 @@
-
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', 'Poppins', sans-serif;
 }
 
 #map {
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    height: 400px; /* Default mobile height */
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    height: 400px;
     width: 100%;
     z-index: 1;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     #map {
-        height: 600px; /* Desktop height */
+        height: 550px;
     }
 }
 
 .leaflet-popup-content-wrapper {
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 0.75rem;
+    padding: 5px;
 }
 
-.leaflet-popup-content {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
+/* Map Legend Custom Control */
+.map-legend {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    font-size: 11px;
+    font-weight: 700;
+    color: #1f2937;
+    border: 1px solid #f3f4f6;
+}
+
+.legend-item {
+    display: flex;
+    items-center: center;
+    gap: 8px;
+    margin-bottom: 4px;
 }
 
 /* AdSense Container Styles */
@@ -34,6 +47,34 @@ body {
     overflow: hidden;
 }
 
-.adsense-container .adsbygoogle {
-    background-color: transparent;
+/* Print Styles */
+@media print {
+    .no-print, header, form, .adsense-container, #dynamic-scm-feed, .mt-16, .bg-gray-900, #disqus_thread, #share-btn {
+        display: none !important;
+    }
+    body {
+        background: white;
+        padding: 0;
+    }
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+    }
+    #result {
+        display: block !important;
+        width: 100% !important;
+    }
+    #map {
+        height: 400px !important;
+        border: 1px solid #eee;
+        break-inside: avoid;
+        margin-top: 20px;
+    }
+    .rounded-xl, .rounded-2xl {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: 1px solid #eee !important;
+    }
 }

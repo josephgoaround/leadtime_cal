@@ -10,25 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "Cargo Category",
             labelOrigin: "Departure",
             labelDest: "Arrival",
-            cargoGen: "General Cargo",
-            cargoRef: "Refrigerated",
-            cargoDG: "Dangerous Goods",
             btnAnalyze: "RUN INTELLIGENCE ANALYSIS",
             feedTitle: "Route-Specific Intelligence",
-            cap1Title: "Smart Routing",
-            cap1Desc: "Calculates routes using major maritime chokepoints and atmospheric flight paths.",
-            cap2Title: "Sustainability",
-            cap2Desc: "Estimate Scope 3 emissions for your global supply chain with our integrated CO2 engine.",
-            cap3Title: "Risk Mitigation",
-            cap3Desc: "Active monitoring of Red Sea, Panama Canal, and regional strikes integrated into data.",
             totalLead: "Total Est. Lead Time",
-            totalDist: "Total Distance",
-            co2Impact: "CO2 Footprint",
-            customsReg: "Customs Status",
             reliability: "Network Health Index",
-            journeyLog: "Journey Log",
-            volatility: "12-Month Volatility Index",
             eta: "Estimated ETA",
+            costTitle: "Cost Breakdown (EST)",
+            btnPrint: "Download PDF Report",
+            legendInland: "Inland Segment",
+            legendTransit: "Main Transit",
             disclaimer: "• 16kts avg. speed applied. External delays not guaranteed."
         },
         ko: {
@@ -40,25 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "화물 종류",
             labelOrigin: "출발지",
             labelDest: "도착지",
-            cargoGen: "일반 화물",
-            cargoRef: "냉장/냉동",
-            cargoDG: "위험물 (DG)",
             btnAnalyze: "물류 분석 실행",
             feedTitle: "경로별 맞춤 인텔리전스",
-            cap1Title: "지능형 경로 분석",
-            cap1Desc: "주요 해상 거점 및 기류를 고려한 항공 경로를 정밀하게 계산합니다.",
-            cap2Title: "지속가능성 (ESG)",
-            cap2Desc: "공급망 Scope 3 탄소 배출량을 지능형 엔진으로 추정합니다.",
-            cap3Title: "리스크 모니터링",
-            cap3Desc: "홍해, 파나마 운하 및 지역별 파업 이슈를 실시간으로 반영합니다.",
             totalLead: "총 예상 리드타임",
-            totalDist: "총 운송 거리",
-            co2Impact: "탄소 배출량",
-            customsReg: "통관 상태",
             reliability: "네트워크 건전성 지수",
-            journeyLog: "상세 여정 로그",
-            volatility: "12개월 변동 지수",
             eta: "최종 도착 예정일",
+            costTitle: "상세 예상 비용 분석",
+            btnPrint: "PDF 보고서 다운로드",
+            legendInland: "육상 운송 구간",
+            legendTransit: "본선 운송 구간",
             disclaimer: "• 컨테이너선 평균 16노트 기준. 기상 및 혼잡에 따른 지연은 제외되었습니다."
         }
     };
@@ -78,8 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const airportCities = {
         "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", scmIssues: "Terminal upgrades." },
         "LAX (Los Angeles)": { coords: [33.9416, -118.4085], hub: "usa-lax-air", country: "USA", scmIssues: "High storage fees." },
-        "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", scmIssues: "E-commerce surges." },
-        "LHR (London)": { coords: [51.4700, -0.4543], hub: "gbr-lhr", country: "UK", scmIssues: "Customs delays." }
+        "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", scmIssues: "E-commerce surges." }
     };
 
     const hubs = {
@@ -90,8 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "chn-sha": { name: "Shanghai Port", coords: [31.3833, 121.5833] },
         "nld-rot": { name: "Rotterdam Port", coords: [51.9490, 4.1450] },
         "kor-pus": { name: "Busan Port", coords: [35.1069, 129.0453] },
-        "kor-icn": { name: "Incheon Intl Airport", coords: [37.4602, 126.4407] },
-        "gbr-lhr": { name: "London Heathrow", coords: [51.4700, -0.4543] }
+        "kor-icn": { name: "Incheon Intl Airport", coords: [37.4602, 126.4407] }
     };
 
     const waypoints = { "pacific_mid": [20.0, -160.0], "good_hope": [-34.35, 18.47], "cape_verde": [15.0, -25.0] };
@@ -101,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const originSelect = document.getElementById('origin');
     const destinationSelect = document.getElementById('destination');
     const dateInput = document.getElementById('departure-date');
-    const feedContainer = document.getElementById('feed-container');
     const networkBadge = document.getElementById('network-status-badge');
 
     dateInput.valueAsDate = new Date();
@@ -125,6 +102,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const map = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+
+    function addMapLegend() {
+        const t = translations[currentLang];
+        const legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function() {
+            const div = L.DomUtil.create('div', 'map-legend');
+            div.innerHTML = `
+                <div class="legend-item"><span style="width:12px;height:2px;background:#ef4444;display:inline-block;margin-right:5px;border:1px dashed #ef4444"></span> ${t.legendInland}</div>
+                <div class="legend-item"><span style="width:12px;height:4px;background:#dc2626;display:inline-block;margin-right:5px"></span> ${t.legendTransit}</div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+    }
+    addMapLegend();
 
     function calculateAndDisplay() {
         const mode = modeSelect.value; const originName = originSelect.value; const destName = destinationSelect.value;
@@ -152,11 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalD = transitD + inlandD + handlingD + cDelay;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
 
-        const costUSD = totalDist * (mode==='sea'?0.15:4.5);
-        const displayCost = currentCurrency === 'USD' ? `$${Math.round(costUSD).toLocaleString()}` : `₩${Math.round(costUSD * exchangeRate).toLocaleString()}`;
-        const co2 = Math.round((totalDist * (mode==='sea'?25:500)) / 1000);
-        const health = Math.max(25, 98 - (risks.length * 25) - (dest.country === "China" ? 10 : 0));
+        // --- Refined Cost Calculation ---
+        const baseRate = totalDist * (mode==='sea'?0.15:4.5);
+        const riskPremium = risks.length * (mode==='sea'?500:1000);
+        const terminalFees = (mode==='sea'?350:150);
+        const totalCostUSD = baseRate + riskPremium + terminalFees;
         
+        const convert = (val) => currentCurrency === 'USD' ? `$${Math.round(val).toLocaleString()}` : `₩${Math.round(val * exchangeRate).toLocaleString()}`;
         const t = translations[currentLang];
 
         document.getElementById('result').innerHTML = `
@@ -169,8 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString(currentLang==='ko'?'ko-KR':'en-US')}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-lg font-bold text-gray-800">${displayCost}</p>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">${Math.round(totalDist).toLocaleString()} km</p>
+                            <p class="text-lg font-bold text-gray-800">${convert(totalCostUSD)}</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase">${Math.round(totalDist).toLocaleString()} km</p>
                         </div>
                     </div>
                     <div class="h-1.5 w-full bg-gray-100 rounded-full flex overflow-hidden">
@@ -181,28 +175,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.reliability}</p>
-                    <div class="flex items-center gap-4">
-                        <div class="text-3xl font-black ${health > 70 ? 'text-green-500' : health > 40 ? 'text-yellow-500' : 'text-red-500'}">${health}%</div>
-                        <div class="flex-1 bg-gray-100 h-2 rounded-full overflow-hidden">
-                            <div style="width: ${health}%" class="${health > 70 ? 'bg-green-500' : health > 40 ? 'bg-yellow-500' : 'bg-red-500'} h-full"></div>
-                        </div>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">${t.costTitle}</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-medium"><span>Freight Base</span><span>${convert(baseRate)}</span></div>
+                        <div class="flex justify-between text-xs font-medium text-red-500"><span>Risk Surcharge</span><span>+${convert(riskPremium)}</span></div>
+                        <div class="flex justify-between text-xs font-medium"><span>Terminal/Port Fees</span><span>${convert(terminalFees)}</span></div>
+                        <div class="border-t pt-2 flex justify-between font-bold text-gray-800"><span>Estimated Total</span><span>${convert(totalCostUSD)}</span></div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 text-center text-xs">
-                    <div class="p-3 bg-white rounded-xl border border-gray-100 shadow-sm">
-                        <p class="font-bold text-gray-400 uppercase">${t.co2Impact}</p>
-                        <p class="text-lg font-bold text-green-600">${co2.toLocaleString()}kg</p>
-                    </div>
-                    <div class="p-3 bg-white rounded-xl border border-gray-100 shadow-sm">
-                        <p class="font-bold text-gray-400 uppercase">${t.customsReg}</p>
-                        <p class="text-sm font-bold text-indigo-600">${dest.country} High Risk</p>
-                    </div>
-                </div>
+                <button id="print-btn" class="w-full bg-gray-900 text-white py-3 rounded-xl font-bold hover:bg-black transition-all flex items-center justify-center text-sm shadow-xl">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    ${t.btnPrint}
+                </button>
             </div>`;
 
-        updateIntelligence(origin, dest, risks, health);
+        document.getElementById('print-btn').onclick = () => window.print();
+        updateIntelligence(origin, dest, risks, Math.max(30, 98 - risks.length*25));
         renderMap(path, origin, dest, oHub, dHub, originName, destName);
     }
 
@@ -210,32 +199,13 @@ document.addEventListener('DOMContentLoaded', () => {
         networkBadge.classList.remove('hidden');
         const statusText = networkBadge.querySelector('span:last-child');
         const statusDot = networkBadge.querySelector('span:first-child span:last-child');
-        
         if (health > 70) { statusText.innerText = "Network Stable"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500"; }
-        else if (health > 40) { statusText.innerText = "Elevated Alert"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-yellow-500"; }
-        else { statusText.innerText = "Critical Disruption"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
+        else { statusText.innerText = "Elevated Risk"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
 
-        let briefing = '';
-        if (risks.length > 0) {
-            briefing += `
-                <div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500">
-                    <p class="text-xs font-bold text-red-600 uppercase mb-1">Impact Alert</p>
-                    <p class="text-sm text-gray-700 font-medium">This route is currently impacted by ${risks.join(' and ')}. Carriers are applying contingency surcharges and rerouting via longer corridors.</p>
-                </div>`;
-        }
-        briefing += `
-            <div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500">
-                <p class="text-xs font-bold text-indigo-600 uppercase mb-1">Customs Briefing: ${d.country}</p>
-                <p class="text-sm text-gray-700">Cargo originating from ${o.country} is subject to increased documentation audits this quarter. Ensure HS Codes are verified prior to departure.</p>
-            </div>`;
-        
-        feedContainer.innerHTML = briefing;
-    }
-
-    function generateSparkline() {
-        const points = Array.from({length: 12}, () => 20 + Math.random() * 30);
-        const path = points.map((p, i) => `${i * 25},${p}`).join(' L ');
-        return `<svg viewBox="0 0 275 60" class="w-full h-12 stroke-current text-indigo-500 fill-none"><path d="M 0,${points[0]} L ${path}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>`;
+        const feed = document.getElementById('feed-container');
+        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Affected by ${risks.join(', ')}. Alternate routes calculated.</div>` : '';
+        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700">${d.country} customs is currently under high alert for ${o.country} cargo.</div>`;
+        feed.innerHTML = briefing;
     }
 
     function setLang(lang) {
@@ -245,12 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.getElementById('lang-ko').className = `px-3 py-1.5 rounded-md text-xs font-bold transition-all ${lang==='ko'?'bg-indigo-600 text-white shadow-sm':'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`;
         document.getElementById('lang-en').className = `px-3 py-1.5 rounded-md text-xs font-bold transition-all ${lang==='en'?'bg-indigo-600 text-white shadow-sm':'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`;
+        populate();
     }
 
     document.getElementById('lang-ko').onclick = () => setLang('ko');
     document.getElementById('lang-en').onclick = () => setLang('en');
-    document.getElementById('curr-usd').onclick = function() { currentCurrency = 'USD'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-krw').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500 hover:text-gray-700'; };
-    document.getElementById('curr-krw').onclick = function() { currentCurrency = 'KRW'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-usd').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500 hover:text-gray-700'; };
+    document.getElementById('curr-usd').onclick = function() { currentCurrency = 'USD'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-krw').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500 hover:text-gray-700'; calculateAndDisplay(); };
+    document.getElementById('curr-krw').onclick = function() { currentCurrency = 'KRW'; this.className = 'px-2 py-1 rounded text-[10px] font-bold bg-white shadow-sm text-indigo-600'; document.getElementById('curr-usd').className = 'px-2 py-1 rounded text-[10px] font-bold text-gray-500 hover:text-gray-700'; calculateAndDisplay(); };
 
     function dist(c1, c2) {
         const R = 6371; const dLat = (c2[0]-c1[0])*Math.PI/180; const dLon = (c2[1]-c1[1])*Math.PI/180;
