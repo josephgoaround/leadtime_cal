@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabOverview: "Summary",
             tabStrategy: "Timeline",
             totalLead: "Total Lead Time",
+            totalDist: "Total Distance",
             eta: "Estimated ETA",
             aiRec: "Routing Intelligence",
             disclaimer: "• 16kts avg. sea speed. Routes strictly maritime optimized."
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tabOverview: "요약",
             tabStrategy: "타임라인",
             totalLead: "총 리드타임",
+            totalDist: "총 운송 거리",
             eta: "최종 도착 예정일",
             aiRec: "라우팅 인텔리전스",
             disclaimer: "• 해상 평균 16노트 기준. 육지 침범 없는 현실적 항로 반영."
@@ -77,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         "aus-syd": { name: "Sydney", coords: [-33.86, 151.20], type: "Both", country: "Australia", region: "OCEANIA" }
     };
 
-    // Maritime Gateways (Precise coordinates for rounding land)
     const gates = {
         "taiwan_strait": [24.0, 119.5],
         "vnm_south": [8.5, 107.0],
@@ -142,13 +143,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const route = solveRoute(oHub, dHub, mode, sandbox);
         const t = translations[currentLang];
 
+        const nm = Math.round(route.dist * 0.539957);
+
         resultContainer.innerHTML = `
-            <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center">
-                <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
-                <p class="text-5xl font-black text-indigo-900">${Math.round(route.totalD)} <span class="text-lg font-bold text-gray-400">Days</span></p>
-                <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${route.eta.toLocaleDateString()}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+                <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
+                    <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
+                    <p class="text-4xl font-black text-indigo-900">${Math.round(route.totalD)} <span class="text-sm font-bold text-gray-400">Days</span></p>
+                    <p class="text-[10px] font-bold text-indigo-500 mt-1">${t.eta}: ${route.eta.toLocaleDateString()}</p>
+                </div>
+                <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                    <p class="text-[10px] font-extrabold text-red-500 uppercase tracking-widest mb-1">${t.totalDist}</p>
+                    <p class="text-4xl font-black text-gray-900">${nm.toLocaleString()} <span class="text-sm font-bold text-gray-400">NM</span></p>
+                    <p class="text-[10px] font-bold text-gray-400 mt-1">Approx. ${Math.round(route.dist).toLocaleString()} KM</p>
+                </div>
             </div>
-            ${route.risks.length ? `<div class="mt-4 p-4 bg-red-50 text-red-700 text-xs font-bold rounded-xl border-l-4 border-red-500">${route.risks.join('<br>')}</div>` : ''}`;
+            ${route.risks.length ? `<div class="mt-4 p-4 bg-red-50 text-red-700 text-[10px] font-bold rounded-xl border-l-4 border-red-500">${route.risks.join('<br>')}</div>` : ''}`;
+        
         executiveActions.classList.remove('hidden');
         renderMap(route.path, oHub, dHub);
     }
@@ -195,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const transitD = dist / (mode === 'sea' ? 16 * 1.852 * 24 : 850 * 24);
         const totalD = transitD + (mode === 'sea' ? 7 : 2);
         const eta = new Date(dateInput.value); eta.setDate(eta.getDate() + totalD);
-        return { totalD, eta, path, risks };
+        return { totalD, eta, path, risks, dist };
     }
 
     function getDist(c1, c2) {
@@ -208,7 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderMap(path, oH, dH) {
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
         L.marker(oH.coords).addTo(map); L.marker(dH.coords).addTo(map);
-        L.polyline(path, { color: '#4f46e5', weight: 4, className: 'leaflet-ant-path' }).addTo(map);
+        // Changed color to Red (#ef4444) as requested
+        L.polyline(path, { color: '#ef4444', weight: 4, className: 'leaflet-ant-path' }).addTo(map);
         map.fitBounds(path, { padding: [50, 50] });
     }
 
