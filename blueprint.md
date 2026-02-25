@@ -28,3 +28,11 @@
 - **UI Simplification:** 불필요한 비용 분석 및 HS Code 필드 제거로 직관성 극대화.
 - **City Database Expansion:** 전 세계 주요 도시 데이터를 70개 이상으로 대폭 확충.
 - **Maritime Realism:** 모든 해상 경로가 지리적 특성을 반영하여 바다 위로만 지나가도록 로직 고도화.
+- **Multi-language Disclaimer:** 면책 조항(Disclaimer)을 선택된 언어(영어/한국어)에 맞게 동적으로 표시하도록 개선.
+
+## **Current Task: Multi-language Disclaimer Support**
+- **Objective:** 현재 영어와 한국어가 동시에 표시되는 면책 조항을 UI 언어 설정에 따라 해당 언어만 표시되도록 변경.
+- **Steps:**
+    1. `index.html`의 면책 조항 영역에 `data-i18n` 속성 적용 및 구조 정리.
+    2. `main.js`의 `translations` 객체에 상세 면책 조항 텍스트 추가.
+    3. 언어 전환 시 면책 조항도 함께 업데이트되도록 보장.
