@@ -10,14 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "Cargo Category",
             labelOrigin: "Departure",
             labelDest: "Arrival",
+            cargoGen: "General Cargo",
+            cargoRef: "Refrigerated",
+            cargoDG: "Dangerous Goods",
             btnAnalyze: "RUN INTELLIGENCE ANALYSIS",
             feedTitle: "Route-Specific Intelligence",
             totalLead: "Total Est. Lead Time",
+            totalDist: "Total Distance",
+            co2Impact: "CO2 Footprint",
+            customsReg: "Customs Status",
             reliability: "Network Health Index",
             eta: "Estimated ETA",
             costTitle: "Cost Breakdown (EST)",
             comparisonTitle: "Mode Comparison Summary",
-            compareMsg: "Alternative via",
             disclaimer: "• 16kts avg. speed applied. External delays not guaranteed."
         },
         ko: {
@@ -29,6 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
             labelCargo: "화물 종류",
             labelOrigin: "출발지",
             labelDest: "도착지",
+            cargoGen: "일반 화물",
+            cargoRef: "냉장/냉동",
+            cargoDG: "위험물 (DG)",
             btnAnalyze: "물류 분석 실행",
             feedTitle: "경로별 맞춤 인텔리전스",
             totalLead: "총 예상 리드타임",
@@ -36,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
             eta: "최종 도착 예정일",
             costTitle: "상세 예상 비용 분석",
             comparisonTitle: "운송 수단별 비교 요약",
-            compareMsg: "대안 수단 이용 시:",
             disclaimer: "• 컨테이너선 평균 16노트 기준. 기상 및 혼잡에 따른 지연은 제외되었습니다."
         }
     };
@@ -104,15 +111,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const map = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
 
-    function getResultForMode(mode, originName, destName, weight, volume) {
+    function getResultForMode(mode, originName, destName, weight, volume, activeSandboxRisks) {
         const cityData = mode === 'sea' ? portCities : airportCities;
         const origin = cityData[originName]; const dest = cityData[destName];
         if (!origin || !dest) return null;
         
         const oHub = hubs[origin.hub]; const dHub = hubs[dest.hub];
-        let risks = [];
-        let path = mode === 'sea' ? getSeaPath(oHub.coords, dHub.coords, risks) : getAirPath(oHub.coords, dHub.coords, risks);
+        let triggeredRisks = [];
         
+        // Mock routing based on sandbox
+        let path = [oHub.coords];
+        if (Math.abs(oHub.coords[1] - dHub.coords[1]) > 180) path.push(waypoints.pacific_mid);
+        else if ((oHub.coords[1]>60 && dHub.coords[1]<20) || (oHub.coords[1]<20 && dHub.coords[1]>60)) {
+            if (activeSandboxRisks.redSea) { path.push(waypoints.good_hope, waypoints.cape_verde); triggeredRisks.push("Red Sea Redirect"); }
+            else path.push([1.2, 103.8], [30.5, 32.2]);
+        }
+        path.push(dHub.coords);
+
         let mDist = 0; for(let i=0; i<path.length-1; i++) mDist += dist(path[i], path[i+1]);
         const fDist = dist(origin.coords, oHub.coords); const lDist = dist(dHub.coords, dest.coords);
         const totalDist = mDist + fDist + lDist;
@@ -122,15 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
         let inlandD = (fDist + lDist) / speeds.land;
         let handlingD = (mode==='sea' ? 5 : 2);
         
-        risks.forEach(r => { if(r.includes("Red Sea")) transitD += 12; if(r.includes("Panama")) handlingD += 5; });
+        if (triggeredRisks.includes("Red Sea Redirect")) transitD += 12;
+        if (activeSandboxRisks.panama && totalDist > 10000) { handlingD += 5; triggeredRisks.push("Panama Delay"); }
+
         const cDelay = (dest.country === "China" ? 5 : 2);
         const totalD = transitD + inlandD + handlingD + cDelay;
 
-        // Chargeable Weight Logic: Air (1:6000), Sea (1:1000)
+        // Chargeable Weight Logic
         const chargeableWeight = mode === 'air' ? Math.max(weight, volume / 6) : Math.max(weight, volume / 1);
         const cost = totalDist * (mode==='sea'?0.15:4.5) * chargeableWeight;
 
-        return { totalD, totalDist, cost, co2: Math.round((totalDist * (mode==='sea'?25:500)) / 1000), risks, health: Math.max(25, 98 - risks.length * 25), path, origin, dest, oHub, dHub, inlandD, transitD, handlingD, cDelay };
+        return { totalD, totalDist, cost, triggeredRisks, health: Math.max(25, 98 - triggeredRisks.length * 25), path, origin, dest, oHub, dHub, inlandD, transitD, handlingD, cDelay };
     }
 
     function calculateAndDisplay() {
@@ -141,16 +158,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const destName = destinationSelect.value;
         const departureDate = new Date(dateInput.value);
 
+        const sandbox = {
+            redSea: document.getElementById('risk-redsea').checked,
+            panama: document.getElementById('risk-panama').checked,
+            airspace: document.getElementById('risk-airspace').checked
+        };
+
         if (originName === destName) return;
 
-        const mainRes = getResultForMode(mode, originName, destName, weight, volume);
-        if (!mainRes) return;
-
-        // Try to get alt mode result (simplified map names)
+        const mainRes = getResultForMode(mode, originName, destName, weight, volume, sandbox);
+        
+        // Mode Comparison
         const altMode = mode === 'sea' ? 'air' : 'sea';
-        const altOriginName = mode === 'sea' ? Object.keys(airportCities)[0] : Object.keys(portCities)[0]; // Logic placeholder
-        const altDestName = mode === 'sea' ? Object.keys(airportCities)[1] : Object.keys(portCities)[1];
-        const altRes = getResultForMode(altMode, altOriginName, altDestName, weight, volume);
+        // Simplified alt mode search: finds first matching city pair if possible
+        const altRes = getResultForMode(altMode, (altMode==='air'?Object.keys(airportCities)[0]:Object.keys(portCities)[0]), (altMode==='air'?Object.keys(airportCities)[1]:Object.keys(portCities)[1]), weight, volume, sandbox);
 
         const convert = (val) => currentCurrency === 'USD' ? `$${Math.round(val).toLocaleString()}` : `₩${Math.round(val * exchangeRate).toLocaleString()}`;
         const t = translations[currentLang];
@@ -177,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <!-- Comparison Box -->
                 <div class="p-4 bg-gray-900 rounded-2xl text-white shadow-xl">
                     <p class="text-[10px] font-bold text-gray-500 uppercase mb-3 tracking-widest">${t.comparisonTitle}</p>
                     <div class="flex items-center justify-between text-sm">
@@ -195,19 +215,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 text-center text-xs">
-                    <div class="p-3 bg-white rounded-xl border border-gray-100 shadow-sm">
-                        <p class="font-bold text-gray-400 uppercase tracking-tighter">${t.co2Impact}</p>
-                        <p class="text-lg font-bold text-green-600">${mainRes.co2.toLocaleString()}kg</p>
-                    </div>
-                    <div class="p-3 bg-white rounded-xl border border-gray-100 shadow-sm">
-                        <p class="font-bold text-gray-400 uppercase tracking-tighter">${t.reliability}</p>
-                        <p class="text-lg font-bold ${mainRes.health > 70 ? 'text-green-500' : 'text-red-500'}">${mainRes.health}%</p>
+                <div class="p-3 bg-white rounded-xl border border-gray-100 shadow-sm text-center">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">${t.reliability}</p>
+                    <div class="flex items-center gap-4 px-2">
+                        <div class="text-2xl font-black ${mainRes.health > 70 ? 'text-green-500' : 'text-red-500'}">${mainRes.health}%</div>
+                        <div class="flex-1 bg-gray-100 h-2 rounded-full overflow-hidden"><div style="width: ${mainRes.health}%" class="${mainRes.health > 70 ? 'bg-green-500' : 'bg-red-500'} h-full"></div></div>
                     </div>
                 </div>
             </div>`;
 
-        updateIntelligence(mainRes.origin, mainRes.dest, mainRes.risks, mainRes.health);
+        updateIntelligence(mainRes.origin, mainRes.dest, mainRes.triggeredRisks, mainRes.health);
         renderMap(mainRes.path, mainRes.origin, mainRes.dest, mainRes.oHub, mainRes.dHub, originName, destName);
     }
 
@@ -218,8 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (health > 70) { statusText.innerText = "Network Stable"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-green-500"; }
         else { statusText.innerText = "Elevated Alert"; statusDot.className = "relative inline-flex rounded-full h-2 w-2 bg-red-500"; }
 
-        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Affected by ${risks.join(' & ')}.</div>` : '';
-        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700">Customs alert for ${d.country}: expect audits for ${o.country} cargo.</div>`;
+        let briefing = risks.length > 0 ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Simulated Impact: ${risks.join(' & ')}.</div>` : '';
+        briefing += `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 italic">"What-if" analysis active. Adjust sandbox toggles to see alternate lead times.</div>`;
         feedContainer.innerHTML = briefing;
     }
 
@@ -243,28 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 
-    function getSeaPath(o, d, r) {
-        let p = [o];
-        if (Math.abs(o[1]-d[1]) > 180) p.push(waypoints.pacific_mid);
-        else if ((o[1]>60 && d[1]<20) || (o[1]<20 && d[1]>60)) {
-            if (globalRisks.redSeaCrisis.active) { p.push(waypoints.good_hope, waypoints.cape_verde); r.push("Red Sea"); }
-            else p.push([1.2, 103.8], [30.5, 32.2]);
-        }
-        p.push(d); return p;
-    }
-
-    function getAirPath(o, d, r) {
-        const p = []; const sL = o[1]; let eL = d[1];
-        if (Math.abs(sL-eL)>180) eL += (sL>0?360:-360);
-        for(let i=0; i<=20; i++) {
-            const f = i/20; let lat = o[0]+(d[0]-o[0])*f; const lon = sL+(eL-sL)*f;
-            const dVal = dist(o, d); let off = Math.sin(Math.PI*f)*(dVal/12000)*15;
-            if(globalRisks.russiaAirspace.active && lat > 45) { off -= 20; if(i===10) r.push("Russia"); }
-            p.push([lat+off, lon]);
-        }
-        return p;
-    }
-
     function renderMap(path, o, d, oH, dH, oN, dN) {
         map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) map.removeLayer(l); });
         L.marker(o.coords).addTo(map).bindPopup(oN); L.marker(d.coords).addTo(map).bindPopup(dN);
@@ -277,4 +272,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
+    setLang('en');
 });
