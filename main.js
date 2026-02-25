@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn: "Share Link",
             copySummary: "Copy Summary",
             exportCsv: "Export CSV",
-            disclaimer: "• 16kts avg. speed. Carbon tax based on $80/ton CO2."
+            disclaimer: "• 16kts avg. speed. Congestion data simulated."
         },
         ko: {
             subtitle: "글로벌 물류 및 통관 AI 경로 분석기",
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             shareBtn: "링크 공유",
             copySummary: "요약 복사",
             exportCsv: "CSV 내보내기",
-            disclaimer: "• 16노트 평균속도 기준. 탄소세는 톤당 $80 기준입니다."
+            disclaimer: "• 16노트 평균속도 기준. 혼잡도는 시뮬레이션 데이터입니다."
         }
     };
 
@@ -69,19 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const rates = { KRW: 1350, EUR: 0.92, USD: 1 };
     const annualICC = 0.15;
 
+    // --- Global Hub Intelligence Database ---
     const portCities = {
-        "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", country: "South Korea", status: "green", duty: 0.10 },
-        "Port of Shanghai": { coords: [31.2304, 121.4737], hub: "chn-sha", country: "China", status: "red", duty: 0.15 },
-        "Port of Singapore": { coords: [1.3521, 103.8198], hub: "sgp-sin", country: "Singapore", status: "yellow", duty: 0.07 },
-        "Port of Rotterdam": { coords: [51.9225, 4.4792], hub: "nld-rot", country: "Netherlands", status: "yellow", duty: 0.12 },
-        "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", country: "USA", status: "red", duty: 0.05 }
+        "Port of Busan": { coords: [35.1796, 129.0756], hub: "kor-pus", country: "South Korea", status: "green", congestion: "Low (4h turnaround)", duty: 0.10 },
+        "Port of Shanghai": { coords: [31.2304, 121.4737], hub: "chn-sha", country: "China", status: "red", congestion: "High (48h vessel bunching)", duty: 0.15 },
+        "Port of Singapore": { coords: [1.3521, 103.8198], hub: "sgp-sin", country: "Singapore", status: "yellow", congestion: "Medium (18h stack wait)", duty: 0.07 },
+        "Port of Rotterdam": { coords: [51.9225, 4.4792], hub: "nld-rot", country: "Netherlands", status: "yellow", congestion: "Medium (12h rail link delay)", duty: 0.12 },
+        "Port of Los Angeles": { coords: [34.0522, -118.2437], hub: "usa-lax", country: "USA", status: "red", congestion: "High (72h gate-out queue)", duty: 0.05 }
     };
 
     const airportCities = {
-        "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", status: "green", duty: 0.10 },
-        "PVG (Shanghai)": { coords: [31.1443, 121.8083], hub: "chn-pvg", country: "China", status: "red", duty: 0.15 },
-        "FRA (Frankfurt)": { coords: [50.0379, 8.5622], hub: "deu-fra", country: "Germany", status: "yellow", duty: 0.12 },
-        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", status: "yellow", duty: 0.05 }
+        "ICN (Incheon)": { coords: [37.4602, 126.4407], hub: "kor-icn", country: "South Korea", status: "green", congestion: "Stable", duty: 0.10 },
+        "PVG (Shanghai)": { coords: [31.1443, 121.8083], hub: "chn-pvg", country: "China", status: "red", congestion: "Severe Backlog", duty: 0.15 },
+        "FRA (Frankfurt)": { coords: [50.0379, 8.5622], hub: "deu-fra", country: "Germany", status: "yellow", congestion: "Labor Shortage", duty: 0.12 },
+        "JFK (New York)": { coords: [40.6413, -73.7781], hub: "usa-jfk", country: "USA", status: "yellow", congestion: "Weather impact", duty: 0.05 }
     };
 
     const hubs = {
@@ -155,10 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let transitD = mDist / speeds[mode];
         let handlingD = (mode==='sea' ? 5 : 2);
         
-        // --- Service Tier Logic ---
-        if (tier === 'premium') {
-            handlingD *= 0.6; // 40% faster handling
-        }
+        if (tier === 'premium') handlingD *= 0.6;
+        if (origin.status === 'red' || dest.status === 'red') { handlingD += 3; risks.push("Hub Congestion"); }
 
         const totalD = transitD + (fDist+lDist)/500 + handlingD + 2;
         const eta = new Date(departureDate); eta.setDate(eta.getDate() + totalD);
@@ -169,12 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalSpend = baseFreight + tierPremium + inventoryCost;
         
         const co2Tons = (totalDist * (mode==='sea'?25:500) * weight) / 1000000;
-        const estCarbonTax = co2Tons * 80; // $80 per ton CO2
+        const estCarbonTax = co2Tons * 80;
 
         const t = translations[currentLang];
         const convert = (val) => `${currentCurrency==='KRW'?'₩':'$'}${Math.round(val * rates[currentCurrency]).toLocaleString()}`;
 
-        // Dates for Milestones
+        // Milestone Dates
         const d1 = new Date(departureDate);
         const d2 = new Date(departureDate); d2.setDate(d2.getDate() + (fDist/500) + handlingD/2);
         const d3 = new Date(d2); d3.setDate(d3.getDate() + transitD);
@@ -194,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="text-xs font-bold text-indigo-500 mt-1">${t.eta}: ${eta.toLocaleDateString()}</p>
                     </div>
                     <!-- Detailed Timeline -->
-                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.journeyLog}</p><div class="space-y-4 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-[2px] before:bg-indigo-100"><div class="flex gap-4 relative items-center"><div class="w-4 h-4 rounded-full bg-indigo-600 z-10 border-4 border-white shadow-sm"></div><div class="flex-1"><p class="text-xs font-bold text-gray-800">${originName} Departure</p><p class="text-[10px] text-gray-400">${d1.toLocaleDateString()}</p></div></div><div class="flex gap-4 relative items-center"><div class="w-4 h-4 rounded-full bg-indigo-400 z-10 border-4 border-white shadow-sm"></div><div class="flex-1"><p class="text-xs font-bold text-gray-800">Hub Handover & Main Transit</p><p class="text-[10px] text-indigo-500">${d2.toLocaleDateString()}</p></div></div><div class="flex gap-4 relative items-center"><div class="w-4 h-4 rounded-full bg-indigo-600 z-10 border-4 border-white shadow-sm"></div><div class="flex-1"><p class="text-xs font-bold text-gray-800">${destName} Arrival</p><p class="text-[10px] text-gray-400">ETA: ${eta.toLocaleDateString()}</p></div></div></div></div>
+                    <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm"><p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">${t.journeyLog}</p><div class="space-y-4 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-[2px] before:bg-indigo-100"><div class="flex gap-4 relative items-center group cursor-help"><div class="w-4 h-4 rounded-full bg-indigo-600 z-10 border-4 border-white shadow-sm"></div><div class="flex-1"><p class="text-xs font-bold text-gray-800">${originName} Departure</p><p class="text-[10px] text-gray-400">${d1.toLocaleDateString()}</p><div class="hidden group-hover:block absolute left-full ml-4 bg-gray-900 text-white p-2 rounded text-[10px] w-32 z-50">Local pickup & export clearance.</div></div></div><div class="flex gap-4 relative items-center group cursor-help"><div class="w-4 h-4 rounded-full bg-indigo-400 z-10 border-4 border-white shadow-sm"></div><div class="flex-1"><p class="text-xs font-bold text-gray-800">Hub Handover & Main Transit</p><p class="text-[10px] text-indigo-500">${d2.toLocaleDateString()}</p><div class="hidden group-hover:block absolute left-full ml-4 bg-gray-900 text-white p-2 rounded text-[10px] w-32 z-50">Loading at ${origin.hub} and deep-sea leg.</div></div></div><div class="flex gap-4 relative items-center group cursor-help"><div class="w-4 h-4 rounded-full bg-indigo-600 z-10 border-4 border-white shadow-sm"></div><div class="flex-1"><p class="text-xs font-bold text-gray-800">${destName} Arrival</p><p class="text-[10px] text-gray-400">ETA: ${eta.toLocaleDateString()}</p><div class="hidden group-hover:block absolute left-full ml-4 bg-gray-900 text-white p-2 rounded text-[10px] w-32 z-50">Import duty payment & final delivery.</div></div></div></div></div>
                 </div>
 
                 <div id="tab-content-finance" class="tab-pane hidden space-y-4">
@@ -224,16 +223,16 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
 
         executiveActions.classList.remove('hidden');
-        updateIntelligence(origin, dest, [], 98);
+        updateIntelligence(origin, dest, risks, 98);
         renderMap(path, origin, dest, oHub, dHub, originName, destName);
         
-        window.currentAnalysis = { originName, destName, mode, totalD, eta, convert, totalSpend, co2Tons, risks: [] };
+        window.currentAnalysis = { originName, destName, mode, totalD, eta, convert, totalSpend, co2Tons, risks };
     }
 
     window.copyExecutiveSummary = () => {
         const a = window.currentAnalysis;
         if (!a) return;
-        const text = `[EXECUTIVE LOGISTICS SUMMARY]\n\nRoute: ${a.originName} to ${a.destName}\nMode: ${a.mode.toUpperCase()}\nLead Time: ${Math.round(a.totalD)} Days\nEstimated ETA: ${a.eta.toLocaleDateString()}\nTotal Spend: ${a.convert(a.totalSpend)}\nESG Impact: ${a.co2Tons.toFixed(2)} Tons CO2\n\nGenerated by LeadTime Intelligence AI.`;
+        const text = `[EXECUTIVE LOGISTICS SUMMARY]\n\nRoute: ${a.originName} to ${a.destName}\nMode: ${a.mode.toUpperCase()}\nLead Time: ${Math.round(a.totalD)} Days\nEstimated ETA: ${a.eta.toLocaleDateString()}\nTotal Spend: ${a.convert(a.totalSpend)}\nESG Impact: ${a.co2Tons.toFixed(2)} Tons CO2\nRisk Status: ${a.risks.length > 0 ? a.risks.join(', ') : 'Stable'}\n\nGenerated by LeadTime Intelligence AI.`;
         navigator.clipboard.writeText(text);
         alert(translations[currentLang].copySummary + " Copied!");
     };
@@ -247,15 +246,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateIntelligence(o, d, risks, health) {
         networkBadge.classList.remove('hidden');
-        networkBadge.querySelector('span:last-child').innerText = "Network Stable";
-        feedContainer.innerHTML = `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">Market Insight: ${d.country} infrastructure ready for high-volume intake.</div>`;
+        const alert = (o.status === 'red' || d.status === 'red' || risks.length > 0);
+        networkBadge.querySelector('span:last-child').innerText = alert ? "Elevated Alert" : "Network Stable";
+        networkBadge.querySelector('span:first-child span:last-child').className = `relative inline-flex rounded-full h-2 w-2 ${alert?'bg-red-500':'bg-green-500'}`;
+        feedContainer.innerHTML = (alert ? `<div class="p-4 bg-red-50 rounded-xl border-l-4 border-red-500 text-sm font-medium text-red-700">Notice: Congestion detected. ${o.name}: ${o.congestion}. ${d.name}: ${d.congestion}.</div>` : '') + `<div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-500 text-sm text-gray-700 font-medium">Market Insight: ${d.country} hub is handling seasonal volumes at standard efficiency.</div>`;
     }
 
     function renderMap(path, o, d, oH, dH, oN, dN) {
         map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) map.removeLayer(l); });
-        const hI = L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41] });
-        L.marker(o.coords).addTo(map).bindPopup(oN); L.marker(d.coords).addTo(map).bindPopup(dN);
-        L.marker(oH.coords, {icon: hI}).addTo(map); L.marker(dH.coords, {icon: hI}).addTo(map);
+        
+        const dot = (color) => L.divIcon({ html: `<div class="w-4 h-4 rounded-full border-2 border-white shadow-md bg-${color}-500"></div>`, className: 'custom-div-icon', iconSize: [16, 16] });
+        
+        L.marker(o.coords, {icon: dot(o.status)}).addTo(map).bindPopup(`<b>${oN}</b><br>Congestion: ${o.congestion}`);
+        L.marker(d.coords, {icon: dot(d.status)}).addTo(map).bindPopup(`<b>${dN}</b><br>Congestion: ${d.congestion}`);
+        
         L.polyline([o.coords, oH.coords], {color: '#ef4444', weight: 2, dashArray: '5, 5'}).addTo(map);
         path.forEach((p, i) => { if(i>0 && Math.abs(path[i-1][1]-p[1])<180) L.polyline([path[i-1], p], {color: '#dc2626', weight: 5}).addTo(map); });
         L.polyline([dH.coords, d.coords], {color: '#ef4444', weight: 2, dashArray: '5, 5'}).addTo(map);
