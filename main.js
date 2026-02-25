@@ -83,13 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function getCustomsIntelligence(originCountry, destCountry) {
         const commonDocs = ["Bill of Lading", "Commercial Invoice", "Packing List"];
         if (originCountry === destCountry) return { level: "Low", delay: 1, color: "text-green-600 bg-green-50", docs: commonDocs };
-        
-        // Specific Rules
         if (destCountry === "China") return { level: "High", delay: 5, color: "text-red-600 bg-red-50", docs: [...commonDocs, "CCC Certificate", "Import License"] };
         if (destCountry === "USA") return { level: "Medium", delay: 3, color: "text-yellow-600 bg-yellow-50", docs: [...commonDocs, "ISF Filing", "Customs Bond"] };
         if (destCountry === "UK") return { level: "Medium", delay: 4, color: "text-yellow-600 bg-yellow-50", docs: [...commonDocs, "EORI Number", "T1 Form"] };
         if (destCountry === "Brazil") return { level: "High", delay: 7, color: "text-red-600 bg-red-50", docs: [...commonDocs, "Import Declaration", "RADAR License"] };
-        
         return { level: "Medium", delay: 2, color: "text-blue-600 bg-blue-50", docs: [...commonDocs, "Certificate of Origin"] };
     }
 
@@ -167,8 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return path;
     }
 
-    document.getElementById('shipping-form').addEventListener('submit', function(e) {
-        e.preventDefault();
+    function calculateAndDisplay() {
         const mode = modeSelect.value; const cargoType = document.getElementById('cargo-type').value;
         const originCityName = originSelect.value; const destCityName = destinationSelect.value;
         const resultDiv = document.getElementById('result');
@@ -206,6 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const customsInfo = getCustomsIntelligence(origin.country, dest.country);
         leadTime += customsInfo.delay;
 
+        // CO2 Estimation (kg per tonne)
+        const co2Factors = { sea: 25, air: 500 };
+        const totalCO2 = Math.round((totalDist * co2Factors[mode]) / 1000);
+
         let riskAlertHtml = '';
         if (activeRisks.length > 0) {
             riskAlertHtml = `<div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg text-sm text-red-700">
@@ -219,7 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="p-4 bg-blue-50 rounded-lg border border-blue-100 shadow-inner">
                     <div class="flex justify-between items-end">
                         <div><p class="text-xs text-blue-600 font-bold uppercase">Total Est. Lead Time</p><p class="text-4xl font-bold text-blue-700">${Math.round(leadTime)} Days</p></div>
-                        <div class="text-right"><p class="text-[10px] text-blue-500 font-medium uppercase">Total Distance</p><p class="text-xl font-bold text-blue-600">${totalDist.toLocaleString()} km</p></div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-blue-500 font-medium uppercase">Total Distance</p><p class="text-xl font-bold text-blue-600">${totalDist.toLocaleString()} km</p>
+                            <p class="text-[10px] text-green-600 font-bold uppercase mt-1">Est. CO2 Footprint</p><p class="text-sm font-bold text-green-700">${totalCO2.toLocaleString()} kg/tonne</p>
+                        </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-[13px]">
@@ -234,11 +237,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="flex flex-wrap gap-1">${customsInfo.docs.map(doc => `<span class="bg-gray-50 text-gray-500 px-1.5 py-0.5 rounded-sm text-[9px] border border-gray-100">${doc}</span>`).join('')}</div>
                     </div>
                 </div>
+                <button id="share-btn" class="w-full bg-white border border-gray-300 text-gray-700 py-2 rounded shadow-sm hover:bg-gray-50 text-sm font-bold flex items-center justify-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>Share Result Link
+                </button>
                 <div class="text-[10px] text-gray-400 leading-relaxed space-y-1 mt-4 border-t pt-3">
                     <p>• 운송 날짜는 컨테이너선종 평균 속력(16knot) 및 국가별 통관 행정 시간을 기준으로 계산되었습니다.</p>
+                    <p>• 탄소 배출량은 톤당 평균 배출 계수(해상 25g, 항공 500g)를 기준으로 추정되었습니다.</p>
                     <p>• 면책 고지: 예상 소요 날짜는 기상 악화, 천재지변 및 항만 혼잡 상황에 따라 변동될 수 있습니다.</p>
                 </div>
             </div>`;
+
+        document.getElementById('share-btn').addEventListener('click', () => {
+            const url = new URL(window.location);
+            url.searchParams.set('mode', mode); url.searchParams.set('origin', originCityName); url.searchParams.set('dest', destCityName); url.searchParams.set('cargo', cargoType);
+            navigator.clipboard.writeText(url.href).then(() => alert('Result link copied to clipboard!'));
+        });
 
         map.eachLayer(layer => { if (layer instanceof L.Marker || layer instanceof L.Polyline) map.removeLayer(layer); });
         L.marker(origin.coords).addTo(map).bindPopup(originCityName);
@@ -251,7 +264,20 @@ document.addEventListener('DOMContentLoaded', () => {
         else L.polyline(middleMilePath, { color: '#ef4444', weight: 4, opacity: 0.8 }).addTo(map); 
         L.polyline([destHub.coords, dest.coords], { color: '#ef4444', weight: 2, dashArray: '5, 5', opacity: 0.6 }).addTo(map); 
         map.fitBounds([origin.coords, dest.coords, ...middleMilePath], { padding: [50, 50] });
-    });
+    }
+
+    document.getElementById('shipping-form').addEventListener('submit', (e) => { e.preventDefault(); calculateAndDisplay(); });
+
+    // Load from URL if present
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('mode')) {
+        modeSelect.value = params.get('mode');
+        populateCities();
+        originSelect.value = params.get('origin');
+        destinationSelect.value = params.get('dest');
+        document.getElementById('cargo-type').value = params.get('cargo');
+        setTimeout(calculateAndDisplay, 500);
+    }
 
     function drawSeaPath(path) {
         let segments = [[]]; let currentSegment = 0;
