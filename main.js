@@ -13,11 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             totalLead: "Total Lead Time",
             totalDist: "Total Distance",
             eta: "Estimated ETA",
-            aiRec: "Routing Intelligence",
-            disclaimer: "• 16kts avg. sea speed. Routes strictly maritime optimized.",
-            disclaimerSpeed: "• Estimated lead times are calculated based on average container ship speeds (approx. 16-18 knots).",
-            disclaimerLabel: "• Disclaimer:",
-            disclaimerText: "Actual arrival dates may vary due to weather conditions, natural disasters, and port congestion.",
+            labelCost: "Estimated Cost",
             unitDays: "Days",
             unitNM: "NM",
             approx: "Approx.",
@@ -34,7 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
             feedPlaceholder: "Select a route to generate deep-dive intelligence briefing.",
             feedTitle: "Route-Specific Intelligence",
             liveAlert: "Live Alert",
-            updatedRealtime: "Updated: Real-time"
+            updatedRealtime: "Updated: Real-time",
+            disclaimerSpeed: "• Estimated lead times are calculated based on average container ship speeds (approx. 16-18 knots).",
+            disclaimerLabel: "• Disclaimer:",
+            disclaimerText: "Actual arrival dates may vary due to weather conditions, natural disasters, and port congestion.",
+            disclaimerCost: "• Cost estimates are for reference only and may differ from actual carrier rates."
         },
         ko: {
             subtitle: "글로벌 물류 AI 경로 분석기",
@@ -49,11 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             totalLead: "총 리드타임",
             totalDist: "총 운송 거리",
             eta: "최종 도착 예정일",
-            aiRec: "라우팅 인텔리전스",
-            disclaimer: "• 해상 평균 16노트 기준. 육지 침범 없는 현실적 항로 반영.",
-            disclaimerSpeed: "• 예상 소요 시간은 컨테이너 선종의 평균 속력(약 16-18노트)을 기준으로 계산되었습니다.",
-            disclaimerLabel: "• 면책 공지:",
-            disclaimerText: "소요 예정 날짜는 악천후, 천재지변 및 항구 혼잡도에 따라 달라질 수 있습니다.",
+            labelCost: "예상 운송 비용",
             unitDays: "일",
             unitNM: "해리(NM)",
             approx: "약",
@@ -70,59 +66,91 @@ document.addEventListener('DOMContentLoaded', () => {
             feedPlaceholder: "경로를 선택하면 상세 물류 인텔리전스 브리핑이 생성됩니다.",
             feedTitle: "경로별 특화 인텔리전스",
             liveAlert: "실시간 알림",
-            updatedRealtime: "업데이트: 실시간"
+            updatedRealtime: "업데이트: 실시간",
+            disclaimerSpeed: "• 예상 소요 시간은 컨테이너 선종의 평균 속력(약 16-18노트)을 기준으로 계산되었습니다.",
+            disclaimerLabel: "• 면책 공지:",
+            disclaimerText: "소요 예정 날짜는 악천후, 천재지변 및 항구 혼잡도에 따라 달라질 수 있습니다.",
+            disclaimerCost: "• 비용 분석은 참조용이며, 실제 운송사 요금과는 다를 수 있습니다."
         }
     };
 
     let currentLang = 'en';
 
-    // 1. 초정밀 해상 노드 (육지 완전 회피 그리드)
+    // 1. 초정밀 해상 노드 (육지 침범 절대 불가 영역)
     const seaNodes = {
-        // Korea Coastal (Detailed Bypass)
-        "pusan_gate": [35.0, 129.1], "geoje_s": [34.5, 128.8], "namhae_s": [34.1, 127.8], "jeju_nw": [33.8, 125.8], "jeju_s": [32.5, 126.5], "incheon_gate": [37.2, 126.1], "yellow_sea_mid": [35.5, 124.5],
-        // NE Asia
-        "shanghai_gate": [31.2, 122.5], "shanghai_outer": [30.5, 123.5], "kyushu_s": [30.5, 131.0], "tokyo_gate": [35.0, 140.0], "tokyo_outer": [34.0, 141.0], "taipei_gate": [25.2, 122.0], "taipei_outer": [25.5, 123.0], "luzon_strait": [20.0, 121.5], "hongkong_gate": [22.1, 114.3], "hongkong_outer": [21.5, 115.0],
-        // SE Asia (Detailed Malacca)
-        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "gulf_thailand": [6.5, 102.5], "malacca_east": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0], "indonesia_south": [-10.0, 115.0], "sunda_strait": [-6.2, 105.5],
+        // Korea / NE Asia
+        "pusan_exit": [35.0, 129.1], "incheon_exit": [37.2, 126.0], "jeju_s": [32.5, 126.5], "yellow_sea_mid": [35.5, 124.5],
+        "shanghai_exit": [31.2, 122.5], "shanghai_outer": [30.5, 123.5], "ningbo_exit": [29.8, 122.5], "qingdao_exit": [36.0, 121.0],
+        "taipei_exit": [25.2, 121.8], "taipei_outer": [25.5, 122.5], "kaohsiung_exit": [22.5, 120.2], "hongkong_exit": [22.2, 114.2], "hongkong_outer": [21.5, 114.5],
+        "kyushu_s": [30.5, 131.0], "tokyo_exit": [35.5, 140.0], "tokyo_outer": [34.0, 141.0], "luzon_strait": [20.0, 121.5],
+        // SE Asia
+        "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "malacca_east": [1.5, 104.8], "singapore_gate": [1.2, 103.8],
+        "port_kelang_exit": [3.0, 101.0], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0],
+        "jakarta_exit": [-6.0, 106.8], "sunda_strait": [-6.2, 105.5], "indonesia_south": [-10.0, 115.0],
+        "manila_exit": [14.5, 120.8], "bangkok_exit": [13.0, 100.8],
         // Indian Ocean
-        "srilanka_s": [5.5, 80.5], "mumbai_gate": [18.8, 72.5], "mumbai_outer": [18.5, 71.0], "dubai_gate": [25.2, 55.5], "dubai_outer": [25.8, 56.8], "arabian_sea_mid": [15.0, 62.0], "bab_el_mandeb": [12.6, 43.3], "red_sea_1": [17.0, 40.5], "red_sea_2": [21.0, 38.0], "red_sea_3": [25.0, 36.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
-        // Europe & Africa
-        "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "portugal_w": [39.0, -11.0], "finisterre": [44.5, -10.0], "bay_of_biscay": [46.5, -6.5], "english_channel": [49.8, -3.5], "rotterdam_gate": [52.0, 3.8], "hamburg_gate": [54.0, 8.2], "good_hope": [-36.0, 20.0], "west_africa_1": [15.0, -19.0], "west_africa_2": [0.0, -12.0], "canary_islands": [28.0, -17.0],
+        "srilanka_s": [5.5, 80.5], "mumbai_exit": [18.8, 72.5], "mumbai_outer": [18.5, 71.0], "dubai_exit": [25.2, 55.3], "jebel_ali_gate": [25.0, 55.0], "jeddah_exit": [21.5, 39.0],
+        "arabian_sea_mid": [15.0, 62.0], "bab_el_mandeb": [12.6, 43.3], "red_sea_mid": [21.0, 38.0], "suez_s": [29.8, 32.6], "suez_n": [31.3, 32.3],
+        // Europe
+        "piraeus_exit": [37.8, 23.6], "med_mid": [34.5, 18.0], "gibraltar": [35.9, -5.8], "valencia_exit": [39.4, -0.2], "algeciras_gate": [36.0, -5.4],
+        "portugal_w": [39.0, -11.0], "bay_of_biscay": [46.5, -6.5], "english_channel": [49.8, -3.5], "le_havre_gate": [49.5, 0.0],
+        "rotterdam_exit": [52.0, 3.8], "antwerp_gate": [51.3, 4.3], "hamburg_exit": [54.0, 8.2], "felixstowe_gate": [51.9, 1.3],
+        // Africa
+        "good_hope": [-36.0, 20.0], "durban_exit": [-30.0, 31.0], "cape_town_exit": [-34.0, 18.4], "west_africa_1": [15.0, -19.0], "west_africa_2": [0.0, -12.0],
         // Americas
-        "nyc_gate": [40.2, -73.5], "florida_s": [24.2, -81.0], "bahamas_n": [27.0, -78.5], "caribbean_mid": [16.0, -76.0], "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "mexico_w": [18.5, -106.0], "lax_gate": [33.5, -118.5], "lax_outer": [32.5, -120.0], "vancouver_gate": [49.0, -123.8], "vancouver_outer": [48.5, -126.5], "brazil_e": [-6.0, -34.0], "santos_gate": [-24.2, -46.0], "santos_outer": [-25.5, -45.0], "cape_horn": [-57.5, -67.0],
-        // Mid Oceans (Antimeridian Handling)
-        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "atlantic_mid": [32.0, -45.0], "sydney_gate": [-33.9, 151.5], "sydney_outer": [-35.0, 153.0]
+        "nyc_exit": [40.2, -73.5], "savannah_gate": [31.5, -80.5], "houston_gate": [29.0, -94.5], "florida_s": [24.2, -81.0], "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6],
+        "mexico_w": [18.5, -106.0], "lax_exit": [33.5, -118.5], "oakland_gate": [37.8, -122.5], "vancouver_exit": [49.0, -123.8],
+        "santos_exit": [-24.0, -46.3], "buenos_aires_exit": [-34.6, -58.0], "brazil_e": [-6.0, -34.0], "cape_horn": [-57.5, -67.0],
+        // Mid Oceans
+        "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "atlantic_mid": [32.0, -45.0], "sydney_gate": [-33.9, 151.5]
     };
 
-    // 2. 정밀 해상 연결망 (육지 절대 침범 불가)
     const seaEdges = [
-        // Korea Bypass
-        ["incheon_gate", "yellow_sea_mid"], ["yellow_sea_mid", "jeju_nw"], ["jeju_nw", "jeju_s"], ["pusan_gate", "geoje_s"], ["geoje_s", "namhae_s"], ["namhae_s", "jeju_nw"], ["jeju_s", "shanghai_gate"], ["jeju_s", "kyushu_s"],
-        // Asia Network
-        ["shanghai_gate", "shanghai_outer"], ["shanghai_outer", "taipei_outer"], ["taipei_gate", "taipei_outer"], ["taipei_outer", "luzon_strait"], ["taipei_outer", "kyushu_s"], ["kyushu_s", "tokyo_outer"], ["tokyo_gate", "tokyo_outer"], ["luzon_strait", "hongkong_outer"], ["hongkong_gate", "hongkong_outer"], ["hongkong_outer", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "gulf_thailand"], ["gulf_thailand", "malacca_east"], ["vietnam_s", "malacca_east"], ["malacca_east", "singapore_gate"], ["singapore_gate", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"],
-        // Indian Ocean & Suez
-        ["andaman_sea", "srilanka_s"], ["srilanka_s", "mumbai_outer"], ["mumbai_gate", "mumbai_outer"], ["srilanka_s", "arabian_sea_mid"], ["mumbai_outer", "arabian_sea_mid"], ["dubai_outer", "arabian_sea_mid"], ["dubai_gate", "dubai_outer"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "med_mid"], ["srilanka_s", "good_hope"],
-        // Europe & Africa
-        ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"], ["finisterre", "bay_of_biscay"], ["bay_of_biscay", "english_channel"], ["english_channel", "rotterdam_gate"], ["rotterdam_gate", "hamburg_gate"], ["good_hope", "west_africa_2"], ["west_africa_2", "west_africa_1"], ["west_africa_1", "canary_islands"], ["canary_islands", "portugal_w"],
-        // Americas
-        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_gate"], ["nyc_gate", "bahamas_n"], ["bahamas_n", "florida_s"], ["florida_s", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_outer"], ["lax_gate", "lax_outer"], ["lax_outer", "vancouver_outer"], ["vancouver_gate", "vancouver_outer"], ["canary_islands", "brazil_e"], ["brazil_e", "santos_outer"], ["santos_gate", "santos_outer"], ["santos_outer", "cape_horn"],
-        // Pacific (Antimeridian)
-        ["tokyo_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_outer"], ["singapore_gate", "indonesia_south"], ["indonesia_south", "sydney_outer"], ["sydney_gate", "sydney_outer"], ["pacific_mid_w", "sydney_outer"]
+        ["incheon_exit", "yellow_sea_mid"], ["pusan_exit", "jeju_s"], ["yellow_sea_mid", "jeju_s"], ["jeju_s", "shanghai_gate"], ["shanghai_gate", "ningbo_exit"], ["shanghai_gate", "qingdao_exit"], ["jeju_s", "kyushu_s"],
+        ["kyushu_s", "tokyo_exit"], ["shanghai_gate", "taipei_gate"], ["taipei_gate", "kaohsiung_exit"], ["kaohsiung_exit", "luzon_strait"], ["taipei_gate", "luzon_strait"], ["luzon_strait", "hongkong_exit"],
+        ["hongkong_exit", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "bangkok_exit"], ["vietnam_s", "manila_exit"], ["vietnam_s", "singapore_gate"], ["singapore_gate", "jakarta_exit"], ["jakarta_exit", "sunda_strait"],
+        ["singapore_gate", "port_kelang_exit"], ["port_kelang_exit", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"], ["andaman_sea", "srilanka_s"],
+        ["srilanka_s", "mumbai_exit"], ["srilanka_s", "arabian_sea_mid"], ["mumbai_exit", "arabian_sea_mid"], ["arabian_sea_mid", "dubai_exit"], ["dubai_exit", "jebel_ali_gate"], ["dubai_exit", "bab_el_mandeb"],
+        ["bab_el_mandeb", "red_sea_mid"], ["red_sea_mid", "jeddah_exit"], ["red_sea_mid", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "piraeus_exit"], ["suez_n", "med_mid"], ["med_mid", "valencia_exit"], ["med_mid", "gibraltar"],
+        ["gibraltar", "algeciras_gate"], ["gibraltar", "portugal_w"], ["portugal_w", "finisterre"], ["finisterre", "bay_of_biscay"], ["bay_of_biscay", "le_havre_gate"], ["bay_of_biscay", "english_channel"], ["english_channel", "felixstowe_gate"], ["english_channel", "rotterdam_exit"], ["rotterdam_exit", "antwerp_gate"], ["rotterdam_exit", "hamburg_exit"],
+        ["srilanka_s", "good_hope"], ["good_hope", "durban_exit"], ["good_hope", "cape_town_exit"], ["good_hope", "west_africa_2"], ["west_africa_2", "west_africa_1"], ["west_africa_1", "canary_islands"], ["canary_islands", "portugal_w"],
+        ["portugal_w", "atlantic_mid"], ["atlantic_mid", "nyc_gate"], ["nyc_gate", "savannah_gate"], ["savannah_gate", "florida_s"], ["florida_s", "houston_gate"], ["florida_s", "bahamas_n"], ["bahamas_n", "caribbean_mid"], ["caribbean_mid", "panama_e"], ["panama_e", "panama_w"], ["panama_w", "mexico_w"], ["mexico_w", "lax_exit"], ["lax_exit", "oakland_gate"], ["lax_exit", "vancouver_exit"],
+        ["canary_islands", "brazil_e"], ["brazil_e", "santos_gate"], ["santos_gate", "buenos_aires_exit"], ["santos_gate", "cape_horn"],
+        ["tokyo_exit", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_exit"], ["singapore_gate", "sunda_strait"], ["sunda_strait", "indonesia_south"], ["indonesia_south", "sydney_gate"]
     ];
 
     const hubs = {
-        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_gate" },
-        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_gate" },
-        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_gate" },
-        "jpn-tyo": { name: "Tokyo", coords: [35.67, 139.65], exit: "tokyo_gate" },
-        "chn-hkg": { name: "Hong Kong", coords: [22.31, 114.16], exit: "hongkong_gate" },
-        "twn-tpe": { name: "Taipei", coords: [25.03, 121.56], exit: "taipei_gate" },
-        "sgp-sin": { name: "Singapore", coords: [1.26, 103.83], exit: "singapore_gate" },
-        "nld-rot": { name: "Rotterdam", coords: [51.92, 4.47], exit: "rotterdam_gate" },
-        "deu-ham": { name: "Hamburg", coords: [53.55, 9.99], exit: "hamburg_gate" },
-        "usa-lax": { name: "Los Angeles", coords: [33.75, -118.27], exit: "lax_gate" },
-        "usa-nyc": { name: "New York", coords: [40.71, -74.00], exit: "nyc_gate" },
-        "aus-syd": { name: "Sydney", coords: [-33.86, 151.20], exit: "sydney_gate" }
+        "kor-pus": { name: "Busan", coords: [35.10, 129.04], exit: "pusan_gate", country: "South Korea" },
+        "kor-icn": { name: "Incheon", coords: [37.46, 126.44], exit: "incheon_gate", country: "South Korea" },
+        "chn-sha": { name: "Shanghai", coords: [31.23, 121.47], exit: "shanghai_gate", country: "China" },
+        "chn-nbo": { name: "Ningbo", coords: [29.86, 121.54], exit: "ningbo_exit", country: "China" },
+        "chn-shz": { name: "Shenzhen", coords: [22.54, 114.05], exit: "hongkong_exit", country: "China" },
+        "chn-hkg": { name: "Hong Kong", coords: [22.31, 114.16], exit: "hongkong_exit", country: "Hong Kong" },
+        "jpn-tyo": { name: "Tokyo", coords: [35.67, 139.65], exit: "tokyo_exit", country: "Japan" },
+        "sgp-sin": { name: "Singapore", coords: [1.26, 103.83], exit: "singapore_gate", country: "Singapore" },
+        "mys-pkg": { name: "Port Kelang", coords: [3.00, 101.40], exit: "port_kelang_exit", country: "Malaysia" },
+        "vnm-hcm": { name: "Ho Chi Minh", coords: [10.76, 106.66], exit: "vietnam_s", country: "Vietnam" },
+        "tha-lcb": { name: "Laem Chabang", coords: [13.08, 100.90], exit: "bangkok_exit", country: "Thailand" },
+        "phl-mnl": { name: "Manila", coords: [14.59, 120.98], exit: "manila_exit", country: "Philippines" },
+        "ind-bom": { name: "Mumbai", coords: [18.93, 72.83], exit: "mumbai_exit", country: "India" },
+        "uae-dxb": { name: "Dubai", coords: [25.20, 55.27], exit: "dubai_exit", country: "UAE" },
+        "uae-jba": { name: "Jebel Ali", coords: [25.01, 55.06], exit: "jebel_ali_gate", country: "UAE" },
+        "sau-jed": { name: "Jeddah", coords: [21.50, 39.18], exit: "jeddah_exit", country: "Saudi Arabia" },
+        "nld-rot": { name: "Rotterdam", coords: [51.92, 4.47], exit: "rotterdam_exit", country: "Netherlands" },
+        "deu-ham": { name: "Hamburg", coords: [53.55, 9.99], exit: "hamburg_exit", country: "Germany" },
+        "bel-ant": { name: "Antwerp", coords: [51.22, 4.40], exit: "antwerp_gate", country: "Belgium" },
+        "gbr-feli": { name: "Felixstowe", coords: [51.96, 1.35], exit: "felixstowe_gate", country: "UK" },
+        "esp-val": { name: "Valencia", coords: [39.47, -0.37], exit: "valencia_exit", country: "Spain" },
+        "esp-alg": { name: "Algeciras", coords: [36.13, -5.45], exit: "algeciras_gate", country: "Spain" },
+        "grc-pir": { name: "Piraeus", coords: [37.94, 23.64], exit: "piraeus_exit", country: "Greece" },
+        "usa-lax": { name: "Los Angeles", coords: [33.75, -118.27], exit: "lax_exit", country: "USA" },
+        "usa-oak": { name: "Oakland", coords: [37.80, -122.27], exit: "oakland_gate", country: "USA" },
+        "usa-nyc": { name: "New York", coords: [40.71, -74.00], exit: "nyc_gate", country: "USA" },
+        "usa-sav": { name: "Savannah", coords: [32.08, -81.09], exit: "savannah_gate", country: "USA" },
+        "usa-hou": { name: "Houston", coords: [29.76, -95.36], exit: "houston_gate", country: "USA" },
+        "can-yvr": { name: "Vancouver", coords: [49.28, -123.12], exit: "vancouver_exit", country: "Canada" },
+        "bra-sao": { name: "Santos", coords: [-23.96, -46.33], exit: "santos_gate", country: "Brazil" },
+        "aus-syd": { name: "Sydney", coords: [-33.86, 151.20], exit: "sydney_gate", country: "Australia" }
     };
 
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
@@ -134,11 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultContainer = document.getElementById('result');
 
     function populate() {
+        const mode = modeSelect.value;
         const curO = originSelect.value, curD = destinationSelect.value;
         originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
         Object.entries(hubs).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([id,h]) => {
-            originSelect.add(new Option(h.name, id));
-            destinationSelect.add(new Option(h.name, id));
+            originSelect.add(new Option(`${h.name}, ${h.country}`, id));
+            destinationSelect.add(new Option(`${h.name}, ${h.country}`, id));
         });
         if(curO) originSelect.value = curO; if(curD) destinationSelect.value = curD;
     }
@@ -158,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-                if (redSeaRisk && (neighbor === "red_sea_1" || neighbor === "bab_el_mandeb" || neighbor === "suez_s")) return;
+                if (redSeaRisk && (neighbor === "red_sea_mid" || neighbor === "bab_el_mandeb" || neighbor === "suez_s")) return;
 
                 let d = getDist(seaNodes[closest], seaNodes[neighbor]);
                 let alt = distances[closest] + d;
@@ -187,11 +216,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let dist = 0;
         for (let i = 0; i < finalPath.length - 1; i++) dist += getDist(finalPath[i], finalPath[i+1]);
+        
         const speed = mode === 'sea' ? 16 : 850;
         const totalD = (dist / (speed * 1.852 * 24)) + (mode === 'sea' ? 7 : 2);
+        
+        // Approximate Cost Logic
+        let cost = 0;
+        if (mode === 'sea') {
+            cost = 1200 + (dist * 0.15); // Base $1200 + $0.15 per NM (approx)
+            if (document.getElementById('risk-redsea').checked) cost += 800; // Risk Surcharge
+        } else {
+            cost = 500 + (dist * 1.25); // Base $500 + $1.25 per KM
+        }
+
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + totalD);
-        return { totalD, eta, path: finalPath, dist, risks: document.getElementById('risk-redsea').checked && mode === 'sea' ? ["riskMsgSuez"] : [] };
+        return { totalD, eta, path: finalPath, dist, cost, risks: document.getElementById('risk-redsea').checked && mode === 'sea' ? ["riskMsgSuez"] : [] };
     }
 
     function getDist(c1, c2) {
@@ -214,18 +254,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!oId || !dId || oId === dId) return;
         const route = solveRoute(oId, dId, modeSelect.value);
         const t = translations[currentLang];
+        
         resultContainer.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
                 <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
                     <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
-                    <p class="text-4xl font-black text-indigo-900">${Math.round(route.totalD)} <span class="text-sm font-bold text-gray-400">${t.unitDays}</span></p>
+                    <p class="text-3xl font-black text-indigo-900">${Math.round(route.totalD)} <span class="text-sm font-bold text-gray-400">${t.unitDays}</span></p>
                     <p class="text-[10px] font-bold text-indigo-500 mt-1">${t.eta}: ${route.eta.toLocaleDateString()}</p>
+                </div>
+                <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                    <p class="text-[10px] font-extrabold text-green-600 uppercase tracking-widest mb-1">${t.labelCost}</p>
+                    <p class="text-3xl font-black text-gray-900">$${Math.round(route.cost).toLocaleString()}</p>
+                    <p class="text-[10px] font-bold text-gray-400 mt-1">Estimated Market Rate</p>
                 </div>
                 <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                     <p class="text-[10px] font-extrabold text-red-500 uppercase tracking-widest mb-1">${t.totalDist}</p>
-                    <p class="text-4xl font-black text-gray-900">${Math.round(route.dist * 0.539957).toLocaleString()} <span class="text-sm font-bold text-gray-400">${t.unitNM}</span></p>
+                    <p class="text-3xl font-black text-gray-900">${Math.round(route.dist * 0.539957).toLocaleString()} <span class="text-sm font-bold text-gray-400">${t.unitNM}</span></p>
                     <p class="text-[10px] font-bold text-gray-400 mt-1">${t.approx} ${Math.round(route.dist).toLocaleString()} KM</p>
                 </div>
             </div>
