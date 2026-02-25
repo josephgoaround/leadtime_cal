@@ -286,27 +286,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const t = translations[currentLang];
         
         resultContainer.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
-                <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
-                    <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
-                    <p class="text-3xl font-black text-indigo-900">${Math.round(route.totalD)} <span class="text-sm font-bold text-gray-400">${t.unitDays}</span></p>
-                    <p class="text-[10px] font-bold text-indigo-500 mt-1">${t.eta}: ${route.eta.toLocaleDateString()}</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+                <!-- Lead Time Card -->
+                <div class="p-8 bg-indigo-50 rounded-3xl shadow-lg border border-indigo-100 text-center relative overflow-hidden group hover:bg-indigo-100 transition-all">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-indigo-600"></div>
+                    <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">${t.totalLead}</p>
+                    <p class="text-5xl font-black text-indigo-900 mb-2 leading-none">${Math.round(route.totalD)} <span class="text-lg font-bold text-indigo-400">${t.unitDays}</span></p>
+                    <p class="text-xs font-bold text-indigo-500 mt-2 bg-white/50 py-1 px-3 rounded-full inline-block border border-indigo-200">${t.eta}: ${route.eta.toLocaleDateString()}</p>
                 </div>
-                <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
-                    <p class="text-[10px] font-extrabold text-green-600 uppercase tracking-widest mb-1">${t.labelCost}</p>
-                    <p class="text-3xl font-black text-gray-900">$${Math.round(route.cost).toLocaleString()}</p>
-                    <p class="text-[10px] font-bold text-gray-400 mt-1">Estimated Market Rate</p>
+
+                <!-- Cost Card -->
+                <div class="p-8 bg-green-50 rounded-3xl shadow-lg border border-green-100 text-center relative overflow-hidden group hover:bg-green-100 transition-all">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-green-500"></div>
+                    <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
+                    <p class="text-5xl font-black text-gray-900 mb-2 leading-none"><span class="text-3xl text-gray-400 mr-1">$</span>${Math.round(route.cost).toLocaleString()}</p>
+                    <p class="text-xs font-bold text-gray-500 mt-2 uppercase tracking-tighter">Market Benchmark Rate</p>
                 </div>
-                <div class="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                    <p class="text-[10px] font-extrabold text-red-500 uppercase tracking-widest mb-1">${t.totalDist}</p>
-                    <p class="text-3xl font-black text-gray-900">${Math.round(route.dist * 0.539957).toLocaleString()} <span class="text-sm font-bold text-gray-400">${t.unitNM}</span></p>
-                    <p class="text-[10px] font-bold text-gray-400 mt-1">${t.approx} ${Math.round(route.dist).toLocaleString()} KM</p>
+
+                <!-- Distance Card -->
+                <div class="p-8 bg-orange-50 rounded-3xl shadow-lg border border-orange-100 text-center relative overflow-hidden group hover:bg-orange-100 transition-all">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-500"></div>
+                    <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.totalDist}</p>
+                    <p class="text-5xl font-black text-gray-900 mb-2 leading-none">${Math.round(route.dist * 0.539957).toLocaleString()} <span class="text-lg font-bold text-orange-400">${t.unitNM}</span></p>
+                    <p class="text-xs font-bold text-gray-500 mt-2">${t.approx} ${Math.round(route.dist).toLocaleString()} KM</p>
                 </div>
             </div>
-            ${route.risks.length ? `<div class="mt-4 p-4 bg-red-50 text-red-700 text-[10px] font-bold rounded-xl border-l-4 border-red-500">${route.risks.map(rk => t[rk] || rk).join('<br>')}</div>` : ''}`;
+            ${route.risks.length ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${route.risks.map(rk => t[rk] || rk).join('<br>')}</div>` : ''}`;
         renderMap(route.path, hubs[oId], hubs[dId]);
     };
 
