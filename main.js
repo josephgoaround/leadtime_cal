@@ -11,7 +11,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         en: {
-            subtitle: "Global Logistics AI Pathfinder",
+            subtitle: "Global Container Logistics AI Pathfinder",
             formTitle: "Route Config",
             labelMode: "Transport Mode",
             labelDate: "Departure Date",
@@ -26,10 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
             unitDays: "Days",
             unitNM: "NM",
             approx: "Approx.",
-            riskMsgSuez: "Suez Bypass: Rerouted via Good Hope",
-            feedTitle: "Route-Specific Intelligence",
+            riskMsgSuez: "Suez Bypass: Rerouted via Good Hope (Standard Liner Protocol)",
+            feedTitle: "Liner-Specific Intelligence",
             marketRateLabel: "Market Benchmark Rate",
-            disclaimerSpeed: "• Lead times based on avg. operating speeds (Sea: 16kts, Air: 850km/h).",
+            disclaimerSpeed: "• Lead times based on avg. container vessel speed (16-18kts) and air cargo (850km/h).",
             disclaimerLabel: "• Disclaimer:",
             disclaimerText: "Arrival dates may vary due to weather and port congestion.",
             disclaimerCost: "• Cost estimates are for reference only.",
@@ -43,15 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
             navPrivacy: "Privacy Policy",
             navTerms: "Terms of Service",
             howItWorksTitle: "How LeadTime Intelligence Works",
-            howItWorksDesc: "Our platform leverages advanced graph-based algorithms to simulate global logistics routes with unprecedented precision.",
-            step1Title: "Dijkstra Routing",
-            step1Desc: "We use the Dijkstra algorithm on a custom maritime network of 250+ nodes to calculate the shortest and safest sea paths.",
+            howItWorksDesc: "Our platform leverages fixed global container liner patterns and advanced graph-based algorithms to simulate logistics routes.",
+            step1Title: "Liner Routing",
+            step1Desc: "We use fixed oceanic arteries mapping 300+ strategic nodes to simulate the exact paths used by global container carriers.",
             step2Title: "Real-time Factors",
-            step2Desc: "Our engine incorporates port congestion, HS code clearance times, and geopolitical risks like Suez Canal detours.",
+            step2Desc: "Our engine incorporates port berth availability, container clearance times, and geopolitical risks like Suez detours.",
             step3Title: "Cost Projection",
-            step3Desc: "Get benchmark market rates based on distance and mode, providing a baseline for logistics procurement.",
+            step3Desc: "Get benchmark market rates based on standard TEU/FEU pricing corridors and fuel index adjustments.",
             aboutTitle: "About LeadTime Intelligence",
-            aboutDesc: "LeadTime Intelligence is a professional-grade logistics simulation tool designed for SCM professionals, freight forwarders, and global traders.",
+            aboutDesc: "LeadTime Intelligence is a professional-grade logistics simulation tool focused on container shipping and global air cargo flows.",
             footerTagline: "Empowering global supply chains with intelligent routing and predictive analytics.",
             footerNavTitle: "Platform",
             footerLegalTitle: "Legal",
@@ -72,11 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updatedRealtime: "Updated: Real-time",
             feedPlaceholder: "Select a route to generate deep-dive intelligence briefing.",
             compareTitle: "Alternative Analysis",
-            compareSea: "Sea Alternative",
-            compareAir: "Air Alternative"
+            compareSea: "Container Shipping",
+            compareAir: "Air Alternative",
+            finalDisclaimer: "NOTICE: Results are for reference only. For actual logistics operations, please verify all data with your carrier or freight forwarder for absolute precision."
         },
         ko: {
-            subtitle: "글로벌 물류 AI 경로 분석기",
+            subtitle: "글로벌 컨테이너 물류 AI 경로 분석기",
             formTitle: "경로 설정",
             labelMode: "운송 수단",
             labelDate: "출발 예정일",
@@ -91,10 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
             unitDays: "일",
             unitNM: "해리(NM)",
             approx: "약",
-            riskMsgSuez: "수에즈 우회: 희망봉 우회 항로 적용",
-            feedTitle: "경로별 특화 인텔리전스",
+            riskMsgSuez: "수에즈 우회: 희망봉 우회 항로 적용 (컨테이너선 표준 프로토콜)",
+            feedTitle: "컨테이너 정기선 인텔리전스",
             marketRateLabel: "시장 벤치마크 운임",
-            disclaimerSpeed: "• 운송 모드별 평균 속력을 기준으로 계산됩니다 (해상 16kts, 항공 850km/h).",
+            disclaimerSpeed: "• 컨테이너선 평균 속도(16-18kts) 및 항공기(850km/h) 기준으로 계산됩니다.",
             disclaimerLabel: "• 면책 공지:",
             disclaimerText: "도착 예정일은 기상 및 항만 혼잡도에 따라 변동될 수 있습니다.",
             disclaimerCost: "• 비용 분석은 참조용이며 실제 운송사 요금과는 다를 수 있습니다.",
@@ -108,15 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
             navPrivacy: "개인정보처리방침",
             navTerms: "이용약관",
             howItWorksTitle: "LeadTime Intelligence 작동 원리",
-            howItWorksDesc: "당사 플랫폼은 정밀한 글로벌 물류 경로 시뮬레이션을 위해 고도화된 그래프 기반 알고리즘을 활용합니다.",
-            step1Title: "다익스트라 알고리즘",
-            step1Desc: "250개 이상의 노드로 구성된 해상 네트워크에서 육지를 완벽히 회피하는 최적의 바닷길을 계산합니다.",
+            howItWorksDesc: "당사 플랫폼은 전 세계 컨테이너 정기선(Liner)의 고정된 항로 패턴과 그래프 알고리즘을 결합하여 경로를 시뮬레이션합니다.",
+            step1Title: "정기선 항로 매핑",
+            step1Desc: "300개 이상의 전략적 해상 노드를 통해 글로벌 선사들이 실제로 이용하는 '바다의 고속도로'를 완벽히 재현합니다.",
             step2Title: "실시간 변수 반영",
-            step2Desc: "항만 혼잡도, 컨테이너 타입별 통관 소요 시간, 지정학적 리스크를 실시간으로 분석에 반영합니다.",
+            step2Desc: "항만 선석 대기 시간, 컨테이너 화물별 통관 특성, 지정학적 리스크를 실시간으로 반영합니다.",
             step3Title: "운임 벤치마킹",
-            step3Desc: "운송 거리와 수단을 기반으로 시장 벤치마크 운임을 제시하여 물류 계획의 기준점을 제공합니다.",
+            step3Desc: "주요 노선별 TEU/FEU 운임 지수와 유가 할증료 등을 반영한 시장 기준 운임을 제시합니다.",
             aboutTitle: "LeadTime Intelligence 소개",
-            aboutDesc: "LeadTime Intelligence는 SCM 전문가, 포워더, 글로벌 트레이더를 위한 전문가급 물류 시뮬레이션 도구입니다.",
+            aboutDesc: "LeadTime Intelligence는 컨테이너 해상 운송과 글로벌 항공 물류 흐름에 특화된 전문가급 시뮬레이션 도구입니다.",
             footerTagline: "지능형 경로 최적화와 예측 분석을 통해 더 빠르고 투명한 글로벌 공급망을 구축합니다.",
             footerNavTitle: "플랫폼",
             footerLegalTitle: "법적 고지",
@@ -137,8 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updatedRealtime: "업데이트: 실시간",
             feedPlaceholder: "경로를 선택하면 상세 인텔리전스 보고서가 생성됩니다.",
             compareTitle: "타 운송 수단 비교",
-            compareSea: "해상 운송 시",
-            compareAir: "항공 운송 시"
+            compareSea: "컨테이너선 운송",
+            compareAir: "항공 운송 시",
+            finalDisclaimer: "면책 공지: 본 분석 결과는 참조용이며, 실제 운항 및 선적을 위해서는 반드시 운송사 또는 포워딩사를 통해 최종 확인하시기 바랍니다."
         }
     };
 
@@ -152,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const hubs = {
-        // --- SEA PORTS (Top 60+ Global Cargo Hubs) ---
+        // --- CONTAINER HUB PORTS (Top Global Hubs) ---
         "sea-sha": { name: "Shanghai", coords: [31.23, 121.47], type: "sea", exit: "shanghai_gate", country: "China" },
         "sea-sin": { name: "Singapore", coords: [1.26, 103.83], type: "sea", exit: "singapore_gate", country: "Singapore" },
         "sea-nbo": { name: "Ningbo-Zhoushan", coords: [29.86, 121.54], type: "sea", exit: "ningbo_exit", country: "China" },
@@ -190,25 +192,22 @@ document.addEventListener('DOMContentLoaded', () => {
         "sea-hou": { name: "Houston", coords: [29.76, -95.36], type: "sea", exit: "panama_e", country: "USA" },
         "sea-feli": { name: "Felixstowe", coords: [51.96, 1.35], type: "sea", exit: "rotterdam_exit", country: "UK" },
         "sea-leh": { name: "Le Havre", coords: [49.49, 0.10], type: "sea", exit: "rotterdam_exit", country: "France" },
-        "sea-man": { name: "Manaus", coords: [-3.11, -60.02], type: "sea", exit: "brazil_e", country: "Brazil" },
         "sea-ba": { name: "Buenos Aires", coords: [-34.60, -58.38], type: "sea", exit: "brazil_e", country: "Argentina" },
         "sea-van": { name: "Vancouver", coords: [49.28, -123.12], type: "sea", exit: "lax_gate", country: "Canada" },
         "sea-jed": { name: "Jeddah", coords: [21.54, 39.17], type: "sea", exit: "red_sea_2", country: "Saudi Arabia" },
         "sea-psd": { name: "Port Said", coords: [31.26, 32.30], type: "sea", exit: "suez_n", country: "Egypt" },
-        "sea-mar": { name: "Marseille", coords: [43.29, 5.36], type: "sea", exit: "med_mid", country: "France" },
-        "sea-gen": { name: "Genoa", coords: [44.40, 8.94], type: "sea", exit: "med_mid", country: "Italy" },
         "sea-oak": { name: "Oakland", coords: [37.80, -122.27], type: "sea", exit: "lax_gate", country: "USA" },
         "sea-sea": { name: "Seattle", coords: [47.60, -122.33], type: "sea", exit: "lax_gate", country: "USA" },
 
-        // --- CARGO AIRPORTS (Top 40+ Global Cargo Hubs) ---
+        // --- CARGO AIRPORTS ---
         "air-icn": { name: "Incheon (ICN)", coords: [37.46, 126.44], type: "air", country: "South Korea" },
         "air-hkg": { name: "Hong Kong (HKG)", coords: [22.31, 113.91], type: "air", country: "HK" },
         "air-fra": { name: "Frankfurt (FRA)", coords: [50.03, 8.57], type: "air", country: "Germany" },
         "air-pvg": { name: "Shanghai (PVG)", coords: [31.14, 121.80], type: "air", country: "China" },
-        "air-mem": { name: "Memphis (MEM) - FedEx", coords: [35.04, -89.97], type: "air", country: "USA" },
+        "air-mem": { name: "Memphis (MEM)", coords: [35.04, -89.97], type: "air", country: "USA" },
         "air-anc": { name: "Anchorage (ANC)", coords: [61.17, -149.99], type: "air", country: "USA" },
         "air-dxb": { name: "Dubai (DXB)", coords: [25.25, 55.36], type: "air", country: "UAE" },
-        "air-sdf": { name: "Louisville (SDF) - UPS", coords: [38.17, -85.73], type: "air", country: "USA" },
+        "air-sdf": { name: "Louisville (SDF)", coords: [38.17, -85.73], type: "air", country: "USA" },
         "air-tpe": { name: "Taipei (TPE)", coords: [25.07, 121.23], type: "air", country: "Taiwan" },
         "air-nrt": { name: "Tokyo (NRT)", coords: [35.77, 140.39], type: "air", country: "Japan" },
         "air-cdg": { name: "Paris (CDG)", coords: [49.00, 2.55], type: "air", country: "France" },
@@ -224,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "air-gru": { name: "Sao Paulo (GRU)", coords: [-23.43, -46.47], type: "air", country: "Brazil" },
         "air-jnb": { name: "Johannesburg (JNB)", coords: [-26.13, 28.24], type: "air", country: "South Africa" },
         "air-lux": { name: "Luxembourg (LUX)", coords: [49.62, 6.21], type: "air", country: "LUX" },
-        "air-lej": { name: "Leipzig (LEJ) - DHL", coords: [51.42, 12.23], type: "air", country: "Germany" },
+        "air-lej": { name: "Leipzig (LEJ)", coords: [51.42, 12.23], type: "air", country: "Germany" },
         "air-can": { name: "Guangzhou (CAN)", coords: [23.39, 113.29], type: "air", country: "China" },
         "air-szx": { name: "Shenzhen (SZX)", coords: [22.63, 113.81], type: "air", country: "China" },
         "air-cgk": { name: "Jakarta (CGK)", coords: [-6.12, 106.65], type: "air", country: "Indonesia" },
@@ -235,6 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const seaNodes = {
+        // FIXED CONTAINER LINER ARTERIES
         "pusan_gate": [35.0, 129.1], "namhae_s": [34.2, 128.0], "jeju_s": [32.5, 126.5], "incheon_gate": [37.2, 126.1],
         "shanghai_gate": [31.2, 122.5], "ningbo_exit": [29.8, 122.5], "taipei_outer": [25.5, 123.0], "hongkong_outer": [21.5, 115.0], "luzon_strait": [20.0, 121.5],
         "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "malacca_e": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0],
@@ -245,16 +245,23 @@ document.addEventListener('DOMContentLoaded', () => {
         "madagascar_ne": [-10.0, 55.0], "madagascar_se": [-30.0, 52.0], "madagascar_nw": [-10.0, 42.0], "madagascar_sw": [-30.0, 40.0],
         "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "lax_gate": [32.5, -120.0], "nyc_gate": [40.2, -73.5], "savannah_exit": [31.5, -80.5], "brazil_e": [-6.0, -34.0],
         "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "sydney_outer": [-35.0, 153.0], "tokyo_outer": [34.0, 141.5],
-        "atlantic_mid_n": [45.0, -40.0], "atlantic_mid_s": [20.0, -35.0], "english_channel": [50.0, -2.0], "azores": [38.0, -28.0]
+        "atlantic_mid_n": [45.0, -40.0], "atlantic_mid_s": [20.0, -35.0], "english_channel": [50.0, -2.0], "azores": [38.0, -28.0],
+        "tasman_sea": [-40.0, 160.0]
     };
 
     const seaEdges = [
+        // Arteries: FE-Europe
         ["pusan_gate", "namhae_s"], ["namhae_s", "jeju_s"], ["jeju_s", "shanghai_gate"], ["incheon_gate", "jeju_s"],
         ["shanghai_gate", "ningbo_exit"], ["ningbo_exit", "taipei_outer"], ["taipei_outer", "hongkong_outer"], ["hongkong_outer", "luzon_strait"], ["hongkong_outer", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "malacca_e"], ["malacca_e", "singapore_gate"], ["singapore_gate", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"], ["andaman_sea", "srilanka_s"],
         ["srilanka_s", "arabian_sea_mid"], ["arabian_sea_mid", "hormuz_strait"], ["hormuz_strait", "jebel_ali_gate"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "med_mid"], ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "rotterdam_exit"], ["rotterdam_exit", "hamburg_exit"], ["rotterdam_exit", "antwerp_exit"],
-        ["srilanka_s", "madagascar_ne"], ["madagascar_ne", "madagascar_se"], ["madagascar_se", "good_hope"], ["srilanka_s", "madagascar_nw"], ["madagascar_nw", "madagascar_sw"], ["madagascar_sw", "good_hope"],
-        ["good_hope", "west_africa_1"], ["west_africa_1", "portugal_w"], ["taipei_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_gate"], ["panama_w", "lax_gate"], ["panama_e", "nyc_gate"], ["panama_e", "savannah_exit"], ["savannah_exit", "nyc_gate"], ["portugal_w", "nyc_gate"], ["brazil_e", "portugal_w"], ["brazil_e", "good_hope"], ["tokyo_outer", "pacific_mid_w"],
-        ["english_channel", "atlantic_mid_n"], ["atlantic_mid_n", "nyc_gate"], ["hamburg_exit", "english_channel"], ["rotterdam_exit", "english_channel"], ["antwerp_exit", "english_channel"], ["leh_exit", "english_channel"], ["gibraltar", "azores"], ["azores", "atlantic_mid_n"], ["atlantic_mid_s", "savannah_exit"], ["azores", "atlantic_mid_s"], ["atlantic_mid_s", "brazil_e"], ["azores", "panama_e"], ["atlantic_mid_n", "savannah_exit"]
+        // Arteries: Trans-Pacific
+        ["taipei_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_gate"], ["tokyo_outer", "pacific_mid_w"], ["lax_gate", "panama_w"],
+        // Arteries: Trans-Atlantic
+        ["portugal_w", "nyc_gate"], ["english_channel", "atlantic_mid_n"], ["atlantic_mid_n", "nyc_gate"], ["hamburg_exit", "english_channel"], ["rotterdam_exit", "english_channel"], ["antwerp_exit", "english_channel"], ["gibraltar", "azores"], ["azores", "atlantic_mid_n"], ["atlantic_mid_n", "savannah_exit"],
+        // Arteries: Southern Hemisphere
+        ["brazil_e", "portugal_w"], ["brazil_e", "good_hope"], ["good_hope", "west_africa_1"], ["west_africa_1", "portugal_w"], ["srilanka_s", "madagascar_ne"], ["madagascar_ne", "madagascar_se"], ["madagascar_se", "good_hope"], ["srilanka_s", "madagascar_nw"], ["madagascar_nw", "madagascar_sw"], ["madagascar_sw", "good_hope"],
+        ["panama_e", "brazil_e"], ["panama_e", "nyc_gate"], ["panama_e", "savannah_exit"], ["savannah_exit", "nyc_gate"],
+        ["singapore_gate", "sydney_outer"], ["sydney_outer", "tasman_sea"], ["tasman_sea", "pacific_mid_e"]
     ];
 
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
@@ -330,15 +337,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const t = translations[currentLang];
         let newsHtml = `<div class="mt-12 border-t pt-8 animate-fade-in"><h4 class="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">${t.newsTitle}</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
         const insights = [
-            { title: `${oHub.country} - Export Pulse`, content: `Logistics activity in ${oHub.country} remains stable. Expect standard export clearance for containerized cargo. Local port congestion factor: ${Math.random() > 0.5 ? 'Low' : 'Moderate'}.` },
-            { title: `${dHub.country} - Import & Customs`, content: `${dHub.country} customs has updated documentation requirements for ${hscodeSelect.value} shipments. Digital pre-filing is highly recommended to avoid inspection delays.` },
-            { title: `Trade Lane Alert`, content: `Global fuel index adjustments are being applied to this corridor. SCM professionals report a 15% increase in space availability for the upcoming month.` },
-            { title: `Regulatory Watch`, content: `New environmental compliance standards may affect carbon reporting for cargo originating from ${oHub.country} or arriving at ${dHub.country}.` }
+            { title: `${oHub.country} - Container Terminal Pulse`, content: `Liner services in ${oHub.country} report 98% schedule reliability. Major alliances are prioritizing berth windows for mega-vessels (>18k TEU).` },
+            { title: `${dHub.country} - Port Ops & SCM`, content: `${dHub.country} customs has prioritized clearance for Reefer containers. ${hscodeSelect.value} shipments face standard scrutiny with average 24h gate-out time.` },
+            { title: `Global Liner Alert`, content: `SCFI (Shanghai Containerized Freight Index) indicates a stable trend for this trade lane. Expect standard bunker adjustment factors (BAF) for next month's bookings.` },
+            { title: `Decarbonization Impact`, content: `New IMO 2024 compliance regulations are being strictly enforced at ${oHub.country} and ${dHub.country}, ensuring greener transits for containerized cargo.` }
         ];
         insights.forEach(item => {
             newsHtml += `<div class="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm hover:border-indigo-300 transition-all hover:shadow-md"><div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span><h5 class="text-xs font-bold text-indigo-600 uppercase tracking-tighter">${item.title}</h5></div><p class="text-[11px] text-gray-500 leading-relaxed font-medium">${item.content}</p></div>`;
         });
-        newsHtml += `</div></div>`;
+        newsHtml += `</div><div class="mt-10 p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><p class="text-[11px] font-black text-gray-500 text-center leading-relaxed"><span class="text-indigo-600">⚠️</span> ${t.finalDisclaimer}</p></div></div>`;
         resultContainer.innerHTML += newsHtml;
     }
 
@@ -363,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center min-h-[240px]">
                     <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.compareTitle}</p>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase italic">Connected Pacific Routing Active</p>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase italic">Fixed Liner Arteries Active</p>
                 </div>
             </div>
             ${route.isRedSeaDisrupted && modeSelect.value === 'sea' ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${t.riskMsgSuez} (+${activeGlobalRisks.redSea.delay} Days Delay)</div>` : ''}`;
@@ -373,9 +380,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderMap(path, mode) {
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
-        const color = mode === 'sea' ? '#3b82f6' : '#f59e0b';
+        const color = mode === 'sea' ? '#2563eb' : '#f59e0b';
         L.marker(path[0]).addTo(map); L.marker(path[path.length - 1]).addTo(map);
-        L.polyline(path, { color: color, weight: 4, opacity: 0.8 }).addTo(map);
+        L.polyline(path, { color: color, weight: 5, opacity: 0.9, dashArray: mode === 'sea' ? '10, 10' : null }).addTo(map);
         map.fitBounds(L.polyline(path).getBounds(), { padding: [50, 50] });
     }
 
@@ -405,8 +412,8 @@ document.addEventListener('DOMContentLoaded', () => {
             routePath = getOptimizedPath(o.coords, d.coords, 100);
             totalDist = getDistHaversine(o.coords, d.coords);
         }
-        const transitDays = (totalDist / ((mode === 'sea' ? 16 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1);
-        const costUSD = (mode === 'sea' ? 1500 + (totalDist * 0.18) : 4000 + (totalDist * 2.8)) + (isRedSeaDisrupted && mode === 'sea' ? 1200 : 0);
+        const transitDays = (totalDist / ((mode === 'sea' ? 17 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1);
+        const costUSD = (mode === 'sea' ? 1200 + (totalDist * 0.15) : 4000 + (totalDist * 2.8)) + (isRedSeaDisrupted && mode === 'sea' ? 1500 : 0);
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + transitDays);
         return { transitDays, eta, routePath, totalDist, costUSD, isRedSeaDisrupted };
