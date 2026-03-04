@@ -387,16 +387,41 @@ document.addEventListener('DOMContentLoaded', () => {
     async function calculateAndDisplay() {
         const oId = originSelect.value, dId = destinationSelect.value;
         if(!oId || !dId || oId === dId) return;
-        const t = translations[currentLang], route = solveRoute(oId, dId, modeSelect.value, hscodeSelect.value);
-        const costConverted = route.costUSD * rates[currentCurrency], formattedCost = Math.round(costConverted).toLocaleString();
+        const t = translations[currentLang];
+        
+        // Solve for both modes to compare
+        const seaRoute = solveRoute(oId, dId, 'sea', hscodeSelect.value);
+        const airRoute = solveRoute(oId, dId, 'air', hscodeSelect.value);
+        
+        const currentRoute = modeSelect.value === 'sea' ? seaRoute : airRoute;
+        const otherRoute = modeSelect.value === 'sea' ? airRoute : seaRoute;
+        
+        const costConverted = currentRoute.costUSD * rates[currentCurrency], formattedCost = Math.round(costConverted).toLocaleString();
         let fontSizeClass = formattedCost.length > 10 ? "text-3xl" : (formattedCost.length > 7 ? "text-4xl" : "text-5xl");
+        
+        // Comparison details
+        const dayDiff = Math.abs(Math.round(seaRoute.transitDays - airRoute.transitDays));
+        const costDiff = Math.abs(Math.round((seaRoute.costUSD - airRoute.costUSD) * rates[currentCurrency])).toLocaleString();
+        
+        const comparisonHTML = modeSelect.value === 'sea' 
+            ? `<div class="text-left w-full h-full flex flex-col justify-center">
+                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Air Cargo</p>
+                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${dayDiff} Days</span></p>
+                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Extra <span class="text-red-600">${symbols[currentCurrency]}${costDiff}</span></p>
+               </div>`
+            : `<div class="text-left w-full h-full flex flex-col justify-center">
+                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Container Sea</p>
+                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${symbols[currentCurrency]}${costDiff}</span></p>
+                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Add <span class="text-red-600">${dayDiff} Days</span></p>
+               </div>`;
+
         resultContainer.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
                 <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px]">
                     <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">${t.totalLead}</p>
-                    <p class="text-5xl font-black text-indigo-900 leading-none">${Math.round(route.transitDays)} ${t.unitDays}</p>
-                    <p class="text-[10px] font-bold text-indigo-500 mt-2">${t.eta}: ${route.eta.toLocaleDateString()}</p>
-                    <p class="text-[9px] text-gray-400 mt-2 font-bold">${t.totalDist}: ${Math.round(route.totalDist * 0.539957).toLocaleString()} NM</p>
+                    <p class="text-5xl font-black text-indigo-900 leading-none">${Math.round(currentRoute.transitDays)} ${t.unitDays}</p>
+                    <p class="text-[10px] font-bold text-indigo-500 mt-2">${t.eta}: ${currentRoute.eta.toLocaleDateString()}</p>
+                    <p class="text-[9px] text-gray-400 mt-2 font-bold">${t.totalDist}: ${Math.round(currentRoute.totalDist * 0.539957).toLocaleString()} NM</p>
                 </div>
                 <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center min-h-[240px]">
                     <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
@@ -405,11 +430,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center min-h-[240px]">
                     <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.compareTitle}</p>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase italic">Fixed Liner Arteries Active</p>
+                    ${comparisonHTML}
                 </div>
             </div>
-            ${route.isRedSeaDisrupted && modeSelect.value === 'sea' ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${t.riskMsgSuez} (+${activeGlobalRisks.redSea.delay} Days Delay)</div>` : ''}`;
-        renderMap(route.routePath, modeSelect.value);
+            ${currentRoute.isRedSeaDisrupted && modeSelect.value === 'sea' ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${t.riskMsgSuez} (+${activeGlobalRisks.redSea.delay} Days Delay)</div>` : ''}`;
+        
+        renderMap(currentRoute.routePath, modeSelect.value);
         await fetchSummarizedNews(hubs[oId], hubs[dId]);
     }
 
