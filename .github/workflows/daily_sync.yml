@@ -1,0 +1,31 @@
+name: Daily Maritime News Sync
+
+on:
+  schedule:
+    # 06:00 UTC is 15:00 (3 PM) KST
+    # 18:00 UTC is 03:00 (3 AM) KST
+    - cron: '0 6,18 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/set_up-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run sync script
+        run: python sync_data.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add data/maritime_data.json
+          git commit -m "chore: automated maritime news sync [skip ci]" || echo "No changes to commit"
+          git push

@@ -268,6 +268,41 @@ document.addEventListener('DOMContentLoaded', () => {
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 18 }).addTo(map);
 
     const originSelect = document.getElementById('origin'), destinationSelect = document.getElementById('destination'), modeSelect = document.getElementById('transport-mode'), hscodeSelect = document.getElementById('hscode'), resultContainer = document.getElementById('feed-container');
+    const newsTicker = document.getElementById('news-ticker');
+
+    async function loadLiveNews() {
+        try {
+            const response = await fetch('data/maritime_data.json');
+            if (!response.ok) return;
+            const data = await response.json();
+            
+            if (data.alerts && data.alerts.length > 0) {
+                // Update Ticker
+                newsTicker.innerHTML = data.alerts.map(a => `<span class="mx-4">${a.msg}</span>`).join('');
+                
+                // Inject into deep-dive feed if it's empty (initial state)
+                if (resultContainer.innerHTML.includes('feedPlaceholder')) {
+                    resultContainer.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${data.alerts.slice(0, 4).map(a => `
+                                <a href="${a.url}" target="_blank" class="p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-200 transition-all group flex flex-col gap-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[9px] font-bold text-indigo-500 uppercase tracking-tighter">Security Intel</span>
+                                        <span class="text-[9px] font-bold text-gray-300 uppercase">${a.time}</span>
+                                    </div>
+                                    <p class="text-[11px] font-bold text-gray-700 group-hover:text-indigo-600 leading-snug">${a.msg}</p>
+                                </a>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            }
+        } catch (e) {
+            console.error("Failed to load live news:", e);
+        }
+    }
+
+    loadLiveNews();
 
     function populate() {
         const mode = modeSelect.value;

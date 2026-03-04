@@ -156,6 +156,18 @@
             </div>
         </div>
 
+        <div id="live-alerts-container" class="mt-8 p-8 bg-slate-50 rounded-3xl border border-gray-100 shadow-sm hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2" data-i18n="liveAlert">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> 실시간 리스크 경보
+                </h3>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter" id="last-updated-text"></span>
+            </div>
+            <div id="alerts-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Live news will be injected here -->
+            </div>
+        </div>
+
         <div id="disqus_thread" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mt-12"></div>
 
         <!-- SEO Content Sections for AdSense -->
