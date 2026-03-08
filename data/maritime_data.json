@@ -1,35 +1,69 @@
 {
-  "last_updated": "2026-03-04 11:52:16",
+  "last_updated": "2026-03-08 23:56:55",
+  "active_risks": [
+    {
+      "label": "Strait of Hormuz Alert",
+      "delay": 5,
+      "cost": 800,
+      "source_news": "Iran Picks New Leader As Escalating War Deepens Oil Shock"
+    },
+    {
+      "label": "Panama Canal Slot Restriction",
+      "delay": 4,
+      "cost": 500,
+      "source_news": "Crude Oil Spill Draws Large Response at Nation’s Only Deepwater VLCC Port"
+    }
+  ],
   "alerts": [
     {
-      "id": "news-6676091332632649547",
-      "msg": "Moscow Alleges Ukrainian Drone Boat Attack on LNG Carrier ‘Arctic Metagaz’",
-      "url": "https://gcaptain.com/moscow-alleges-ukrainian-drone-boat-attack-on-lng-carrier-arctic-metagaz/",
-      "time": "11:52"
+      "msg": "US Defends Waiver On Russian Oil Sanctions",
+      "url": "https://gcaptain.com/us-defends-waiver-on-russian-oil-sanctions/",
+      "time": "23:56"
     },
     {
-      "id": "news-615057517309663962",
-      "msg": "Crew of Sanctioned Russian LNG Carrier Arctic Metagaz Found Alive After Fire Incident Off Malta",
-      "url": "https://gcaptain.com/crew-of-sanctioned-russian-lng-carrier-arctic-metagaz-found-alive-after-fire-incident-off-malta/",
-      "time": "11:52"
+      "msg": "Iran Picks New Leader As Escalating War Deepens Oil Shock",
+      "url": "https://gcaptain.com/iran-picks-new-leader-as-escalating-war-deepens-oil-shock/",
+      "time": "23:56"
     },
     {
-      "id": "news-1554965249045948551",
-      "msg": "Trump Orders Federal Insurance Backstop for Gulf Shipping, Signals Possible Navy Tanker Escorts",
-      "url": "https://gcaptain.com/trump-orders-federal-insurance-backstop-for-gulf-shipping-signals-possible-navy-tanker-escorts/",
-      "time": "11:52"
+      "msg": "Tokyo Prepared To Release Oil Reserve Amid Iran Crisis",
+      "url": "https://gcaptain.com/tokyo-prepared-to-release-oil-reserve-amid-iran-crisis/",
+      "time": "23:56"
     },
     {
-      "id": "news-2651898617825395201",
-      "msg": "White House Weighs U.S. Backstop for Tanker Insurance Amid Gulf Shipping Crisis",
-      "url": "https://gcaptain.com/white-house-weighs-u-s-backstop-for-tanker-insurance-amid-gulf-shipping-crisis/",
-      "time": "11:52"
+      "msg": "Crude Oil Spill Draws Large Response at Nation’s Only Deepwater VLCC Port",
+      "url": "https://gcaptain.com/crude-oil-spill-draws-large-response-at-nations-only-deepwater-vlcc-port/",
+      "time": "23:56"
     },
     {
-      "id": "news-2869592521922065560",
-      "msg": "Container Shipping: Gulf Booking Freeze Triggers Congestion Fears at Global Hubs",
-      "url": "https://gcaptain.com/container-shipping-gulf-booking-freeze-triggers-congestion-fears-at-global-hubs/",
-      "time": "11:52"
+      "msg": "US May ‘Unsanction’ More Russia Oil Post India Move",
+      "url": "https://gcaptain.com/us-may-unsanction-more-russia-oil-post-india-move/",
+      "time": "23:56"
+    },
+    {
+      "msg": "US Pressing Sri Lanka Not To Repatriate Iranian Crew From Sunken Ship",
+      "url": "https://gcaptain.com/us-pressing-sri-lanka-not-to-repatriate-iranian-crew-from-sunken-ship/",
+      "time": "23:56"
+    },
+    {
+      "msg": "Second Bulk Carrier Claiming To Be Chinese Passes Through Hormuz",
+      "url": "https://gcaptain.com/second-bulk-carrier-claiming-to-be-chinese-passes-through-hormuz/",
+      "time": "23:56"
+    },
+    {
+      "msg": "Kuwait Declares Force Majeure Due To Middle East Conflict",
+      "url": "https://gcaptain.com/kuwait-cuts-oil-production-as-precaution-amid-iran-tensions/",
+      "time": "23:56"
+    },
+    {
+      "msg": "India Allowed Iranian Warship To Dock As U.S. Sank Another Off Sri Lanka",
+      "url": "https://gcaptain.com/india-allowed-iranian-warship-to-dock-as-u-s-sank-another-off-sri-lanka/",
+      "time": "23:56"
+    },
+    {
+      "msg": "US Oil Posts Biggest Weekly Gain Ever As Iran War Rages On",
+      "url": "https://gcaptain.com/us-oil-posts-biggest-weekly-gain-ever-as-iran-war-rages-on/",
+      "time": "23:56"
     }
   ]
 }

@@ -68,9 +68,14 @@
                         </div>
 
                         <!-- Integrated Risk & Alerts (Automated) -->
-                        <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex items-center gap-3">
-                            <div class="w-2 h-2 bg-indigo-600 rounded-full animate-ping"></div>
-                            <p class="text-[10px] font-bold text-indigo-900 uppercase tracking-tight" data-i18n="autoRiskLabel">Automated Risk Intelligence Active</p>
+                        <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex flex-col gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-ping"></div>
+                                <p class="text-[10px] font-bold text-indigo-900 uppercase tracking-tight" data-i18n="autoRiskLabel">Automated Risk Intelligence Active</p>
+                            </div>
+                            <ul id="risk-summary-list" class="text-[9px] font-medium text-indigo-700 space-y-1 list-disc list-inside border-t border-indigo-100 pt-2 hidden">
+                                <!-- Dynamic summary items will appear here -->
+                            </ul>
                         </div>
 
                         <div class="grid grid-cols-1 gap-4">

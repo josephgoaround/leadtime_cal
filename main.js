@@ -149,9 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rates = { USD: 1, KRW: 1350, EUR: 0.92 };
     const symbols = { USD: "$", KRW: "₩", EUR: "€" };
 
-    const activeGlobalRisks = {
-        redSea: { active: true, delay: 12, label: "Red Sea/Suez Canal Disruption (High Risk)" }
-    };
+    let activeRisks = []; // Dynamic risks from sync_data.py
 
     const hubs = {
         // --- CONTAINER HUB PORTS (Top Global Hubs) ---
@@ -276,6 +274,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) return;
             const data = await response.json();
             
+            // Set dynamic risks
+            activeRisks = data.active_risks || [];
+            const riskSummaryList = document.getElementById('risk-summary-list');
+
             if (data.alerts && data.alerts.length > 0) {
                 // Update Ticker
                 newsTicker.innerHTML = data.alerts.map(a => `<span class="mx-4">${a.msg}</span>`).join('');
@@ -296,6 +298,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                 }
+            }
+
+            // Update Risk Intelligence Summary UI
+            if (activeRisks.length > 0) {
+                riskSummaryList.classList.remove('hidden');
+                riskSummaryList.innerHTML = activeRisks.map(r => `
+                    <li>${r.label} (+${r.delay}d)</li>
+                `).join('');
+            } else {
+                riskSummaryList.classList.add('hidden');
             }
         } catch (e) {
             console.error("Failed to load live news:", e);
@@ -394,7 +406,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const airRoute = solveRoute(oId, dId, 'air', hscodeSelect.value);
         
         const currentRoute = modeSelect.value === 'sea' ? seaRoute : airRoute;
-        const otherRoute = modeSelect.value === 'sea' ? airRoute : seaRoute;
         
         const costConverted = currentRoute.costUSD * rates[currentCurrency], formattedCost = Math.round(costConverted).toLocaleString();
         let fontSizeClass = formattedCost.length > 10 ? "text-3xl" : (formattedCost.length > 7 ? "text-4xl" : "text-5xl");
@@ -415,6 +426,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Add <span class="text-red-600">${dayDiff} Days</span></p>
                </div>`;
 
+        // Active Risk UI logic
+        let riskAlertHTML = '';
+        if (modeSelect.value === 'sea' && currentRoute.appliedRisks.length > 0) {
+            const riskLabels = currentRoute.appliedRisks.map(r => r.label).join(' & ');
+            const totalRiskDelay = currentRoute.appliedRisks.reduce((sum, r) => sum + r.delay, 0);
+            riskAlertHTML = `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${riskLabels}: Rerouting Active (+${totalRiskDelay} Days Delay)</div>`;
+        }
+
         resultContainer.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
                 <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px]">
@@ -433,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${comparisonHTML}
                 </div>
             </div>
-            ${currentRoute.isRedSeaDisrupted && modeSelect.value === 'sea' ? `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${t.riskMsgSuez} (+${activeGlobalRisks.redSea.delay} Days Delay)</div>` : ''}`;
+            ${riskAlertHTML}`;
         
         renderMap(currentRoute.routePath, modeSelect.value);
         await fetchSummarizedNews(hubs[oId], hubs[dId]);
@@ -449,10 +468,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cargoDelays = { general: 1, rf: 2, dg: 4, special: 5 };
     function solveRoute(oId, dId, mode, cargo) {
-        const o = hubs[oId], d = hubs[dId], isRedSeaDisrupted = activeGlobalRisks.redSea.active;
+        const o = hubs[oId], d = hubs[dId];
         let routePath = [], totalDist = 0;
+        
+        // Dynamic Risk Assessment
+        let appliedRisks = [];
         if (mode === 'sea') {
-            const maritimeNodes = findMaritimePath(o.exit, d.exit, isRedSeaDisrupted);
+            activeRisks.forEach(risk => {
+                if (risk.id === 'suez_disruption' && ((o.exit === 'suez_n' || d.exit === 'suez_n') || (o.country === 'China' || o.country === 'Singapore' || o.country === 'South Korea') && (d.country === 'Netherlands' || d.country === 'Germany' || d.country === 'Belgium'))) {
+                    appliedRisks.append(risk);
+                }
+                // Simplified logic for Panama/Other risks based on port names
+                if (risk.id === 'panama_disruption' && (o.name.includes('Panama') || d.name.includes('Panama'))) {
+                    appliedRisks.append(risk);
+                }
+            });
+        }
+
+        const riskDelay = appliedRisks.reduce((sum, r) => sum + r.delay, 0);
+        const riskCost = appliedRisks.reduce((sum, r) => sum + r.cost, 0);
+
+        if (mode === 'sea') {
+            const isSuezDisrupted = appliedRisks.some(r => r.id === 'suez_disruption');
+            const maritimeNodes = findMaritimePath(o.exit, d.exit, isSuezDisrupted);
             const rawPath = [o.coords].concat(maritimeNodes).concat([d.coords]);
             for (let i = 0; i < rawPath.length - 1; i++) {
                 const seg = getOptimizedPath(rawPath[i], rawPath[i+1], 10);
@@ -473,11 +511,13 @@ document.addEventListener('DOMContentLoaded', () => {
             routePath = getOptimizedPath(o.coords, d.coords, 100);
             totalDist = getDistHaversine(o.coords, d.coords);
         }
-        const transitDays = (totalDist / ((mode === 'sea' ? 17 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1);
-        const costUSD = (mode === 'sea' ? 1200 + (totalDist * 0.15) : 4000 + (totalDist * 2.8)) + (isRedSeaDisrupted && mode === 'sea' ? 1500 : 0);
+        
+        const transitDays = (totalDist / ((mode === 'sea' ? 17 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1) + riskDelay;
+        const costUSD = (mode === 'sea' ? 1200 + (totalDist * 0.15) : 4000 + (totalDist * 2.8)) + riskCost;
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + transitDays);
-        return { transitDays, eta, routePath, totalDist, costUSD, isRedSeaDisrupted };
+        
+        return { transitDays, eta, routePath, totalDist, costUSD, appliedRisks };
     }
 
     document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };

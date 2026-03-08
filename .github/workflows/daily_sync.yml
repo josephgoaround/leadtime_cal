@@ -10,12 +10,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/set_up-python@v4
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
