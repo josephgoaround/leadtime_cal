@@ -4,235 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LeadTime Intelligence | Global Logistics Pathfinder</title>
-    <meta name="description" content="Advanced global logistics lead time simulator and route visualization platform.">
+    <meta name="description" content="Advanced global logistics lead time simulator and route visualization platform. Analyze sea and air transit times with precision Dijkstra routing.">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <meta name="google-adsense-account" content="ca-pub-6930584793965742">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6930584793965742" crossorigin="anonymous"></script>
 </head>
-<body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden min-h-screen flex flex-col">
-
-    <!-- Navbar -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-[3000] shadow-sm">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-[1600px]">
-            <a href="#" class="block">
-                <h1 class="text-xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
-            </a>
-            
-            <!-- Universal Tab Toggle -->
-            <div class="hidden md:flex bg-slate-100 p-1 rounded-full shadow-inner border border-slate-200">
-                <button id="tab-analyzer" class="px-6 py-1.5 rounded-full text-xs font-bold transition-all bg-white shadow-sm text-indigo-600 border border-slate-200/50">🌍 Global Route Analyzer</button>
-                <button id="tab-planner" class="px-6 py-1.5 rounded-full text-xs font-bold transition-all text-slate-500 hover:text-slate-800">📦 3D Load Planner</button>
+<body class="bg-gray-50 font-sans text-gray-900 leading-normal">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-[2000]">
+        <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
+            <div class="flex items-center gap-8">
+                <a href="index.html" class="block">
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="index.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1" data-i18n="navAnalyzer">Analyzer</a>
+                    <a href="planner.html" class="text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors pb-1">📦 3D Load Planner</a>
+                    <a href="#how-it-works" class="text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navHowItWorks">How it Works</a>
+                </nav>
             </div>
-
             <div class="flex items-center gap-3">
-                <div class="hidden sm:flex bg-slate-100 p-1 rounded-lg">
+                <div class="hidden sm:flex bg-gray-100 p-1 rounded-lg mr-2">
                     <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
-                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-slate-500">KRW</button>
-                    <button id="curr-eur" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-slate-500">EUR</button>
+                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">KRW</button>
+                    <button id="curr-eur" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">EUR</button>
                 </div>
-                <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
-                    <button id="lang-ko" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-slate-200 text-slate-600">KO</button>
+                <div class="flex items-center gap-1 border-l pl-3 border-gray-200">
+                    <button id="lang-ko" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">KO</button>
                     <button id="lang-en" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">EN</button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- App Container -->
-    <div class="flex-1 w-full max-w-[1600px] mx-auto px-4 py-8">
-        
-        <!-- ==========================================
-             VIEW 1: ROUTE ANALYZER (Original)
-        =========================================== -->
-        <main id="view-analyzer" class="w-full space-y-6 animate-fade-in">
-            <!-- News Ticker -->
-            <div class="bg-slate-900 text-white p-3 rounded-2xl flex items-center gap-4 overflow-hidden shadow-lg border border-slate-800">
-                <div class="bg-red-500 text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest shrink-0 animate-pulse flex items-center gap-2">
-                    <span class="w-2 h-2 bg-white rounded-full"></span> Live Alert
-                </div>
-                <div id="news-ticker" class="text-xs font-bold whitespace-nowrap overflow-hidden flex-1 flex gap-12 animate-marquee">
-                    <span>Checking live maritime databases...</span>
-                </div>
-            </div>
+    <main id="analyzer" class="container mx-auto p-4 max-w-6xl mt-8">
+        <div class="mb-8">
+            <p class="text-gray-500 text-sm font-medium" data-i18n="subtitle">Global Logistics & Customs AI Pathfinder</p>
+        </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <!-- Sidebar Config -->
-                <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-100">
-                        <h2 class="text-sm font-black mb-6 text-slate-800 uppercase tracking-widest flex items-center gap-2">
-                            <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">⚙️</span>
-                            Shipment Config
-                        </h2>
-                        
-                        <form id="shipping-form" class="space-y-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100">
+                    <h2 class="text-lg font-bold mb-6 flex items-center text-gray-800">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01m-.01 4h.01"></path></svg>
+                        <span data-i18n="formTitle">Shipment Config</span>
+                    </h2>
+                    <form id="shipping-form" class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Mode</label>
-                                <select id="transport-mode" class="w-full py-3 px-4 border-slate-100 bg-slate-50 rounded-2xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold text-slate-700"></select>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Departure Date</label>
-                                <input type="date" id="departure-date" class="w-full py-3 px-4 border-slate-100 bg-slate-50 rounded-2xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold text-slate-700">
-                            </div>
-
-                            <div class="p-4 bg-red-50 rounded-2xl border border-red-100 hidden" id="risk-alert-box">
-                                <ul id="risk-summary-list" class="text-[10px] font-bold text-red-600 space-y-1"></ul>
-                            </div>
-
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Origin</label>
-                                <select id="origin" class="w-full py-3 px-4 border-slate-100 bg-slate-50 rounded-2xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold text-slate-700"></select>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Destination</label>
-                                <select id="destination" class="w-full py-3 px-4 border-slate-100 bg-slate-50 rounded-2xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold text-slate-700"></select>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Commodity</label>
-                                <select id="hscode" class="w-full py-3 px-4 border-slate-100 bg-slate-50 rounded-2xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold text-slate-700">
-                                    <option value="general">📦 General Cargo</option>
-                                    <option value="rf">❄️ Reefer</option>
-                                    <option value="dg">⚠️ Dangerous Goods</option>
-                                    <option value="special">🏗️ Out of Gauge</option>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelMode">Transport Mode</label>
+                                <select id="transport-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
+                                    <option value="sea">🚢 Container Shipping (Liner)</option>
+                                    <option value="air">✈️ Air Cargo</option>
                                 </select>
                             </div>
-                            
-                            <button type="submit" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl hover:bg-indigo-700 transition-all shadow-lg text-xs uppercase tracking-widest mt-4">
-                                Run Analysis
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Main Content -->
-                <div class="lg:col-span-3 space-y-6">
-                    <div class="bg-white p-2 rounded-3xl shadow-xl border border-slate-100 relative">
-                        <div id="map" class="rounded-2xl h-[500px] w-full z-10"></div>
-                    </div>
-                    
-                    <div id="dynamic-scm-feed" class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 min-h-[200px]">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest">Intelligence Report</h3>
-                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Live</span>
-                        </div>
-                        <div id="feed-container">
-                            <p class="text-sm text-slate-400 font-medium text-center py-10">Configure route and run analysis to generate report.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-
-        <!-- ==========================================
-             VIEW 2: 3D LOAD PLANNER (Completely Rewritten Layout)
-        =========================================== -->
-        <main id="view-planner" class="w-full hidden opacity-0 transition-opacity duration-300">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[80vh] min-h-[800px]">
-                
-                <!-- Cargo Config Sidebar -->
-                <div class="lg:col-span-1 bg-white rounded-3xl shadow-xl border border-slate-100 p-6 flex flex-col h-full overflow-hidden">
-                    <div class="mb-6">
-                        <h2 class="text-lg font-black text-slate-800 flex items-center gap-3">
-                            <span class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">🧊</span>
-                            Load Planner
-                        </h2>
-                        <p class="text-xs text-slate-500 font-medium mt-2">Optimize LCL dimensions into FCL equipment using WebGL.</p>
-                    </div>
-                    
-                    <!-- Config Body (Scrollable) -->
-                    <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
-                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">1. Select Container</label>
-                            <select id="container-type" class="w-full py-3 px-4 border-white bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 text-sm font-bold text-slate-700">
-                                <option value="20ft">20' Standard</option>
-                                <option value="40ft" selected>40' Standard</option>
-                                <option value="40hc">40' High Cube</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">2. Cargo List (cm)</label>
-                                <button id="add-cargo-btn" class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-bold hover:bg-indigo-100 transition-colors">+ Add</button>
-                            </div>
-                            <div id="cargo-items" class="space-y-3">
-                                <!-- JS injects items here -->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Fixed Bottom Action -->
-                    <div class="pt-6 mt-4 border-t border-slate-100 space-y-4">
-                        <div id="packing-summary" class="hidden grid grid-cols-2 gap-4">
-                            <div class="bg-indigo-50 rounded-xl p-3 text-center border border-indigo-100">
-                                <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">Volume</p>
-                                <p class="text-lg font-black text-indigo-600" id="vol-util">0%</p>
-                            </div>
-                            <div class="bg-emerald-50 rounded-xl p-3 text-center border border-emerald-100">
-                                <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Packed</p>
-                                <p class="text-lg font-black text-emerald-600" id="packed-count">0/0</p>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelDate">Departure Date</label>
+                                <input type="date" id="departure-date" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
                             </div>
                         </div>
 
-                        <button id="simulate-load-btn" class="w-full bg-slate-900 text-white font-black py-4 rounded-2xl hover:bg-black transform active:scale-[0.98] transition-all shadow-xl shadow-slate-300 text-xs tracking-widest uppercase flex justify-center items-center gap-2">
-                            <span>Execute Simulation</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 3D Canvas Area (Huge) -->
-                <div class="lg:col-span-3 h-full min-h-[600px] relative rounded-3xl shadow-2xl border border-slate-200 overflow-hidden bg-slate-900">
-                    
-                    <!-- HUD overlay -->
-                    <div class="absolute top-6 left-6 z-10 flex gap-3 pointer-events-none">
-                        <div class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 flex items-center gap-2">
-                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]"></div>
-                            <span class="text-[10px] font-bold text-white uppercase tracking-widest">WebGL Active</span>
+                        <!-- Integrated Risk Intelligence -->
+                        <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex flex-col gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-ping"></div>
+                                <p class="text-[10px] font-bold text-indigo-900 uppercase tracking-tight" data-i18n="autoRiskLabel">Automated Risk Intelligence Active</p>
+                            </div>
+                            <ul id="risk-summary-list" class="text-[9px] font-medium text-indigo-700 space-y-1 list-disc list-inside border-t border-indigo-100 pt-2 hidden"></ul>
                         </div>
-                    </div>
-                    <div class="absolute bottom-6 left-6 right-6 z-10 flex justify-between items-end pointer-events-none">
-                        <div class="bg-black/50 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10">
-                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 border-b border-white/10 pb-2">Mouse Controls</p>
-                            <ul class="text-xs text-white/80 space-y-1 font-medium">
-                                <li>🖱️ <span class="text-indigo-300 ml-1">Left Click:</span> Rotate View</li>
-                                <li>↕️ <span class="text-indigo-300 ml-1">Scroll:</span> Zoom In/Out</li>
-                                <li>👉 <span class="text-indigo-300 ml-1">Right Click:</span> Pan Camera</li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <!-- WebGL Target -->
-                    <div id="canvas-container" class="w-full h-full cursor-grab active:cursor-grabbing">
-                        <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center flex-col gap-4">
-                            <div class="w-16 h-16 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
-                            <p class="text-indigo-200 font-bold tracking-widest text-xs uppercase animate-pulse">Initializing Environment...</p>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelOrigin">Departure</label><select id="origin" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold"></select></div>
+                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelDest">Arrival</label><select id="destination" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold"></select></div>
+                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelHSCode">Commodity</label><select id="hscode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold"><option value="general">📦 General</option><option value="rf">❄️ Reefer</option><option value="dg">⚠️ Dangerous</option><option value="special">🏗️ Special</option></select></div>
                         </div>
-                    </div>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition-all shadow-lg text-sm tracking-wide" data-i18n="btnAnalyze">RUN INTELLIGENCE ANALYSIS</button>
+                    </form>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 mt-auto py-8">
-        <div class="container mx-auto px-6 max-w-[1600px] flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">© 2026 LEADTIME INTELLIGENCE. ALL RIGHTS RESERVED.</p>
-            <div class="flex gap-4 text-xs font-bold text-slate-400">
-                <a href="#" class="hover:text-indigo-600 transition-colors">Privacy</a>
-                <a href="#" class="hover:text-indigo-600 transition-colors">Terms</a>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="bg-gray-900 text-white p-2.5 rounded-xl flex items-center gap-4 overflow-hidden shadow-lg border border-gray-800">
+                    <div class="bg-red-600 text-[9px] font-black px-2 py-0.5 rounded uppercase shrink-0 animate-pulse" data-i18n="liveAlert">Live Alert</div>
+                    <div id="news-ticker" class="text-[11px] font-bold whitespace-nowrap overflow-hidden flex-1 flex gap-12 animate-marquee"></div>
+                </div>
+                <div class="bg-white p-2 rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+                    <div id="map" class="rounded-xl h-[600px] w-full"></div>
+                </div>
+                <div id="dynamic-scm-feed" class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 min-h-[200px]">
+                    <div id="feed-container"></div>
+                </div>
             </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-20 pt-16 pb-8">
+        <div class="container mx-auto px-4 max-w-6xl text-center">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">© 2026 LEADTIME INTELLIGENCE. ALL RIGHTS RESERVED.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="main.js?v=2.0"></script>
-    <script src="container3d.js?v=2.0"></script>
+    <script src="main.js"></script>
 </body>
 </html>
