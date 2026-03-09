@@ -186,13 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update Efficiency HUD
         const efficiency = (totalVol / (C_L*C_W*C_H)) * 100;
-        const summary = document.getElementById('packing-summary');
-        if(summary) {
-            summary.classList.remove('hidden');
-            document.getElementById('vol-util').innerText = efficiency.toFixed(1) + '%';
-            document.getElementById('vol-bar').style.width = efficiency + '%';
-            document.getElementById('packed-count').innerText = `${packer.packed.length}/${itemsToPack.length}`;
-        }
+        
+        const volUtil = document.getElementById('vol-util');
+        const volBar = document.getElementById('vol-bar');
+        const packedCount = document.getElementById('packed-count');
+
+        if(volUtil) volUtil.innerText = efficiency.toFixed(1) + '%';
+        if(volBar) volBar.style.width = efficiency + '%';
+        if(packedCount) packedCount.innerText = `${packer.packed.length}/${itemsToPack.length}`;
         
         camera.position.set(C_L * 1.3, C_H + 1200, C_W + 1800);
         controls.target.set(0, C_H/2, 0);
