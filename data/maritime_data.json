@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-09 13:15:38",
+  "last_updated": "2026-03-09 15:06:00",
   "active_risks": [
     {
       "label": "Strait of Hormuz Alert",
@@ -16,64 +16,64 @@
   ],
   "alerts": [
     {
+      "msg": "ABS and HD Hyundai Launch Nuclear-Powered Mega Containership Study",
+      "url": "https://gcaptain.com/abs-and-hd-hyundai-launch-nuclear-powered-mega-containership-study/",
+      "time": "15:05"
+    },
+    {
       "msg": "Oil Prices Hit Highest Since 2022 at More Than $119 a Barrel on Iran War",
       "url": "https://gcaptain.com/oil-prices-hit-highest-since-2022-at-more-than-119-a-barrel-on-iran-war/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "Greek Oil Tanker Exits Strait of Hormuz With Its Signal Off",
       "url": "https://gcaptain.com/greek-oil-tanker-exits-strait-of-hormuz-with-its-signal-off/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "EU Buys 100% of Russian Arctic LNG Just 9 Months Before Planned Gas Ban",
       "url": "https://gcaptain.com/eu-buys-100-of-russian-arctic-lng-just-9-months-before-planned-gas-ban/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "US Defends Waiver On Russian Oil Sanctions",
       "url": "https://gcaptain.com/us-defends-waiver-on-russian-oil-sanctions/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "Iran Picks New Leader As Escalating War Deepens Oil Shock",
       "url": "https://gcaptain.com/iran-picks-new-leader-as-escalating-war-deepens-oil-shock/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "Tokyo Prepared To Release Oil Reserve Amid Iran Crisis",
       "url": "https://gcaptain.com/tokyo-prepared-to-release-oil-reserve-amid-iran-crisis/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "Crude Oil Spill Draws Large Response at Nation’s Only Deepwater VLCC Port",
       "url": "https://gcaptain.com/crude-oil-spill-draws-large-response-at-nations-only-deepwater-vlcc-port/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "US May ‘Unsanction’ More Russia Oil Post India Move",
       "url": "https://gcaptain.com/us-may-unsanction-more-russia-oil-post-india-move/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "US Pressing Sri Lanka Not To Repatriate Iranian Crew From Sunken Ship",
       "url": "https://gcaptain.com/us-pressing-sri-lanka-not-to-repatriate-iranian-crew-from-sunken-ship/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "Second Bulk Carrier Claiming To Be Chinese Passes Through Hormuz",
       "url": "https://gcaptain.com/second-bulk-carrier-claiming-to-be-chinese-passes-through-hormuz/",
-      "time": "13:15"
+      "time": "15:05"
     },
     {
       "msg": "Kuwait Declares Force Majeure Due To Middle East Conflict",
       "url": "https://gcaptain.com/kuwait-cuts-oil-production-as-precaution-amid-iran-tensions/",
-      "time": "13:15"
-    },
-    {
-      "msg": "India Allowed Iranian Warship To Dock As U.S. Sank Another Off Sri Lanka",
-      "url": "https://gcaptain.com/india-allowed-iranian-warship-to-dock-as-u-s-sank-another-off-sri-lanka/",
-      "time": "13:15"
+      "time": "15:05"
     }
   ]
 }
