@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- CONTAINER HUB PORTS (Top Global Hubs) ---
         "sea-sha": { name: "Shanghai", coords: [31.23, 121.47], type: "sea", exit: "shanghai_gate", country: "China" },
         "sea-sin": { name: "Singapore", coords: [1.26, 103.83], type: "sea", exit: "singapore_gate", country: "Singapore" },
-        "sea-nbo": { name: "Ningbo-Zhoushan", coords: [29.86, 121.54], type: "sea", exit: "ningbo_exit", country: "China" },
+        "sea-nbo": { name: "Ningbo-Zhoushan", coords: [29.86, 121.54], type: "sea", exit: "shanghai_gate", country: "China" },
         "sea-szx": { name: "Shenzhen", coords: [22.54, 114.05], type: "sea", exit: "hongkong_outer", country: "China" },
         "sea-can": { name: "Guangzhou", coords: [23.13, 113.26], type: "sea", exit: "hongkong_outer", country: "China" },
         "sea-pus": { name: "Busan", coords: [35.10, 129.04], type: "sea", exit: "pusan_gate", country: "South Korea" },
@@ -196,6 +196,20 @@ document.addEventListener('DOMContentLoaded', () => {
         "sea-psd": { name: "Port Said", coords: [31.26, 32.30], type: "sea", exit: "suez_n", country: "Egypt" },
         "sea-oak": { name: "Oakland", coords: [37.80, -122.27], type: "sea", exit: "lax_gate", country: "USA" },
         "sea-sea": { name: "Seattle", coords: [47.60, -122.33], type: "sea", exit: "lax_gate", country: "USA" },
+
+        // --- NEW RESEARCH PORTS (Bulk/Tanker/Gas) ---
+        "sea-phead": { name: "Port Hedland", coords: [-20.31, 118.57], type: "sea", exit: "indonesia_s", country: "Australia" },
+        "sea-tuba": { name: "Tubarao", coords: [-20.28, -40.24], type: "sea", exit: "brazil_e", country: "Brazil" },
+        "sea-qatar": { name: "Ras Laffan", coords: [25.90, 51.53], type: "sea", exit: "hormuz_strait", country: "Qatar" },
+        "sea-uls": { name: "Ulsan", coords: [35.53, 129.31], type: "sea", exit: "pusan_gate", country: "South Korea" },
+        "sea-gwa": { name: "Gwangyang", coords: [34.94, 127.69], type: "sea", exit: "pusan_gate", country: "South Korea" },
+        "sea-poh": { name: "Pohang", coords: [36.01, 129.38], type: "sea", exit: "pusan_gate", country: "South Korea" },
+        "sea-yamal": { name: "Sabetta (Yamal)", coords: [71.27, 72.07], type: "sea", exit: "arctic_n", country: "Russia" },
+        "sea-sabine": { name: "Sabine Pass", coords: [29.73, -93.87], type: "sea", exit: "panama_e", country: "USA" },
+        "sea-tger": { name: "Tanger Med", coords: [35.88, -5.50], type: "sea", exit: "gibraltar", country: "Morocco" },
+        "sea-mom": { name: "Mombasa", coords: [-4.04, 39.66], type: "sea", exit: "madagascar_nw", country: "Kenya" },
+        "sea-dji": { name: "Djibouti", coords: [11.58, 43.14], type: "sea", exit: "bab_el_mandeb", country: "Djibouti" },
+        "sea-chan": { name: "Chancay", coords: [-11.58, -77.27], type: "sea", exit: "chancay_exit", country: "Peru" },
 
         // --- CARGO AIRPORTS ---
         "air-icn": { name: "Incheon (ICN)", coords: [37.46, 126.44], type: "air", country: "South Korea" },
@@ -244,7 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "panama_e": [9.5, -79.8], "panama_w": [8.8, -79.6], "lax_gate": [32.5, -120.0], "nyc_gate": [40.2, -73.5], "savannah_exit": [31.5, -80.5], "brazil_e": [-6.0, -34.0],
         "pacific_mid_w": [30.0, 175.0], "pacific_mid_e": [30.0, -175.0], "sydney_outer": [-35.0, 153.0], "tokyo_outer": [34.0, 141.5],
         "atlantic_mid_n": [45.0, -40.0], "atlantic_mid_s": [20.0, -35.0], "english_channel": [50.0, -2.0], "azores": [38.0, -28.0],
-        "tasman_sea": [-40.0, 160.0]
+        "tasman_sea": [-40.0, 160.0],
+        "arctic_n": [75.0, 70.0], "bering_strait": [66.0, -169.0], "indonesia_s": [-10.0, 115.0], "chancay_exit": [-12.0, -85.0]
     };
 
     const seaEdges = [
@@ -259,7 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Arteries: Southern Hemisphere
         ["brazil_e", "portugal_w"], ["brazil_e", "good_hope"], ["good_hope", "west_africa_1"], ["west_africa_1", "portugal_w"], ["srilanka_s", "madagascar_ne"], ["madagascar_ne", "madagascar_se"], ["madagascar_se", "good_hope"], ["srilanka_s", "madagascar_nw"], ["madagascar_nw", "madagascar_sw"], ["madagascar_sw", "good_hope"],
         ["panama_e", "brazil_e"], ["panama_e", "nyc_gate"], ["panama_e", "savannah_exit"], ["savannah_exit", "nyc_gate"],
-        ["singapore_gate", "sydney_outer"], ["sydney_outer", "tasman_sea"], ["tasman_sea", "pacific_mid_e"]
+        ["singapore_gate", "sydney_outer"], ["sydney_outer", "tasman_sea"], ["tasman_sea", "pacific_mid_e"],
+        // New Connections
+        ["arctic_n", "rotterdam_exit"], ["arctic_n", "bering_strait"], ["bering_strait", "pacific_mid_w"],
+        ["indonesia_s", "singapore_gate"], ["indonesia_s", "sydney_outer"],
+        ["chancay_exit", "pacific_mid_e"], ["chancay_exit", "lax_gate"]
     ];
 
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
@@ -363,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-                if (isRiskActive && ["bab_el_mandeb", "suez_s"].includes(neighbor)) return;
+                if (isRiskActive && ["bab_el_mandeb", "suez_s", "red_sea_1", "red_sea_2", "red_sea_3"].includes(neighbor)) return;
                 let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]);
                 let alt = distances[closest] + d;
                 if (alt < distances[neighbor]) { distances[neighbor] = alt; previous[neighbor] = closest; }
@@ -476,11 +495,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mode === 'sea') {
             activeRisks.forEach(risk => {
                 if (risk.id === 'suez_disruption' && ((o.exit === 'suez_n' || d.exit === 'suez_n') || (o.country === 'China' || o.country === 'Singapore' || o.country === 'South Korea') && (d.country === 'Netherlands' || d.country === 'Germany' || d.country === 'Belgium'))) {
-                    appliedRisks.append(risk);
+                    appliedRisks.push(risk);
                 }
-                // Simplified logic for Panama/Other risks based on port names
-                if (risk.id === 'panama_disruption' && (o.name.includes('Panama') || d.name.includes('Panama'))) {
-                    appliedRisks.append(risk);
+                if (risk.id === 'panama_disruption' && (o.name.includes('Panama') || d.name.includes('Panama') || o.exit === 'panama_e' || d.exit === 'panama_e')) {
+                    appliedRisks.push(risk);
+                }
+                if (risk.id === 'hormuz_disruption' && (o.exit === 'hormuz_strait' || d.exit === 'hormuz_strait')) {
+                    appliedRisks.push(risk);
                 }
             });
         }
