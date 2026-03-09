@@ -1,6 +1,5 @@
 // container3d.js
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Tab Switching Logic
     const tabAnalyzer = document.getElementById('tab-analyzer');
     const tabPlanner = document.getElementById('tab-planner');
     const viewAnalyzer = document.getElementById('analyzer');
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         viewAnalyzer.style.display = 'block';
         if(howItWorks) howItWorks.style.display = 'block';
         viewPlanner.classList.add('hidden');
-        viewPlanner.style.display = 'none';
         tabAnalyzer.className = "text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1";
         tabPlanner.className = "text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors pb-1";
     });
@@ -24,23 +22,19 @@ document.addEventListener('DOMContentLoaded', () => {
         viewAnalyzer.style.display = 'none';
         if(howItWorks) howItWorks.style.display = 'none';
         viewPlanner.classList.remove('hidden');
-        viewPlanner.style.display = 'block';
         tabPlanner.className = "text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1";
         tabAnalyzer.className = "text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors pb-1";
         
-        // Ensure Three.js is initialized and resized
+        // CRITICAL: Wait for CSS display:block to take effect so clientWidth/Height are not 0
         setTimeout(() => {
-            initThreeJS();
-            if(isInitialized && renderer && camera) {
-                const container = document.getElementById('canvas-container');
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
+            if (!isInitialized) {
+                initThreeJS();
+            } else {
+                onWindowResize(); // Force resize to match the newly visible container
             }
-        }, 100);
+        }, 200);
     });
 
-    // 2. Cargo Items UI Logic
     const cargoContainer = document.getElementById('cargo-items');
     const addBtn = document.getElementById('add-cargo-btn');
     const simBtn = document.getElementById('simulate-load-btn');
@@ -53,12 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'grid grid-cols-6 gap-2 items-center bg-gray-50 p-2 rounded-lg border border-gray-100';
         div.innerHTML = `
-            <input type="text" placeholder="Item" class="col-span-2 text-xs py-1 px-2 border rounded border-gray-200" value="Cargo ${id+1}" id="c-name-${id}">
-            <input type="number" placeholder="L(cm)" class="col-span-1 text-xs py-1 px-1 border rounded border-gray-200" value="100" id="c-l-${id}">
-            <input type="number" placeholder="W(cm)" class="col-span-1 text-xs py-1 px-1 border rounded border-gray-200" value="100" id="c-w-${id}">
-            <input type="number" placeholder="H(cm)" class="col-span-1 text-xs py-1 px-1 border rounded border-gray-200" value="100" id="c-h-${id}">
+            <input type="text" placeholder="Item" class="col-span-2 text-[10px] py-1 px-2 border rounded border-gray-200" value="Item ${id+1}" id="c-name-${id}">
+            <input type="number" placeholder="L" class="col-span-1 text-[10px] py-1 px-1 border rounded border-gray-200" value="100" id="c-l-${id}">
+            <input type="number" placeholder="W" class="col-span-1 text-[10px] py-1 px-1 border rounded border-gray-200" value="100" id="c-w-${id}">
+            <input type="number" placeholder="H" class="col-span-1 text-[10px] py-1 px-1 border rounded border-gray-200" value="100" id="c-h-${id}">
             <div class="col-span-1 flex gap-1">
-                <input type="number" placeholder="Qty" class="w-full text-xs py-1 px-1 border rounded border-gray-200" value="10" id="c-q-${id}">
+                <input type="number" placeholder="Q" class="w-full text-[10px] py-1 px-1 border rounded border-gray-200" value="10" id="c-q-${id}">
                 <button class="text-red-500 font-bold px-1 hover:text-red-700" onclick="this.parentElement.parentElement.remove()">×</button>
             </div>
         `;
@@ -66,62 +60,76 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if(addBtn) addBtn.addEventListener('click', addCargoRow);
-    if(cargoContainer) addCargoRow(); // Add first row default
+    if(cargoContainer) addCargoRow();
 
-    // 3. Three.js Setup & Simulation
     let scene, camera, renderer, controls;
     let isInitialized = false;
 
     function initThreeJS() {
-        if (isInitialized) return;
         const container = document.getElementById('canvas-container');
-        if(!container || container.clientWidth === 0) return;
+        if(!container || container.clientWidth === 0) {
+            console.warn("Container not ready, retrying...");
+            return;
+        }
         
-        const placeholder = document.getElementById('canvas-placeholder');
-        if(placeholder) placeholder.style.display = 'none';
-        
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x0f172a); // Slate-900 for premium feel
+        try {
+            const placeholder = document.getElementById('canvas-placeholder');
+            if(placeholder) placeholder.style.display = 'none';
+            
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f172a);
 
-        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 20000);
-        camera.position.set(1500, 1000, 2000);
+            const aspect = container.clientWidth / container.clientHeight;
+            camera = new THREE.PerspectiveCamera(45, aspect, 1, 20000);
+            camera.position.set(2000, 1500, 2500);
 
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-        scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-        dirLight.position.set(2000, 3000, 1000);
-        scene.add(dirLight);
-
-        // Add Grid
-        const gridHelper = new THREE.GridHelper(5000, 40, 0x334155, 0x1e293b);
-        gridHelper.position.y = -1;
-        scene.add(gridHelper);
-
-        window.addEventListener('resize', () => {
-            if(!container || viewPlanner.style.display === 'none') return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
 
-        const animate = function () {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        };
-        animate();
-        isInitialized = true;
-        
-        drawEmptyContainer(1200, 235, 239); // Default 40ft
+            // OrbitControls might be attached to THREE or global
+            const OrbitControls = window.THREE.OrbitControls || THREE.OrbitControls;
+            if (OrbitControls) {
+                controls = new OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+            }
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+            dirLight.position.set(2000, 3000, 1000);
+            scene.add(dirLight);
+
+            const gridHelper = new THREE.GridHelper(5000, 50, 0x334155, 0x1e293b);
+            gridHelper.position.y = -1;
+            scene.add(gridHelper);
+
+            window.addEventListener('resize', onWindowResize);
+
+            const animate = function () {
+                requestAnimationFrame(animate);
+                if (controls) controls.update();
+                renderer.render(scene, camera);
+            };
+            animate();
+            isInitialized = true;
+            
+            drawEmptyContainer(1200, 235, 239); // 40ft initial
+            console.log("3D Engine Initialized Successfully");
+        } catch (e) {
+            console.error("Three.js Init Error:", e);
+            document.getElementById('canvas-placeholder').innerHTML = `<p class="text-red-500 font-bold">Failed to load 3D Engine: ${e.message}</p>`;
+        }
+    }
+
+    function onWindowResize() {
+        const container = document.getElementById('canvas-container');
+        if(!container || !isInitialized) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
     }
     
     let containerBox = null;
@@ -135,27 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const geometry = new THREE.BoxGeometry(L, H, W);
         const edges = new THREE.EdgesGeometry(geometry);
         containerBox = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x818cf8, linewidth: 2 }));
-        
         containerBox.position.set(0, H/2, 0);
         scene.add(containerBox);
     }
 
     function addBox(x, y, z, l, h, w, colorCode, contL, contW, contH) {
         const geo = new THREE.BoxGeometry(l, h, w);
-        const mat = new THREE.MeshLambertMaterial({ color: colorCode, transparent: true, opacity: 0.9 });
+        const mat = new THREE.MeshLambertMaterial({ color: colorCode, transparent: true, opacity: 0.85 });
         const mesh = new THREE.Mesh(geo, mat);
         
         const edgeGeo = new THREE.EdgesGeometry(geo);
-        const edgeMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1, transparent: true, opacity: 0.3 });
+        const edgeMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1, transparent: true, opacity: 0.2 });
         const wireframe = new THREE.LineSegments(edgeGeo, edgeMat);
         mesh.add(wireframe);
 
-        mesh.position.set(
-            -contL/2 + x + l/2,
-            y + h/2,
-            -contW/2 + z + w/2
-        );
-
+        mesh.position.set(-contL/2 + x + l/2, y + h/2, -contW/2 + z + w/2);
         scene.add(mesh);
         cargoMeshes.push(mesh);
     }
@@ -163,7 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if(simBtn) simBtn.addEventListener('click', () => {
         if(!isInitialized) {
             initThreeJS();
-            if(!isInitialized) return; // Wait for tab to be fully visible
+            if(!isInitialized) {
+                alert("Please click the tab first to initialize the 3D view.");
+                return;
+            }
         }
         
         const contType = document.getElementById('container-type').value;
@@ -198,12 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.packed = [];
             }
             pack(box) {
-                this.spaces.sort((a, b) => {
-                    if (Math.abs(a.y - b.y) > 0.1) return a.y - b.y; 
-                    if (Math.abs(a.z - b.z) > 0.1) return a.z - b.z; 
-                    return a.x - b.x; 
-                });
-
+                this.spaces.sort((a, b) => (a.y - b.y) || (a.z - b.z) || (a.x - b.x));
                 for (let i = 0; i < this.spaces.length; i++) {
                     let space = this.spaces[i];
                     let rots = [{l: box.l, w: box.w, h: box.h}, {l: box.w, w: box.l, h: box.h}];
@@ -240,14 +240,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const summary = document.getElementById('packing-summary');
         if(summary) {
-            summary.style.display = 'block';
+            summary.classList.remove('hidden');
             const contVol = C_L * C_W * C_H;
             document.getElementById('vol-util').innerText = ((totalVolPacked / contVol) * 100).toFixed(1) + '%';
             document.getElementById('packed-count').innerText = `${packedCount} / ${itemsToPack.length}`;
-            document.getElementById('packed-count').className = (packedCount < itemsToPack.length) ? 'text-lg font-black text-red-500' : 'text-lg font-black text-green-600';
         }
         
-        camera.position.set(C_L * 1.2, C_H + 1000, C_W + 1500);
+        camera.position.set(C_L * 1.5, C_H + 1500, C_W + 2000);
         controls.target.set(0, C_H/2, 0);
         controls.update();
     });
