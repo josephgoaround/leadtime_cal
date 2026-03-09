@@ -5,82 +5,283 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LeadTime Intelligence | Global Logistics Pathfinder</title>
     <meta name="description" content="Advanced global logistics lead time simulator and route visualization platform. Analyze sea and air transit times with precision Dijkstra routing.">
+    <meta name="keywords" content="logistics, lead time calculator, sea freight, air cargo, routing, supply chain, maritime pathfinder">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <meta name="google-adsense-account" content="ca-pub-6930584793965742">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6930584793965742" crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-50 font-sans text-gray-900 leading-normal">
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-[2000] shadow-sm">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-[1800px]">
-            <a href="index.html" class="block">
-                <h1 class="text-xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
-            </a>
-            
-            <nav class="flex items-center gap-8">
-                <a href="index.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">🌍 Route Analyzer</a>
-                <a href="planner.html" class="text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors">📦 3D Load Planner</a>
-            </nav>
-
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-[2000]">
+        <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
+            <div class="flex items-center gap-8">
+                <a href="#" class="block">
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="index.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1" data-i18n="navAnalyzer">Analyzer</a>
+                    <a href="planner.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">3D Load Planner</a>
+                    <a href="#how-it-works" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors" data-i18n="navHowItWorks">How it Works</a>
+                    <a href="#about" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors" data-i18n="navAbout">About</a>
+                </nav>
+            </div>
             <div class="flex items-center gap-3">
-                <div class="hidden sm:flex bg-slate-100 p-1 rounded-lg">
+                <div class="hidden sm:flex bg-gray-100 p-1 rounded-lg mr-2">
                     <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
-                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-slate-500">KRW</button>
+                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">KRW</button>
+                    <button id="curr-eur" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">EUR</button>
                 </div>
-                <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
-                    <button id="lang-ko" class="px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200">KO</button>
-                    <button id="lang-en" class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm">EN</button>
+                <div class="flex items-center gap-1 border-l pl-3 border-gray-200">
+                    <button id="lang-ko" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">KO</button>
+                    <button id="lang-en" class="px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm">EN</button>
                 </div>
             </div>
         </div>
     </header>
 
-    <main id="analyzer" class="container mx-auto p-6 max-w-6xl mt-8 animate-fade-in">
+    <main id="analyzer" class="container mx-auto p-4 max-w-6xl mt-8">
         <div class="mb-8">
             <p class="text-gray-500 text-sm font-medium" data-i18n="subtitle">Global Logistics & Customs AI Pathfinder</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-100">
-                    <h2 class="text-lg font-bold mb-6 flex items-center text-slate-800">⚙️ <span data-i18n="formTitle" class="ml-2">Shipment Config</span></h2>
+                <div class="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100">
+                    <h2 class="text-lg font-bold mb-6 flex items-center text-gray-800">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01m-.01 4h.01"></path></svg>
+                        <span data-i18n="formTitle">Shipment Config</span>
+                    </h2>
                     <form id="shipping-form" class="space-y-5">
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Mode</label><select id="transport-mode" class="w-full py-2.5 px-3 border-slate-100 bg-slate-50 rounded-xl text-sm font-semibold"></select></div>
-                            <div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Date</label><input type="date" id="departure-date" class="w-full py-2.5 px-3 border-slate-100 bg-slate-50 rounded-xl text-sm font-semibold"></div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelMode">Transport Mode</label>
+                                <select id="transport-mode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
+                                    <option value="sea">🚢 Container Shipping (Liner)</option>
+                                    <option value="air">✈️ Air Cargo</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelDate">Departure Date</label>
+                                <input type="date" id="departure-date" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
+                            </div>
                         </div>
+
+                        <!-- Integrated Risk & Alerts (Automated) -->
                         <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100 flex flex-col gap-3">
-                            <div class="flex items-center gap-3"><div class="w-2 h-2 bg-indigo-600 rounded-full animate-ping"></div><p class="text-[10px] font-bold text-indigo-900 uppercase">Risk Intelligence Active</p></div>
-                            <ul id="risk-summary-list" class="text-[9px] font-medium text-indigo-700 space-y-1 list-disc list-inside border-t border-indigo-100 pt-2 hidden"></ul>
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-ping"></div>
+                                <p class="text-[10px] font-bold text-indigo-900 uppercase tracking-tight" data-i18n="autoRiskLabel">Automated Risk Intelligence Active</p>
+                            </div>
+                            <ul id="risk-summary-list" class="text-[9px] font-medium text-indigo-700 space-y-1 list-disc list-inside border-t border-indigo-100 pt-2 hidden">
+                                <!-- Dynamic summary items will appear here -->
+                            </ul>
                         </div>
+
                         <div class="grid grid-cols-1 gap-4">
-                            <div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Origin</label><select id="origin" class="w-full py-2.5 px-3 border-slate-100 bg-slate-50 rounded-xl text-sm font-semibold"></select></div>
-                            <div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Arrival</label><select id="destination" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold"></select></div>
-                            <div><label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Commodity</label><select id="hscode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm font-semibold"><option value="general">📦 General</option><option value="rf">❄️ Reefer</option><option value="dg">⚠️ Dangerous</option><option value="special">🏗️ Special</option></select></div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelOrigin">Departure</label>
+                                <select id="origin" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelDest">Arrival</label>
+                                <select id="destination" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider" data-i18n="labelHSCode">Commodity Type</label>
+                                <select id="hscode" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
+                                    <option value="general">📦 General Container</option>
+                                    <option value="rf">❄️ RF (Reefer)</option>
+                                    <option value="dg">⚠️ DG (Dangerous Goods)</option>
+                                    <option value="special">🏗️ Special Container (OOG)</option>
+                                </select>
+                            </div>
                         </div>
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 shadow-lg text-sm tracking-wide" data-i18n="btnAnalyze">RUN ANALYSIS</button>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-lg shadow-indigo-200 text-sm tracking-wide" data-i18n="btnAnalyze">
+                            RUN INTELLIGENCE ANALYSIS
+                        </button>
                     </form>
+                    <div id="executive-actions" class="mt-6 hidden space-y-3">
+                        <button onclick="window.print()" class="w-full bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-black transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-wider">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path></svg>
+                            Download PDF Report
+                        </button>
+                        <button id="btn-share" class="w-full bg-white text-gray-700 font-bold py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-wider">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                            Share Analysis URL
+                        </button>
+                    </div>
+                    <div id="disclaimers" class="mt-6 text-[10px] text-gray-400 space-y-1 border-t pt-4">
+                        <p data-i18n="disclaimerSpeed"></p>
+                        <p><span class="text-red-500 font-semibold" data-i18n="disclaimerLabel"></span> <span data-i18n="disclaimerText"></span></p>
+                        <p data-i18n="disclaimerCost"></p>
+                    </div>
                 </div>
             </div>
 
             <div class="lg:col-span-8 space-y-6">
+                <!-- Logistics News Ticker -->
                 <div class="bg-gray-900 text-white p-2.5 rounded-xl flex items-center gap-4 overflow-hidden shadow-lg border border-gray-800">
-                    <div class="bg-red-600 text-[9px] font-black px-2 py-0.5 rounded uppercase shrink-0 animate-pulse">Live Alert</div>
-                    <div id="news-ticker" class="text-[11px] font-bold whitespace-nowrap overflow-hidden flex-1 flex gap-12 animate-marquee"></div>
+                    <div class="bg-red-600 text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-tighter shrink-0 animate-pulse" data-i18n="liveAlert">Live Alert</div>
+                    <div class="text-[11px] font-bold whitespace-nowrap overflow-hidden flex-1">
+                        <div id="news-ticker" class="flex gap-12 animate-marquee">
+                            <span data-i18n="news1">Suez Canal transit volume down 42% YoY.</span>
+                            <span data-i18n="news2">Panama Canal daily slots restricted due to low water levels.</span>
+                            <span data-i18n="news3">Shanghai Port automation upgrades improving turnaround by 15%.</span>
+                            <span data-i18n="news4">New EU Carbon Border Adjustment Mechanism (CBAM) phase-in starts.</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white p-2 rounded-2xl shadow-2xl border border-gray-100 overflow-hidden relative"><div id="map" class="rounded-xl h-[600px] w-full"></div></div>
-                <div id="dynamic-scm-feed" class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 min-h-[200px]"><div id="feed-container"></div></div>
+
+                <div class="bg-white p-2 rounded-2xl shadow-2xl shadow-gray-200 border border-gray-100 overflow-hidden relative">
+                    <div id="network-status-badge" class="absolute top-6 right-6 z-[1000] bg-white/95 backdrop-blur px-3 py-1.5 rounded-full shadow-lg border border-gray-100 flex items-center gap-2 hidden">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <span class="text-[10px] font-bold text-gray-600 uppercase tracking-tight">Network Stable</span>
+                    </div>
+                    <div id="map" class="rounded-xl"></div>
+                </div>
+                
+                <div id="dynamic-scm-feed" class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-md font-bold text-gray-800 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span data-i18n="feedTitle">Route-Specific Intelligence</span>
+                        </h3>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" data-i18n="updatedRealtime">Updated: Real-time</span>
+                    </div>
+                    <div class="space-y-4" id="feed-container">
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <p class="text-sm text-gray-500 italic text-center" data-i18n="feedPlaceholder">Select a route to generate deep-dive intelligence briefing.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <div id="live-alerts-container" class="mt-8 p-8 bg-slate-50 rounded-3xl border border-gray-100 shadow-sm hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-2" data-i18n="liveAlert">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> 실시간 리스크 경보
+                </h3>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter" id="last-updated-text"></span>
+            </div>
+            <div id="alerts-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Live news will be injected here -->
+            </div>
+        </div>
+
+        <div id="disqus_thread" class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mt-12"></div>
+
+        <!-- SEO Content Sections for AdSense -->
+        <section id="how-it-works" class="mt-16 space-y-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-4" data-i18n="howItWorksTitle">How LeadTime Intelligence Works</h2>
+                <p class="text-gray-600 leading-relaxed" data-i18n="howItWorksDesc">Our platform leverages advanced graph-based algorithms to simulate global logistics routes with unprecedented precision.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.382V7.618a2 2 0 011.096-1.789L9 3m0 17l9.904-4.952A2 2 0 0020 13.268V5.732a2 2 0 00-1.096-1.789L9 3m0 17V3"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2" data-i18n="step1Title">Dijkstra Routing</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="step1Desc">We use the Dijkstra algorithm on a custom maritime network of 250+ nodes to calculate the shortest and safest sea paths, avoiding landmasses entirely.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2" data-i18n="step2Title">Real-time Factors</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="step2Desc">Our engine incorporates port congestion, HS code clearance times, and geopolitical risks like Suez Canal detours into every calculation.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2" data-i18n="step3Title">Cost Projection</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed" data-i18n="step3Desc">Get benchmark market rates based on distance and mode, providing a baseline for your logistics procurement and planning.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="mt-20 p-10 bg-indigo-900 rounded-3xl text-white relative overflow-hidden">
+            <div class="relative z-10 max-w-3xl">
+                <h2 class="text-3xl font-bold mb-6" data-i18n="aboutTitle">About LeadTime Intelligence</h2>
+                <p class="text-indigo-100 leading-relaxed mb-8" data-i18n="aboutDesc">LeadTime Intelligence is a professional-grade logistics simulation tool designed for SCM professionals, freight forwarders, and global traders. Our mission is to provide transparency in global shipping by offering data-driven insights into transit times and costs.</p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="bg-white/10 backdrop-blur px-4 py-2 rounded-lg border border-white/20 text-sm font-semibold">30+ Global Hubs</div>
+                    <div class="bg-white/10 backdrop-blur px-4 py-2 rounded-lg border border-white/20 text-sm font-semibold">AI Routing Engine</div>
+                    <div class="bg-white/10 backdrop-blur px-4 py-2 rounded-lg border border-white/20 text-sm font-semibold">Multi-Currency Support</div>
+                </div>
+            </div>
+            <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-indigo-500/20 to-transparent pointer-events-none"></div>
+        </section>
+
+        <!-- Partnership & Inquiry Form -->
+        <section id="contact" class="mt-24 max-w-4xl mx-auto">
+            <div class="bg-white p-8 md:p-12 rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-indigo-100/50">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4" data-i18n="contactTitle">Partnership & Inquiries</h2>
+                    <p class="text-gray-500 max-w-md mx-auto" data-i18n="contactDesc">Interested in integrating our logistics engine or have a custom requirement? Send us a message.</p>
+                </div>
+                <form action="https://formspree.io/f/xzdayboe" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1" data-i18n="labelName">Full Name</label>
+                            <input type="text" name="name" required class="w-full px-6 py-4 bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 rounded-2xl transition-all text-sm font-semibold" data-i18n-placeholder="placeholderName">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1" data-i18n="labelEmail">Email Address</label>
+                            <input type="email" name="email" required class="w-full px-6 py-4 bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 rounded-2xl transition-all text-sm font-semibold" data-i18n-placeholder="placeholderEmail">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1" data-i18n="labelMessage">Message</label>
+                        <textarea name="message" required rows="4" class="w-full px-6 py-4 bg-gray-50 border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 rounded-2xl transition-all text-sm font-semibold resize-none" data-i18n-placeholder="placeholderMessage"></textarea>
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-[0.98] transition-all shadow-xl shadow-indigo-200 uppercase tracking-widest text-xs" data-i18n="btnSubmit">
+                            Send Inquiry
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
     </main>
 
     <footer class="bg-white border-t border-gray-200 mt-20 pt-16 pb-8">
-        <div class="container mx-auto px-4 max-w-6xl text-center">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">© 2026 LEADTIME INTELLIGENCE. ALL RIGHTS RESERVED.</p>
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <h2 class="text-xl font-extrabold tracking-tight mb-4">LeadTime<span class="text-indigo-600">Intelligence</span></h2>
+                    <p class="text-gray-500 text-sm max-w-sm leading-relaxed" data-i18n="footerTagline">Empowering global supply chains with intelligent routing and predictive analytics for a faster, more transparent world.</p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-gray-900 uppercase tracking-widest mb-6" data-i18n="footerNavTitle">Platform</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#analyzer" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navAnalyzer">Analyzer</a></li>
+                        <li><a href="#how-it-works" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navHowItWorks">How it Works</a></li>
+                        <li><a href="#about" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navAbout">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-gray-900 uppercase tracking-widest mb-6" data-i18n="footerLegalTitle">Legal</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navPrivacy">Privacy Policy</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors" data-i18n="navTerms">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">© 2026 LEADTIME INTELLIGENCE. ALL RIGHTS RESERVED.</p>
+            </div>
         </div>
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="main.js"></script>
+    <script src="main.js?v=1.2"></script>
 </body>
 </html>

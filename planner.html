@@ -20,21 +20,22 @@
 <body class="flex flex-col min-h-screen">
 
     <!-- Header with Tab Navigation -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-[3000] shadow-sm">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-[1800px]">
-            <a href="index.html" class="block">
-                <h1 class="text-xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
-            </a>
-            
-            <nav class="flex items-center gap-8">
-                <a href="index.html" class="text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors pb-1">🌍 Route Analyzer</a>
-                <a href="planner.html" class="text-sm font-bold tab-active pb-1">📦 3D Load Planner</a>
-            </nav>
-
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-[3000] shadow-sm">
+        <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
+            <div class="flex items-center gap-8">
+                <a href="index.html" class="block">
+                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+                </a>
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="index.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">Analyzer</a>
+                    <a href="planner.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">3D Load Planner</a>
+                    <a href="index.html#how-it-works" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">How it Works</a>
+                </nav>
+            </div>
             <div class="flex items-center gap-3">
                 <div class="hidden sm:flex bg-slate-100 p-1 rounded-lg mr-2">
                     <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
-                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-slate-500">KRW</button>
+                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">KRW</button>
                 </div>
                 <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
                     <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600">KO</button>
