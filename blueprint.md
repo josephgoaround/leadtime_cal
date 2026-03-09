@@ -12,7 +12,8 @@
 
 ### **2. 3D Load Planner (FCL/LCL Simulation)**
 - **Interactive 3D Visualization:** Three.js 기반의 20ft/40ft/40HC 컨테이너 적재 시뮬레이션.
-- **Bin Packing Algorithm:** 아이템 크기 및 수량에 따른 최적 적재 로직 (Greedy Space Splitting).
+- **Advanced Bin Packing Algorithm:** 2D 회전, 동적 공간 분할(Guillotine split) 및 휴리스틱 최적화 알고리즘 적용.
+- **Stackability Control:** 화물별 2단 적재(Stackable) 옵션 제공 및 적재 시뮬레이션 반영.
 - **Real-time Efficiency HUD:** 적재율(Volume Efficiency) 및 적재 아이템 수를 실시간으로 계산하여 반영.
 
 ### **3. UI/UX & Intelligence**

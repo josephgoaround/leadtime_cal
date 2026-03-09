@@ -16,11 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <button class="absolute -top-2 -right-2 w-6 h-6 bg-white shadow-md rounded-full text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center border border-slate-100" onclick="this.parentElement.remove()">×</button>
             <input type="text" placeholder="Cargo Description" class="w-full text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Unit ${id+1}" id="c-name-${id}">
-            <div class="grid grid-cols-4 gap-2">
+            <div class="grid grid-cols-5 gap-2">
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">L (cm)</p><input type="number" value="120" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-l-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">W (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-w-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">H (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-h-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">QTY</p><input type="number" value="5" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-q-${id}"></div>
+                <div class="space-y-1 flex flex-col items-center justify-end pb-1">
+                    <p class="text-[8px] font-black text-slate-400 uppercase mb-1">Stack</p>
+                    <input type="checkbox" checked class="w-4 h-4 rounded border-slate-200 text-indigo-600 focus:ring-indigo-500" id="c-s-${id}">
+                </div>
             </div>
         `;
         cargoContainer.appendChild(div);
@@ -150,26 +154,67 @@ document.addEventListener('DOMContentLoaded', () => {
             const w = parseFloat(row.querySelector('[id^="c-w-"]').value) || 0;
             const h = parseFloat(row.querySelector('[id^="c-h-"]').value) || 0;
             const q = parseInt(row.querySelector('[id^="c-q-"]').value) || 0;
+            const s = row.querySelector('[id^="c-s-"]').checked;
             if(l > 0 && w > 0 && h > 0 && q > 0) {
-                for(let j=0; j<q; j++) itemsToPack.push({ l, w, h, color: colors[i % colors.length] });
+                for(let j=0; j<q; j++) itemsToPack.push({ l, w, h, stackable: s, color: colors[i % colors.length] });
             }
         });
 
+        // Sort by Volume descending to fill largest first
         itemsToPack.sort((a,b) => (b.l*b.w*b.h) - (a.l*a.w*a.h));
 
         class Packer {
-            constructor(L, W, H) { this.spaces = [{x:0, y:0, z:0, l:L, w:W, h:H}]; this.packed = []; }
+            constructor(L, W, H) { 
+                this.spaces = [{x:0, y:0, z:0, l:L, w:W, h:H}]; 
+                this.packed = []; 
+            }
+            
             pack(box) {
+                // Heuristic: Prefer spaces that are lower (y), then closer to side (z), then front (x)
                 this.spaces.sort((a, b) => (a.y - b.y) || (a.z - b.z) || (a.x - b.x));
+                
                 for (let i = 0; i < this.spaces.length; i++) {
                     let s = this.spaces[i];
-                    if (box.l <= s.l && box.w <= s.w && box.h <= s.h) {
-                        this.packed.push({x:s.x, y:s.y, z:s.z, l:box.l, w:box.w, h:box.h, color:box.color});
-                        this.spaces.splice(i, 1);
-                        if (s.h - box.h > 0) this.spaces.push({x:s.x, y:s.y + box.h, z:s.z, l:box.l, w:box.w, h:s.h - box.h});
-                        if (s.l - box.l > 0) this.spaces.push({x:s.x + box.l, y:s.y, z:s.z, l:s.l - box.l, w:s.w, h:s.h});
-                        if (s.w - box.w > 0) this.spaces.push({x:s.x, y:s.y, z:s.z + box.w, l:box.l, w:s.w - box.w, h:s.h});
-                        return true;
+                    
+                    // Try normal orientation and 90-degree rotation (floor-wise)
+                    const orientations = [
+                        { l: box.l, w: box.w, h: box.h },
+                        { l: box.w, w: box.l, h: box.h }
+                    ];
+
+                    for (let orient of orientations) {
+                        if (orient.l <= s.l && orient.w <= s.w && orient.h <= s.h) {
+                            this.packed.push({
+                                x: s.x, y: s.y, z: s.z, 
+                                l: orient.l, w: orient.w, h: orient.h, 
+                                color: box.color
+                            });
+                            
+                            this.spaces.splice(i, 1);
+                            
+                            // 3D Guillotine Split with heuristic: Split along axis that leaves largest contiguous space
+                            // Top Space (only if item is stackable)
+                            if (box.stackable && s.h - orient.h > 0) {
+                                this.spaces.push({
+                                    x: s.x, y: s.y + orient.h, z: s.z, 
+                                    l: orient.l, w: orient.w, h: s.h - orient.h
+                                });
+                            }
+                            
+                            // Split remaining volume into two large boxes (Side and Front)
+                            // We split in a way that allows longer items to fit next to shorter ones
+                            if (s.l - orient.l > (s.w - orient.w)) {
+                                // Split Front first
+                                if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: s.w, h: s.h});
+                                if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: orient.l, w: s.w - orient.w, h: s.h});
+                            } else {
+                                // Split Side first
+                                if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: s.l, w: s.w - orient.w, h: s.h});
+                                if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: orient.w, h: s.h});
+                            }
+                            
+                            return true;
+                        }
                     }
                 }
                 return false;
