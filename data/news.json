@@ -196,5 +196,31 @@
       "GlobalFeed"
     ],
     "id": 15
+  },
+  {
+    "date": "2026-03-09",
+    "time": "13:15",
+    "category": "Liner News",
+    "title": "Oil Prices Hit Highest Since 2022 at More Than $119 a Barrel on Iran War",
+    "content": "Oil prices surged to more than $119 a barrel on Monday, hitting levels not seen since mid-2022, as some major producers cut supplies and fears of prolonged shipping disruptions gripped the market due ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 16
+  },
+  {
+    "date": "2026-03-09",
+    "time": "13:15",
+    "category": "Logistics Technology",
+    "title": "Greek Oil Tanker Exits Strait of Hormuz With Its Signal Off",
+    "content": "A ship hauling a million barrels of Saudi crude sailed through the Strait of Hormuz in recent days, one of the first big tankers to leave the Persian Gulf since traffic through the chokepoint all but ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 17
   }
 ]
