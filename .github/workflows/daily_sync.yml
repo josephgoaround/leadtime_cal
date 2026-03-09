@@ -1,10 +1,9 @@
-name: Daily Maritime News Sync
+name: Maritime News Sync Automation
 
 on:
   schedule:
-    # 06:00 UTC is 15:00 (3 PM) KST
-    # 18:00 UTC is 03:00 (3 AM) KST
-    - cron: '0 6,18 * * *'
+    # Runs every 2 hours
+    - cron: '0 */2 * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -27,8 +26,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name 'GitHub Action'
+          git config --global user.name 'GitHub Action Bot'
           git config --global user.email 'action@github.com'
-          git add data/maritime_data.json
-          git commit -m "chore: automated maritime news sync [skip ci]" || echo "No changes to commit"
+          git add data/maritime_data.json data/news.json
+          git commit -m "chore: automated maritime & logistics news sync [skip ci]" || echo "No changes to commit"
           git push

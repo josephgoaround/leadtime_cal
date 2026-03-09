@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-09 06:45:19",
+  "last_updated": "2026-03-09 10:41:19",
   "active_risks": [
     {
       "label": "Strait of Hormuz Alert",
@@ -16,54 +16,64 @@
   ],
   "alerts": [
     {
+      "msg": "EU Buys 100% of Russian Arctic LNG Just 9 Months Before Planned Gas Ban",
+      "url": "https://gcaptain.com/eu-buys-100-of-russian-arctic-lng-just-9-months-before-planned-gas-ban/",
+      "time": "10:41"
+    },
+    {
       "msg": "US Defends Waiver On Russian Oil Sanctions",
       "url": "https://gcaptain.com/us-defends-waiver-on-russian-oil-sanctions/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "Iran Picks New Leader As Escalating War Deepens Oil Shock",
       "url": "https://gcaptain.com/iran-picks-new-leader-as-escalating-war-deepens-oil-shock/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "Tokyo Prepared To Release Oil Reserve Amid Iran Crisis",
       "url": "https://gcaptain.com/tokyo-prepared-to-release-oil-reserve-amid-iran-crisis/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "Crude Oil Spill Draws Large Response at Nation’s Only Deepwater VLCC Port",
       "url": "https://gcaptain.com/crude-oil-spill-draws-large-response-at-nations-only-deepwater-vlcc-port/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "US May ‘Unsanction’ More Russia Oil Post India Move",
       "url": "https://gcaptain.com/us-may-unsanction-more-russia-oil-post-india-move/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "US Pressing Sri Lanka Not To Repatriate Iranian Crew From Sunken Ship",
       "url": "https://gcaptain.com/us-pressing-sri-lanka-not-to-repatriate-iranian-crew-from-sunken-ship/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "Second Bulk Carrier Claiming To Be Chinese Passes Through Hormuz",
       "url": "https://gcaptain.com/second-bulk-carrier-claiming-to-be-chinese-passes-through-hormuz/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "Kuwait Declares Force Majeure Due To Middle East Conflict",
       "url": "https://gcaptain.com/kuwait-cuts-oil-production-as-precaution-amid-iran-tensions/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "India Allowed Iranian Warship To Dock As U.S. Sank Another Off Sri Lanka",
       "url": "https://gcaptain.com/india-allowed-iranian-warship-to-dock-as-u-s-sank-another-off-sri-lanka/",
-      "time": "06:45"
+      "time": "10:41"
     },
     {
       "msg": "US Oil Posts Biggest Weekly Gain Ever As Iran War Rages On",
       "url": "https://gcaptain.com/us-oil-posts-biggest-weekly-gain-ever-as-iran-war-rages-on/",
-      "time": "06:45"
+      "time": "10:41"
+    },
+    {
+      "msg": "Iran’s IRGC Challenges Trump To Have US Vessels Escort Tankers In Strait Of Hormuz",
+      "url": "https://gcaptain.com/irans-irgc-challenges-trump-to-have-us-vessels-escort-tankers-in-strait-of-hormuz/",
+      "time": "10:41"
     }
   ]
 }

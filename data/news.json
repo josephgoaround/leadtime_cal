@@ -1,32 +1,200 @@
 [
-    {
-        "id": 1,
-        "date": "2026-03-09",
-        "time": "14:20",
-        "category": "Liner News",
-        "title": "글로벌 선사, 아시아-유럽 노선 운임 인상 발표",
-        "content": "주요 컨테이너 선사들이 다가오는 2분기를 기점으로 아시아-유럽 항로의 기본 운임(GRI) 인상을 예고했습니다. 수에즈 운하 통행 불안 지속에 따른 우회 항로 운영 비용 증가가 주요 원인으로 분석됩니다.",
-        "author": "LeadTime Intel Team",
-        "tags": ["운임인상", "수에즈운하", "Liner"]
-    },
-    {
-        "id": 2,
-        "date": "2026-03-09",
-        "time": "10:05",
-        "category": "Port Status",
-        "title": "싱가포르항, 컨테이너 터미널 적체 해소 조짐",
-        "content": "최근 2주간 지속되던 싱가포르 항만 내 선박 대기 시간이 평균 12시간으로 단축되었습니다. 터미널 운영사의 추가 선석 가동 및 하역 장비 충원이 효과를 거두고 있는 것으로 보입니다.",
-        "author": "Port Intelligence",
-        "tags": ["싱가포르항", "항만적체", "Port"]
-    },
-    {
-        "id": 3,
-        "date": "2026-03-08",
-        "time": "16:45",
-        "category": "Logistics Technology",
-        "title": "AI 기반 경로 최적화 솔루션, 연료비 15% 절감 효과",
-        "content": "최신 시뮬레이션 결과에 따르면, AI 경로 최적화 알고리즘을 도입한 물류사들이 기존 항로 대비 약 15%의 연료비를 절감한 것으로 나타났습니다. 이는 탄소 배출 규제 대응에도 핵심적인 역할을 할 전망입니다.",
-        "author": "Tech Analyst",
-        "tags": ["AI", "경로최적화", "ESG"]
-    }
+  {
+    "id": 1,
+    "date": "2026-03-09",
+    "time": "14:20",
+    "category": "Liner News",
+    "title": "글로벌 선사, 아시아-유럽 노선 운임 인상 발표",
+    "content": "주요 컨테이너 선사들이 다가오는 2분기를 기점으로 아시아-유럽 항로의 기본 운임(GRI) 인상을 예고했습니다. 수에즈 운하 통행 불안 지속에 따른 우회 항로 운영 비용 증가가 주요 원인으로 분석됩니다.",
+    "author": "LeadTime Intel Team",
+    "tags": [
+      "운임인상",
+      "수에즈운하",
+      "Liner"
+    ]
+  },
+  {
+    "id": 2,
+    "date": "2026-03-09",
+    "time": "10:05",
+    "category": "Port Status",
+    "title": "싱가포르항, 컨테이너 터미널 적체 해소 조짐",
+    "content": "최근 2주간 지속되던 싱가포르 항만 내 선박 대기 시간이 평균 12시간으로 단축되었습니다. 터미널 운영사의 추가 선석 가동 및 하역 장비 충원이 효과를 거두고 있는 것으로 보입니다.",
+    "author": "Port Intelligence",
+    "tags": [
+      "싱가포르항",
+      "항만적체",
+      "Port"
+    ]
+  },
+  {
+    "id": 3,
+    "date": "2026-03-08",
+    "time": "16:45",
+    "category": "Logistics Technology",
+    "title": "AI 기반 경로 최적화 솔루션, 연료비 15% 절감 효과",
+    "content": "최신 시뮬레이션 결과에 따르면, AI 경로 최적화 알고리즘을 도입한 물류사들이 기존 항로 대비 약 15%의 연료비를 절감한 것으로 나타났습니다. 이는 탄소 배출 규제 대응에도 핵심적인 역할을 할 전망입니다.",
+    "author": "Tech Analyst",
+    "tags": [
+      "AI",
+      "경로최적화",
+      "ESG"
+    ]
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Liner News",
+    "title": "EU Buys 100% of Russian Arctic LNG Just 9 Months Before Planned Gas Ban",
+    "content": "Just nine months before a full European Union ban on Russian liquefied natural gas (LNG) is scheduled to take effect, EU buyers purchased every cargo from Russia’s Yamal LNG project in February, highl...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 4
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Logistics Technology",
+    "title": "US Defends Waiver On Russian Oil Sanctions",
+    "content": "By Katharine Jackson and Curtis Williams WASHINGTON, March 8 (Reuters) &#8211; Trump administration officials on Sunday defended a decision to temporarily lift some sanctions on Russianoil and predict...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 5
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Liner News",
+    "title": "Iran Picks New Leader As Escalating War Deepens Oil Shock",
+    "content": "By&#160;Arsalan Shahla, Josh Wingrove and Omar Tamo Mar 8, 2026(Bloomberg) —Iran picked a new supreme leader and kept up attacks on the ninth day of the war in the Middle......",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 6
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Liner News",
+    "title": "Tokyo Prepared To Release Oil Reserve Amid Iran Crisis",
+    "content": "TOKYO, March 8 (Reuters) &#8211; A senior Japanese parliament member said on Sunday that the government instructed a national oil reserve storage site to prepare for a possible release of crude, as......",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 7
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Port Status",
+    "title": "Crude Oil Spill Draws Large Response at Nation’s Only Deepwater VLCC Port",
+    "content": "Cleanup operations are continuing in the Gulf of Mexico near Grand Isle, Louisiana, after a crude oil spill linked to the Louisiana Offshore Oil Port (LOOP) prompted a large-scale response led by fede...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "GlobalFeed"
+    ],
+    "id": 8
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Liner News",
+    "title": "US May ‘Unsanction’ More Russia Oil Post India Move",
+    "content": "By&#160;Daniel Flatley Mar 7, 2026(Bloomberg) &#8211;Treasury Secretary Scott Bessent said the US may lift sanctions on further Russian oil supply after a move Thursday to give Indian refiners the gre...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 9
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Liner News",
+    "title": "US Pressing Sri Lanka Not To Repatriate Iranian Crew From Sunken Ship",
+    "content": "By Humeyra Pamuk WASHINGTON, March 6 (Reuters) &#8211; The United States is pressing Sri Lanka&#8217;s government not to repatriate the survivors from the Iranian warship it sank this week, as well as...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 10
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Logistics Technology",
+    "title": "Second Bulk Carrier Claiming To Be Chinese Passes Through Hormuz",
+    "content": "By&#160;Serene Cheong Mar 7, 2026 (Bloomberg) &#8211;Another bulk carrier signaled it was Chinese-owned as it sailed through the Strait of Hormuz, the narrow waterway at the mouth of the Persian......",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 11
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Logistics Technology",
+    "title": "Kuwait Declares Force Majeure Due To Middle East Conflict",
+    "content": "March 7 (Reuters) &#8211; Kuwait has implemented a precautionary reduction in crude oil production and refining throughput after the ongoing attacks by Iran against the country and the effective closu...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 12
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Liner News",
+    "title": "India Allowed Iranian Warship To Dock As U.S. Sank Another Off Sri Lanka",
+    "content": "NEW DELHI, March 6 (Reuters)&#160;&#8211;&#160;India has allowed an Iranian warship to dock as a humanitarian gesture, Foreign Minister Subrahmanyam Jaishankar said on Saturday, after the U.S. sank an...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 13
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Logistics Technology",
+    "title": "US Oil Posts Biggest Weekly Gain Ever As Iran War Rages On",
+    "content": "By&#160;Bloomberg News Mar 6, 2026(Bloomberg) &#8211;US oil posted the biggest weekly gain on record as the war in Iran upends critical energy market flows, with shipping through the Strait of......",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 14
+  },
+  {
+    "date": "2026-03-09",
+    "time": "10:41",
+    "category": "Logistics Technology",
+    "title": "Iran’s IRGC Challenges Trump To Have US Vessels Escort Tankers In Strait Of Hormuz",
+    "content": "March 7(Reuters) &#8211; A spokesperson for Iran’s Revolutionary Guards challenged U.S. President Donald Trump to deploy U.S. naval vessels to escort oil tankers through the Strait of Hormuz, Iranian ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 15
+  }
 ]
