@@ -6,107 +6,127 @@
     <title>3D Container Load Planner | LeadTime Intelligence</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; overflow: hidden; }
-        .sidebar { background-color: #ffffff; height: 100vh; overflow-y: auto; z-index: 100; border-right: 1px solid #e2e8f0; }
-        #canvas-container { width: 100%; height: 100vh; position: relative; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); }
+        .sidebar { background-color: #ffffff; height: calc(100vh - 64px); overflow-y: auto; z-index: 100; border-right: 1px solid #e2e8f0; }
+        #canvas-container { width: 100%; height: calc(100vh - 64px); position: relative; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .hud-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        input[type="number"]::-webkit-inner-spin-button { display: none; }
+        .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; }
     </style>
 </head>
-<body class="flex">
+<body class="flex flex-col min-h-screen">
 
-    <!-- Sidebar: Input Controls -->
-    <aside class="sidebar w-80 lg:w-96 flex flex-col shadow-2xl">
-        <div class="p-6 border-b border-slate-100">
-            <a href="index.html" class="flex items-center gap-2 text-indigo-600 mb-4 hover:text-indigo-800 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                <span class="text-xs font-bold uppercase tracking-tighter">Back to Analyzer</span>
+    <!-- Header with Tab Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-[3000] shadow-sm">
+        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-[1800px]">
+            <a href="index.html" class="block">
+                <h1 class="text-xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
             </a>
-            <h1 class="text-xl font-black text-slate-800 tracking-tighter">3D Load <span class="text-indigo-600">Planner</span></h1>
-        </div>
+            
+            <nav class="flex items-center gap-8">
+                <a href="index.html" class="text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors pb-1">🌍 Route Analyzer</a>
+                <a href="planner.html" class="text-sm font-bold tab-active pb-1">📦 3D Load Planner</a>
+            </nav>
 
-        <div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
-            <!-- Equipment Selection -->
-            <div>
-                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Container Type</label>
-                <select id="container-type" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none">
-                    <option value="20ft">20' Standard (5.9m)</option>
-                    <option value="40ft" selected>40' Standard (12.0m)</option>
-                    <option value="40hc">40' High Cube (HC)</option>
-                </select>
-            </div>
-
-            <!-- Cargo List -->
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cargo Manifest</label>
-                    <button id="add-cargo-btn" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 transition-all shadow-md">+ ADD ITEM</button>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex bg-slate-100 p-1 rounded-lg mr-2">
+                    <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
+                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-slate-500">KRW</button>
                 </div>
-                <div id="cargo-items" class="space-y-3">
-                    <!-- Dynamic Items Injected Here -->
+                <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
+                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600">KO</button>
+                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm">EN</button>
                 </div>
             </div>
         </div>
+    </header>
 
-        <!-- Execute Action -->
-        <div class="p-6 bg-slate-50 border-t border-slate-100">
-            <button id="simulate-load-btn" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-200 uppercase text-xs tracking-widest flex items-center justify-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                Run Simulation
-            </button>
-            <p class="text-[9px] text-slate-400 text-center mt-4 font-medium">Algorithmic Bin Packing v2.0 - Three.js WebGL Engine</p>
-        </div>
-    </aside>
+    <div class="flex flex-1">
+        <!-- Sidebar: Input Controls -->
+        <aside class="sidebar w-80 lg:w-96 flex flex-col shadow-2xl">
+            <div class="p-6 border-b border-slate-100">
+                <h1 class="text-xl font-black text-slate-800 tracking-tighter">Load <span class="text-indigo-600">Configuration</span></h1>
+                <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">LCL to FCL Simulation</p>
+            </div>
 
-    <!-- Main Content: 3D Visualization -->
-    <main class="flex-1 relative overflow-hidden" id="canvas-container">
-        
-        <!-- Floating HUD -->
-        <div class="absolute top-8 left-8 right-8 z-10 flex justify-between pointer-events-none">
-            <div class="flex gap-4">
-                <div class="hud-card px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-6">
-                    <div class="text-center">
-                        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">Volume Efficiency</p>
-                        <p class="text-2xl font-black text-white" id="vol-util">0.0%</p>
+            <div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+                <!-- Equipment Selection -->
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Container Type</label>
+                    <select id="container-type" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none">
+                        <option value="20ft">20' Standard (5.9m)</option>
+                        <option value="40ft" selected>40' Standard (12.0m)</option>
+                        <option value="40hc">40' High Cube (HC)</option>
+                    </select>
+                </div>
+
+                <!-- Cargo List -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cargo Manifest</label>
+                        <button id="add-cargo-btn" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 transition-all shadow-md">+ ADD ITEM</button>
                     </div>
-                    <div class="w-px h-8 bg-white/10"></div>
-                    <div class="text-center">
-                        <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Packed Items</p>
-                        <p class="text-2xl font-black text-white" id="packed-count">0/0</p>
+                    <div id="cargo-items" class="space-y-3">
+                        <!-- Dynamic Items Injected Here -->
                     </div>
                 </div>
             </div>
 
-            <!-- Controls Guide -->
-            <div class="hud-card px-6 py-4 rounded-2xl shadow-2xl">
-                <div class="grid grid-cols-3 gap-8">
-                    <div class="text-center">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Rotate</p>
-                        <p class="text-[10px] font-bold text-white">Left Mouse</p>
+            <!-- Execute Action -->
+            <div class="p-6 bg-slate-50 border-t border-slate-100">
+                <button id="simulate-load-btn" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-200 uppercase text-xs tracking-widest flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Run Simulation
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content: 3D Visualization -->
+        <main class="flex-1 relative overflow-hidden" id="canvas-container">
+            
+            <!-- Floating HUD -->
+            <div class="absolute top-8 left-8 right-8 z-10 flex justify-between pointer-events-none">
+                <div class="flex gap-4">
+                    <div class="hud-card px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-8">
+                        <div>
+                            <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">Volume Efficiency</p>
+                            <div class="flex items-center gap-4">
+                                <p class="text-2xl font-black text-white" id="vol-util">0.0%</p>
+                                <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden border border-white/5">
+                                    <div id="vol-bar" class="h-full bg-indigo-500 transition-all duration-1000" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-px h-10 bg-white/10"></div>
+                        <div class="text-center">
+                            <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Packed Items</p>
+                            <p class="text-2xl font-black text-white" id="packed-count">0/0</p>
+                        </div>
                     </div>
-                    <div class="text-center">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Zoom</p>
-                        <p class="text-[10px] font-bold text-white">Scroll</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Pan</p>
-                        <p class="text-[10px] font-bold text-white">Right Mouse</p>
+                </div>
+
+                <!-- Controls Guide -->
+                <div class="hud-card px-6 py-4 rounded-2xl shadow-2xl">
+                    <div class="grid grid-cols-3 gap-8 text-center">
+                        <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Rotate</p><p class="text-[10px] font-bold text-white">Left Click</p></div>
+                        <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Zoom</p><p class="text-[10px] font-bold text-white">Scroll</p></div>
+                        <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Pan</p><p class="text-[10px] font-bold text-white">Right Click</p></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Initial Placeholder -->
-        <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div class="text-center">
-                <div class="w-20 h-20 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-6"></div>
-                <p class="text-indigo-300 font-black uppercase tracking-[0.3em] text-sm animate-pulse">Initializing 3D Environment</p>
+            <!-- Initial Placeholder -->
+            <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div class="text-center">
+                    <div class="w-20 h-20 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-6"></div>
+                    <p class="text-indigo-300 font-black uppercase tracking-[0.3em] text-sm animate-pulse">Initializing 3D Environment</p>
+                </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

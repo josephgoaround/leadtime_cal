@@ -1,35 +1,7 @@
-// container3d.js - Unified Tab Logic & Enhanced 3D Simulation
+// container3d.js - Dedicated Engine for 3D Load Planner (Standalone Page)
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. TAB SWITCHING LOGIC ---
-    const btnAnalyzer = document.getElementById('tab-btn-analyzer');
-    const btnPlanner = document.getElementById('tab-btn-planner');
-    const secAnalyzer = document.getElementById('section-analyzer');
-    const secPlanner = document.getElementById('section-planner');
-
-    if (btnAnalyzer && btnPlanner) {
-        btnAnalyzer.addEventListener('click', () => {
-            secAnalyzer.classList.remove('hidden');
-            secPlanner.classList.add('hidden');
-            btnAnalyzer.className = "text-sm font-bold pb-1 transition-all tab-active";
-            btnPlanner.className = "text-sm font-bold pb-1 transition-all text-slate-500 hover:text-indigo-600";
-        });
-
-        btnPlanner.addEventListener('click', () => {
-            secAnalyzer.classList.add('hidden');
-            secPlanner.classList.remove('hidden');
-            btnPlanner.className = "text-sm font-bold pb-1 transition-all tab-active";
-            btnAnalyzer.className = "text-sm font-bold pb-1 transition-all text-slate-500 hover:text-indigo-600";
-            
-            // Trigger 3D check after tab becomes visible
-            setTimeout(() => {
-                if (!isInitialized) initThreeJS();
-                else onWindowResize();
-            }, 100);
-        });
-    }
-
-    // --- 2. CARGO INPUT UI ---
+    // --- 1. UI CORE ELEMENTS ---
     const cargoContainer = document.getElementById('cargo-items');
     const addBtn = document.getElementById('add-cargo-btn');
     const simBtn = document.getElementById('simulate-load-btn');
@@ -43,12 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
         div.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3 animate-fade-in relative group';
         div.innerHTML = `
             <button class="absolute -top-2 -right-2 w-6 h-6 bg-white shadow-md rounded-full text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center border border-slate-100" onclick="this.parentElement.remove()">×</button>
-            <input type="text" placeholder="Cargo Name" class="w-full text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Item ${id+1}" id="c-name-${id}">
+            <input type="text" placeholder="Cargo Description" class="w-full text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Unit ${id+1}" id="c-name-${id}">
             <div class="grid grid-cols-4 gap-2">
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">L (cm)</p><input type="number" value="120" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-l-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">W (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-w-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">H (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-h-${id}"></div>
-                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">QTY</p><input type="number" value="10" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-q-${id}"></div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">QTY</p><input type="number" value="5" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-q-${id}"></div>
             </div>
         `;
         cargoContainer.appendChild(div);
@@ -56,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if(addBtn) addBtn.addEventListener('click', addCargoRow);
-    addCargoRow(); addCargoRow(); // Defaults
+    addCargoRow(); addCargoRow(); // Initial items
 
-    // --- 3. THREE.JS ENGINE ---
+    // --- 2. THREE.JS RENDERING ENGINE ---
     let scene, camera, renderer, controls;
     let isInitialized = false;
     let containerBox = null;
@@ -108,23 +80,27 @@ document.addEventListener('DOMContentLoaded', () => {
             animate();
             
             isInitialized = true;
-            drawEmptyContainer(1200, 235, 239);
-            console.log("3D Engine Ready");
+            drawEmptyContainer(1200, 235, 239); // Render default container
+            console.log("3D Engine Operational");
         } catch (e) {
-            console.error("3D Init Error:", e);
+            console.error("3D Init Failed:", e);
         }
     }
 
-    function onWindowResize() {
-        if (!isInitialized || !renderer || !camera) return;
-        const w = canvasContainer.clientWidth, h = canvasContainer.clientHeight;
-        if (w === 0 || h === 0) return;
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
+    // Auto-Initialization & Responsive Handling
+    if (window.ResizeObserver) {
+        new ResizeObserver(entries => {
+            const w = entries[0].contentRect.width, h = entries[0].contentRect.height;
+            if (w > 0 && h > 0) {
+                if (!isInitialized) initThreeJS();
+                else if (camera && renderer) {
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(w, h);
+                }
+            }
+        }).observe(canvasContainer);
     }
-
-    window.addEventListener('resize', onWindowResize);
 
     function drawEmptyContainer(L, W, H) {
         if (!scene) return;
@@ -156,9 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cargoMeshes.push(mesh);
     }
 
-    // --- 4. PACKING ALGORITHM & EFFICIENCY ---
+    // --- 3. BIN PACKING ALGORITHM ---
     if(simBtn) simBtn.addEventListener('click', () => {
-        if(!isInitialized) initThreeJS();
         if(!isInitialized) return;
 
         const contType = document.getElementById('container-type').value;
@@ -209,14 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => addBox(p.x, p.y, p.z, p.l, p.h, p.w, p.color, C_L, C_W, C_H), idx * 15);
         });
 
-        // Update Efficiency UI
+        // Update Efficiency HUD
+        const efficiency = (totalVol / (C_L*C_W*C_H)) * 100;
         const summary = document.getElementById('packing-summary');
         if(summary) {
             summary.classList.remove('hidden');
-            const efficiency = (totalVol / (C_L*C_W*C_H)) * 100;
             document.getElementById('vol-util').innerText = efficiency.toFixed(1) + '%';
             document.getElementById('vol-bar').style.width = efficiency + '%';
-            document.getElementById('packed-count').innerText = `${packer.packed.length} / ${itemsToPack.length}`;
+            document.getElementById('packed-count').innerText = `${packer.packed.length}/${itemsToPack.length}`;
         }
         
         camera.position.set(C_L * 1.3, C_H + 1200, C_W + 1800);
