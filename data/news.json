@@ -248,5 +248,44 @@
       "GlobalFeed"
     ],
     "id": 19
+  },
+  {
+    "date": "2026-03-09",
+    "time": "19:00",
+    "category": "Logistics Technology",
+    "title": "Trump’s Greenland Hospital Ship Now Sailing Up West Coast After Panama Canal Transit",
+    "content": "The U.S. Navy hospital ship USNS Mercy is currently sailing north along the West Coast off Mexico after transiting the Panama Canal last week, according to the latest Automatic Identification System (...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 20
+  },
+  {
+    "date": "2026-03-09",
+    "time": "19:00",
+    "category": "Logistics Technology",
+    "title": "Tariff Uncertainty to Keep U.S. Container Imports Below 2025 Levels, NRF Says",
+    "content": "U.S. containerized imports are expected to remain below last year’s levels through the first half of 2026 as tariff uncertainty continues to weigh on trade flows, according to the latest Global Port T...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 21
+  },
+  {
+    "date": "2026-03-09",
+    "time": "19:00",
+    "category": "Liner News",
+    "title": "‘Critical’ Threat Persists in Hormuz as Attacks and GPS Jamming Shake Shipping",
+    "content": "Commercial shipping through the Strait of Hormuz has fallen to near-zero levels as the maritime security crisis gripping the Middle East continues, even as attacks on vessels temporarily paused over.....",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 22
   }
 ]
