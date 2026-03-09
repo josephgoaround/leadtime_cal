@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         viewAnalyzer.style.display = 'block';
         if(howItWorks) howItWorks.style.display = 'block';
+        viewPlanner.classList.add('hidden');
         viewPlanner.style.display = 'none';
         tabAnalyzer.className = "text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1";
         tabPlanner.className = "text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors pb-1";
@@ -22,10 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         viewAnalyzer.style.display = 'none';
         if(howItWorks) howItWorks.style.display = 'none';
+        viewPlanner.classList.remove('hidden');
         viewPlanner.style.display = 'block';
         tabPlanner.className = "text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1";
         tabAnalyzer.className = "text-sm font-bold text-gray-500 hover:text-indigo-600 transition-colors pb-1";
-        initThreeJS(); // Initialize on first show
+        
+        // Ensure Three.js is initialized and resized
+        setTimeout(() => {
+            initThreeJS();
+            if(isInitialized && renderer && camera) {
+                const container = document.getElementById('canvas-container');
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        }, 100);
     });
 
     // 2. Cargo Items UI Logic
@@ -63,32 +75,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function initThreeJS() {
         if (isInitialized) return;
         const container = document.getElementById('canvas-container');
-        if(!container) return;
-        document.getElementById('canvas-placeholder').style.display = 'none';
+        if(!container || container.clientWidth === 0) return;
+        
+        const placeholder = document.getElementById('canvas-placeholder');
+        if(placeholder) placeholder.style.display = 'none';
         
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x111827); // Dark background for better visibility
+        scene.background = new THREE.Color(0x0f172a); // Slate-900 for premium feel
 
         camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 20000);
-        camera.position.set(1200, 800, 1500);
+        camera.position.set(1500, 1000, 2000);
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
 
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        dirLight.position.set(1000, 2000, 1000);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        dirLight.position.set(2000, 3000, 1000);
         scene.add(dirLight);
 
         // Add Grid
-        const gridHelper = new THREE.GridHelper(3000, 30, 0x444444, 0x222222);
-        gridHelper.position.y = -1; // slightly below container bottom
+        const gridHelper = new THREE.GridHelper(5000, 40, 0x334155, 0x1e293b);
+        gridHelper.position.y = -1;
         scene.add(gridHelper);
 
         window.addEventListener('resize', () => {
@@ -119,28 +134,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const geometry = new THREE.BoxGeometry(L, H, W);
         const edges = new THREE.EdgesGeometry(geometry);
-        containerBox = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x6366f1, linewidth: 2 }));
+        containerBox = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x818cf8, linewidth: 2 }));
         
-        // Position so bottom center is at 0,0,0
         containerBox.position.set(0, H/2, 0);
         scene.add(containerBox);
     }
 
     function addBox(x, y, z, l, h, w, colorCode, contL, contW, contH) {
         const geo = new THREE.BoxGeometry(l, h, w);
-        const mat = new THREE.MeshLambertMaterial({ color: colorCode, transparent: true, opacity: 0.95 });
+        const mat = new THREE.MeshLambertMaterial({ color: colorCode, transparent: true, opacity: 0.9 });
         const mesh = new THREE.Mesh(geo, mat);
         
-        // Edge lines for the box
         const edgeGeo = new THREE.EdgesGeometry(geo);
-        const edgeMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1 });
+        const edgeMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1, transparent: true, opacity: 0.3 });
         const wireframe = new THREE.LineSegments(edgeGeo, edgeMat);
         mesh.add(wireframe);
 
-        // Transform coordinates (packer uses bottom-back-left = 0,0,0)
-        // ThreeJS Box is centered.
-        // Container center is at 0, H/2, 0. Bottom-back-left is at -L/2, 0, -W/2.
-        
         mesh.position.set(
             -contL/2 + x + l/2,
             y + h/2,
@@ -152,21 +161,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if(simBtn) simBtn.addEventListener('click', () => {
-        if(!isInitialized) initThreeJS();
+        if(!isInitialized) {
+            initThreeJS();
+            if(!isInitialized) return; // Wait for tab to be fully visible
+        }
         
         const contType = document.getElementById('container-type').value;
-        // L, W, H in cm
-        let C_L = 590, C_W = 235, C_H = 239; // 20ft default
+        let C_L = 590, C_W = 235, C_H = 239; 
         if(contType === '40ft') { C_L = 1200; C_W = 235; C_H = 239; }
         if(contType === '40hc') { C_L = 1200; C_W = 235; C_H = 269; }
 
         drawEmptyContainer(C_L, C_W, C_H);
 
-        // Gather Items
         let itemsToPack = [];
         for(let i=0; i<cargoId; i++) {
             const nameEl = document.getElementById(`c-name-${i}`);
-            if(!nameEl) continue; // row was deleted
+            if(!nameEl) continue;
             const l = parseFloat(document.getElementById(`c-l-${i}`).value) || 0;
             const w = parseFloat(document.getElementById(`c-w-${i}`).value) || 0;
             const h = parseFloat(document.getElementById(`c-h-${i}`).value) || 0;
@@ -180,7 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Sort by Volume descending
         itemsToPack.sort((a,b) => b.vol - a.vol);
 
         class Packer {
@@ -189,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.packed = [];
             }
             pack(box) {
-                // Sort spaces to favor bottom, then back, then left
                 this.spaces.sort((a, b) => {
                     if (Math.abs(a.y - b.y) > 0.1) return a.y - b.y; 
                     if (Math.abs(a.z - b.z) > 0.1) return a.z - b.z; 
@@ -198,34 +206,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 for (let i = 0; i < this.spaces.length; i++) {
                     let space = this.spaces[i];
-                    // Try orientations (keeping H upright)
-                    let rots = [
-                        {l: box.l, w: box.w, h: box.h}, // Normal
-                        {l: box.w, w: box.l, h: box.h}, // Rotated
-                    ];
-                    
+                    let rots = [{l: box.l, w: box.w, h: box.h}, {l: box.w, w: box.l, h: box.h}];
                     for (let rot of rots) {
                         if (rot.l <= space.l && rot.w <= space.w && rot.h <= space.h) {
                             let node = {x: space.x, y: space.y, z: space.z, l: rot.l, w: rot.w, h: rot.h, color: box.color};
                             this.packed.push(node);
-                            this.spaces.splice(i, 1); // remove used space
-                            
-                            // Guillotine split (3 new spaces)
-                            if (space.h - rot.h > 0) {
-                                this.spaces.push({x: space.x, y: space.y + rot.h, z: space.z, l: rot.l, w: rot.w, h: space.h - rot.h});
-                            }
-                            if (space.l - rot.l > 0) {
-                                this.spaces.push({x: space.x + rot.l, y: space.y, z: space.z, l: space.l - rot.l, w: space.w, h: space.h});
-                            }
-                            if (space.w - rot.w > 0) {
-                                this.spaces.push({x: space.x, y: space.y, z: space.z + rot.w, l: rot.l, w: space.w - rot.w, h: space.h});
-                            }
-                            
-                            return true; // successfully packed
+                            this.spaces.splice(i, 1);
+                            if (space.h - rot.h > 0) this.spaces.push({x: space.x, y: space.y + rot.h, z: space.z, l: rot.l, w: rot.w, h: space.h - rot.h});
+                            if (space.l - rot.l > 0) this.spaces.push({x: space.x + rot.l, y: space.y, z: space.z, l: space.l - rot.l, w: space.w, h: space.h});
+                            if (space.w - rot.w > 0) this.spaces.push({x: space.x, y: space.y, z: space.z + rot.w, l: rot.l, w: space.w - rot.w, h: space.h});
+                            return true;
                         }
                     }
                 }
-                return false; // could not pack
+                return false;
             }
         }
 
@@ -240,28 +234,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Render packed
         packer.packed.forEach(p => {
             addBox(p.x, p.y, p.z, p.l, p.h, p.w, p.color, C_L, C_W, C_H);
         });
 
-        // Update UI
         const summary = document.getElementById('packing-summary');
         if(summary) {
             summary.style.display = 'block';
             const contVol = C_L * C_W * C_H;
             document.getElementById('vol-util').innerText = ((totalVolPacked / contVol) * 100).toFixed(1) + '%';
             document.getElementById('packed-count').innerText = `${packedCount} / ${itemsToPack.length}`;
-            
-            if(packedCount < itemsToPack.length) {
-                document.getElementById('packed-count').classList.add('text-red-500');
-            } else {
-                document.getElementById('packed-count').classList.remove('text-red-500');
-            }
+            document.getElementById('packed-count').className = (packedCount < itemsToPack.length) ? 'text-lg font-black text-red-500' : 'text-lg font-black text-green-600';
         }
         
-        // Reset Camera
-        camera.position.set(C_L * 0.8, C_H + 800, C_W + 1200);
+        camera.position.set(C_L * 1.2, C_H + 1000, C_W + 1500);
         controls.target.set(0, C_H/2, 0);
         controls.update();
     });
