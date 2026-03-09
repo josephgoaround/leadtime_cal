@@ -1,79 +1,79 @@
 {
-  "last_updated": "2026-03-09 20:40:36",
+  "last_updated": "2026-03-09 22:34:51",
   "active_risks": [
+    {
+      "label": "Strait of Hormuz Alert",
+      "delay": 5,
+      "cost": 800,
+      "source_news": "Oil Surges to Highest Since 2022 as Hormuz Crisis Roils Energy Markets"
+    },
     {
       "label": "Panama Canal Slot Restriction",
       "delay": 4,
       "cost": 500,
       "source_news": "Trump’s Greenland Hospital Ship Now Sailing Up West Coast After Panama Canal Transit"
-    },
-    {
-      "label": "Strait of Hormuz Alert",
-      "delay": 5,
-      "cost": 800,
-      "source_news": "‘Critical’ Threat Persists in Hormuz as Attacks and GPS Jamming Shake Shipping"
     }
   ],
   "alerts": [
     {
+      "msg": "Oil Surges to Highest Since 2022 as Hormuz Crisis Roils Energy Markets",
+      "url": "https://gcaptain.com/oil-prices-hit-highest-since-2022-at-more-than-119-a-barrel-on-iran-war/",
+      "time": "22:34"
+    },
+    {
+      "msg": "France’s Macron Orders Major Naval Deployment to Middle East",
+      "url": "https://gcaptain.com/frances-macron-orders-major-naval-deployment-to-middle-east/",
+      "time": "22:34"
+    },
+    {
       "msg": "Trump’s Greenland Hospital Ship Now Sailing Up West Coast After Panama Canal Transit",
       "url": "https://gcaptain.com/trumps-greenland-hospital-ship-now-sailing-up-west-coast-after-panama-canal-transit/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "Tariff Uncertainty to Keep U.S. Container Imports Below 2025 Levels, NRF Says",
       "url": "https://gcaptain.com/tariff-uncertainty-to-keep-u-s-container-imports-below-2025-levels-nrf-says/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "‘Critical’ Threat Persists in Hormuz as Attacks and GPS Jamming Shake Shipping",
       "url": "https://gcaptain.com/critical-threat-persists-in-hormuz-as-attacks-and-gps-jamming-shake-shipping/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "Trump Tells Ships to ‘Show Some Guts’ in Hormuz as Seafarer Death Toll Rises",
       "url": "https://gcaptain.com/trump-tells-ships-to-show-some-guts-in-hormuz-as-seafarer-death-toll-rises/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "ABS and HD Hyundai Launch Nuclear-Powered Mega Containership Study",
       "url": "https://gcaptain.com/abs-and-hd-hyundai-launch-nuclear-powered-mega-containership-study/",
-      "time": "20:40"
-    },
-    {
-      "msg": "Oil Prices Hit Highest Since 2022 at More Than $119 a Barrel on Iran War",
-      "url": "https://gcaptain.com/oil-prices-hit-highest-since-2022-at-more-than-119-a-barrel-on-iran-war/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "Greek Oil Tanker Exits Strait of Hormuz With Its Signal Off",
       "url": "https://gcaptain.com/greek-oil-tanker-exits-strait-of-hormuz-with-its-signal-off/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "EU Buys 100% of Russian Arctic LNG Just 9 Months Before Planned Gas Ban",
       "url": "https://gcaptain.com/eu-buys-100-of-russian-arctic-lng-just-9-months-before-planned-gas-ban/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "US Defends Waiver On Russian Oil Sanctions",
       "url": "https://gcaptain.com/us-defends-waiver-on-russian-oil-sanctions/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "Iran Picks New Leader As Escalating War Deepens Oil Shock",
       "url": "https://gcaptain.com/iran-picks-new-leader-as-escalating-war-deepens-oil-shock/",
-      "time": "20:40"
+      "time": "22:34"
     },
     {
       "msg": "Tokyo Prepared To Release Oil Reserve Amid Iran Crisis",
       "url": "https://gcaptain.com/tokyo-prepared-to-release-oil-reserve-amid-iran-crisis/",
-      "time": "20:40"
-    },
-    {
-      "msg": "Crude Oil Spill Draws Large Response at Nation’s Only Deepwater VLCC Port",
-      "url": "https://gcaptain.com/crude-oil-spill-draws-large-response-at-nations-only-deepwater-vlcc-port/",
-      "time": "20:40"
+      "time": "22:34"
     }
   ]
 }

@@ -287,5 +287,31 @@
       "GlobalFeed"
     ],
     "id": 22
+  },
+  {
+    "date": "2026-03-09",
+    "time": "22:34",
+    "category": "Liner News",
+    "title": "Oil Surges to Highest Since 2022 as Hormuz Crisis Roils Energy Markets",
+    "content": "Oil prices surged to more than $119 a barrel on Monday, hitting levels not seen since mid-2022, as some major producers cut supplies and fears of prolonged shipping disruptions gripped the market due ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 23
+  },
+  {
+    "date": "2026-03-09",
+    "time": "22:34",
+    "category": "Liner News",
+    "title": "France’s Macron Orders Major Naval Deployment to Middle East",
+    "content": "France is deploying about a dozen naval vessels, including its aircraft carrier strike group, to the Mediterranean, Red Sea and potentially the Strait of Hormuz as part of defensive support to allies ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 24
   }
 ]
