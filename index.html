@@ -253,83 +253,106 @@
     </main>
 
     <!-- 3D Load Planner View (Hidden by default) -->
-    <main id="planner" class="container mx-auto p-4 max-w-6xl mt-8 hidden">
-        <div class="mb-8">
-            <p class="text-gray-500 text-sm font-medium">3D Container Load Optimization Simulator (LCL to FCL)</p>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-4 space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100">
-                    <h2 class="text-lg font-bold mb-6 flex items-center text-gray-800">
-                        <span class="text-indigo-600 mr-2">📦</span> Cargo Input
-                    </h2>
-                    <div class="mb-4">
-                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">Container Type</label>
-                        <select id="container-type" class="w-full py-2.5 px-3 border-gray-200 bg-gray-50 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-semibold">
-                            <option value="20ft">20ft Standard (5.9m x 2.35m x 2.39m)</option>
-                            <option value="40ft">40ft Standard (12.0m x 2.35m x 2.39m)</option>
-                            <option value="40hc">40ft High Cube (12.0m x 2.35m x 2.69m)</option>
-                        </select>
-                    </div>
-                    
-                    <div id="cargo-items" class="space-y-3 mb-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
-                        <!-- Dynamic cargo items -->
-                    </div>
-                    <button id="add-cargo-btn" class="w-full bg-gray-50 text-indigo-600 font-bold py-3 rounded-xl border border-gray-200 hover:bg-gray-100 transition-all text-sm mb-4">+ Add Cargo Item</button>
-                    
-                    <button id="simulate-load-btn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-lg shadow-indigo-200 text-sm tracking-wide">
-                        SIMULATE 3D PACKING
-                    </button>
+    <main id="planner" class="container mx-auto p-4 max-w-[1800px] mt-8 hidden">
+        <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h2 class="text-3xl font-black text-gray-900 tracking-tight">3D Container Load Planner</h2>
+                <p class="text-gray-500 text-sm font-medium">Professional LCL to FCL Optimization & Interactive 3D Simulation</p>
+            </div>
+            <div id="packing-summary" class="bg-indigo-600 text-white px-6 py-3 rounded-2xl shadow-lg shadow-indigo-200 hidden animate-fade-in flex items-center gap-8">
+                <div class="text-center">
+                    <p class="text-[10px] font-bold uppercase opacity-80">Volume Utilized</p>
+                    <p class="text-xl font-black" id="vol-util">0%</p>
                 </div>
-                
-                <!-- Result Summary -->
-                <div id="packing-summary" class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 hidden animate-fade-in">
-                    <h3 class="text-sm font-bold text-indigo-900 mb-4 uppercase tracking-widest">Packing Results</h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center border-b border-indigo-100/50 pb-2">
-                            <span class="text-xs font-semibold text-indigo-700">Volume Utilized</span>
-                            <span class="text-lg font-black text-indigo-900" id="vol-util">0%</span>
+                <div class="w-px h-8 bg-white/20"></div>
+                <div class="text-center">
+                    <p class="text-[10px] font-bold uppercase opacity-80">Items Packed</p>
+                    <p class="text-xl font-black" id="packed-count">0/0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-6 rounded-[2rem] shadow-xl border border-gray-100 h-full flex flex-col">
+                    <h2 class="text-lg font-bold mb-6 flex items-center text-gray-800">
+                        <span class="w-8 h-8 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mr-3 text-sm">📦</span>
+                        Cargo Config
+                    </h2>
+                    
+                    <div class="space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase mb-2 tracking-widest">Select Equipment</label>
+                            <select id="container-type" class="w-full py-3 px-4 border-gray-100 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-bold text-gray-700">
+                                <option value="20ft">20' Standard Container</option>
+                                <option value="40ft" selected>40' Standard Container</option>
+                                <option value="40hc">40' High Cube (HC)</option>
+                            </select>
                         </div>
-                        <div class="flex justify-between items-center border-b border-indigo-100/50 pb-2">
-                            <span class="text-xs font-semibold text-indigo-700">Packed Items</span>
-                            <span class="text-lg font-black text-indigo-900" id="packed-count">0/0</span>
+                        
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Cargo Manifest (LCL)</label>
+                                <button id="add-cargo-btn" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase">+ Add Item</button>
+                            </div>
+                            <div id="cargo-items" class="space-y-3">
+                                <!-- Dynamic items -->
+                            </div>
                         </div>
-                        <p class="text-[10px] text-indigo-500 pt-2 leading-relaxed">
-                            Note: Simulation is based on algorithmic heuristic. Actual load ability depends on weight limits, center of gravity, and dunnage constraints.
-                        </p>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-gray-50 mt-6">
+                        <button id="simulate-load-btn" class="w-full bg-indigo-600 text-white font-black py-5 rounded-[1.5rem] hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 text-xs tracking-widest uppercase">
+                            EXECUTE 3D PACKING
+                        </button>
+                    </div>
+
+                    <!-- Compact Manual -->
+                    <div class="mt-8 p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <span class="w-4 h-4 bg-white text-slate-600 rounded-full flex items-center justify-center text-[8px] shadow-sm">?</span>
+                            Interaction Guide
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Rotate (회전)</span>
+                                <span class="font-bold text-indigo-600">Left-Click</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Zoom (확대)</span>
+                                <span class="font-bold text-indigo-600">Scroll</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[10px]">
+                                <span class="text-slate-500">Pan (이동)</span>
+                                <span class="font-bold text-indigo-600">Right-Click</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="lg:col-span-8">
-                <div class="bg-gray-900 p-2 rounded-2xl shadow-2xl border border-gray-800 h-[750px] flex items-center justify-center relative overflow-hidden" id="canvas-container">
-                    <p class="text-gray-400 font-medium z-10" id="canvas-placeholder">Configure cargo and simulate to view 3D model.</p>
-                </div>
-                
-                <!-- User Manual Section -->
-                <div class="mt-8 bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-                    <h3 class="text-sm font-black text-gray-800 uppercase tracking-widest mb-6 flex items-center gap-2">
-                        <span class="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-[10px]">?</span>
-                        3D Viewer User Manual
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="space-y-2">
-                            <p class="text-[11px] font-bold text-indigo-600 uppercase">Rotation (회전)</p>
-                            <p class="text-xs text-gray-500 leading-relaxed">Left-click and drag anywhere on the 3D window to rotate the container and inspect cargo placement from any angle.</p>
-                        </div>
-                        <div class="space-y-2">
-                            <p class="text-[11px] font-bold text-indigo-600 uppercase">Zoom (확대/축소)</p>
-                            <p class="text-xs text-gray-500 leading-relaxed">Use your mouse scroll wheel or pinch on a trackpad to zoom in for detail or zoom out for a full view.</p>
-                        </div>
-                        <div class="space-y-2">
-                            <p class="text-[11px] font-bold text-indigo-600 uppercase">Pan (이동)</p>
-                            <p class="text-xs text-gray-500 leading-relaxed">Right-click and drag to move the entire camera view horizontally or vertically across the screen.</p>
+            <div class="lg:col-span-4">
+                <div class="bg-slate-900 p-2 rounded-[2.5rem] shadow-2xl border-4 border-slate-800 h-[950px] flex items-center justify-center relative overflow-hidden group" id="canvas-container">
+                    <!-- Overlay Overlay for Loading/Hint -->
+                    <div class="absolute top-8 left-8 z-10 flex flex-col gap-2">
+                        <div class="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-3">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            <p class="text-[10px] font-bold text-white uppercase tracking-tighter">Engine: Three.js WebGL</p>
                         </div>
                     </div>
-                    <div class="mt-6 pt-6 border-t border-gray-50 flex items-center gap-4 text-[10px] text-gray-400 font-medium">
-                        <p>• Red boxes indicate items that could not fit.</p>
-                        <p>• Dimensions are in centimeters (cm).</p>
-                        <p>• Optimized for Desktop Chrome & Safari.</p>
+                    
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-500" id="canvas-placeholder">
+                        <div class="text-center">
+                            <div class="relative w-24 h-24 mx-auto mb-6">
+                                <div class="absolute inset-0 border-4 border-indigo-500/20 rounded-full"></div>
+                                <div class="absolute inset-0 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl animate-bounce">📦</span>
+                                </div>
+                            </div>
+                            <p class="text-slate-400 font-black uppercase tracking-[0.2em] text-xs">Ready for Intelligence Load Input</p>
+                            <p class="text-slate-600 text-[10px] mt-2 font-medium">Click "Execute 3D Packing" to begin simulation</p>
+                        </div>
                     </div>
                 </div>
             </div>
