@@ -1,21 +1,41 @@
-// container3d.js - Optimized for Professional Planner Dashboard
+// container3d.js - Unified Tab Logic & Enhanced 3D Simulation
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- UI CONTROLS ---
+    // --- 1. TAB SWITCHING LOGIC ---
+    const btnAnalyzer = document.getElementById('tab-btn-analyzer');
+    const btnPlanner = document.getElementById('tab-btn-planner');
+    const secAnalyzer = document.getElementById('section-analyzer');
+    const secPlanner = document.getElementById('section-planner');
+
+    if (btnAnalyzer && btnPlanner) {
+        btnAnalyzer.addEventListener('click', () => {
+            secAnalyzer.classList.remove('hidden');
+            secPlanner.classList.add('hidden');
+            btnAnalyzer.className = "text-sm font-bold pb-1 transition-all tab-active";
+            btnPlanner.className = "text-sm font-bold pb-1 transition-all text-slate-500 hover:text-indigo-600";
+        });
+
+        btnPlanner.addEventListener('click', () => {
+            secAnalyzer.classList.add('hidden');
+            secPlanner.classList.remove('hidden');
+            btnPlanner.className = "text-sm font-bold pb-1 transition-all tab-active";
+            btnAnalyzer.className = "text-sm font-bold pb-1 transition-all text-slate-500 hover:text-indigo-600";
+            
+            // Trigger 3D check after tab becomes visible
+            setTimeout(() => {
+                if (!isInitialized) initThreeJS();
+                else onWindowResize();
+            }, 100);
+        });
+    }
+
+    // --- 2. CARGO INPUT UI ---
     const cargoContainer = document.getElementById('cargo-items');
     const addBtn = document.getElementById('add-cargo-btn');
     const simBtn = document.getElementById('simulate-load-btn');
     
     let cargoId = 0;
-    const colors = [
-        0x6366f1, // Indigo
-        0x10b981, // Emerald
-        0xf59e0b, // Amber
-        0xef4444, // Red
-        0x8b5cf6, // Violet
-        0xec4899, // Pink
-        0x06b6d4  // Cyan
-    ];
+    const colors = [0x6366f1, 0x10b981, 0xf59e0b, 0xef4444, 0x8b5cf6, 0xec4899, 0x06b6d4];
 
     function addCargoRow() {
         const id = cargoId++;
@@ -23,24 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
         div.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3 animate-fade-in relative group';
         div.innerHTML = `
             <button class="absolute -top-2 -right-2 w-6 h-6 bg-white shadow-md rounded-full text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center border border-slate-100" onclick="this.parentElement.remove()">×</button>
-            <input type="text" placeholder="Item Description" class="w-full text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Cargo Unit ${id+1}" id="c-name-${id}">
+            <input type="text" placeholder="Cargo Name" class="w-full text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Item ${id+1}" id="c-name-${id}">
             <div class="grid grid-cols-4 gap-2">
-                <div class="space-y-1">
-                    <p class="text-[8px] font-black text-slate-400 uppercase">L (cm)</p>
-                    <input type="number" value="120" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-l-${id}">
-                </div>
-                <div class="space-y-1">
-                    <p class="text-[8px] font-black text-slate-400 uppercase">W (cm)</p>
-                    <input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-w-${id}">
-                </div>
-                <div class="space-y-1">
-                    <p class="text-[8px] font-black text-slate-400 uppercase">H (cm)</p>
-                    <input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-h-${id}">
-                </div>
-                <div class="space-y-1">
-                    <p class="text-[8px] font-black text-slate-400 uppercase">QTY</p>
-                    <input type="number" value="5" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-q-${id}">
-                </div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">L (cm)</p><input type="number" value="120" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-l-${id}"></div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">W (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-w-${id}"></div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">H (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-h-${id}"></div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">QTY</p><input type="number" value="10" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-q-${id}"></div>
             </div>
         `;
         cargoContainer.appendChild(div);
@@ -48,11 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if(addBtn) addBtn.addEventListener('click', addCargoRow);
-    
-    // Initial rows for immediate use
-    addCargoRow(); addCargoRow();
+    addCargoRow(); addCargoRow(); // Defaults
 
-    // --- THREE.JS ENGINE ---
+    // --- 3. THREE.JS ENGINE ---
     let scene, camera, renderer, controls;
     let isInitialized = false;
     let containerBox = null;
@@ -69,18 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             if(placeholder) placeholder.style.display = 'none';
-            
             scene = new THREE.Scene();
-            // Deep space feel
-            scene.background = null; 
-
             camera = new THREE.PerspectiveCamera(45, width / height, 1, 50000);
             camera.position.set(2500, 2000, 3500);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
             renderer.setSize(width, height);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
             canvasContainer.appendChild(renderer.domElement);
 
             const OrbitControls = window.THREE.OrbitControls || THREE.OrbitControls;
@@ -88,21 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 controls = new OrbitControls(camera, renderer.domElement);
                 controls.enableDamping = true;
                 controls.dampingFactor = 0.05;
-                controls.maxPolarAngle = Math.PI / 2 + 0.1;
             }
 
-            // High-fidelity Lighting
-            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-            const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            mainLight.position.set(3000, 5000, 3000);
-            mainLight.castShadow = true;
-            scene.add(mainLight);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+            const light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light.position.set(2000, 5000, 3000);
+            scene.add(light);
 
-            const fillLight = new THREE.PointLight(0x6366f1, 0.4);
-            fillLight.position.set(-2000, 2000, -2000);
-            scene.add(fillLight);
-
-            // Tech Grid
             const grid = new THREE.GridHelper(10000, 100, 0x334155, 0x1e293b);
             grid.position.y = -2;
             scene.add(grid);
@@ -115,36 +108,23 @@ document.addEventListener('DOMContentLoaded', () => {
             animate();
             
             isInitialized = true;
-            drawEmptyContainer(1200, 235, 239); // Default view
-            console.log("3D Simulation Ready");
-
+            drawEmptyContainer(1200, 235, 239);
+            console.log("3D Engine Ready");
         } catch (e) {
-            console.error("Three.js Error:", e);
+            console.error("3D Init Error:", e);
         }
     }
 
-    // Force Init on load and resize
-    window.addEventListener('load', () => setTimeout(initThreeJS, 100));
-    window.addEventListener('resize', () => {
+    function onWindowResize() {
         if (!isInitialized || !renderer || !camera) return;
         const w = canvasContainer.clientWidth, h = canvasContainer.clientHeight;
+        if (w === 0 || h === 0) return;
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
-    });
-
-    // Also use ResizeObserver for foolproof visibility
-    if (window.ResizeObserver) {
-        new ResizeObserver(() => {
-            if (!isInitialized) initThreeJS();
-            else {
-                const w = canvasContainer.clientWidth, h = canvasContainer.clientHeight;
-                camera.aspect = w / h;
-                camera.updateProjectionMatrix();
-                renderer.setSize(w, h);
-            }
-        }).observe(canvasContainer);
     }
+
+    window.addEventListener('resize', onWindowResize);
 
     function drawEmptyContainer(L, W, H) {
         if (!scene) return;
@@ -152,19 +132,15 @@ document.addEventListener('DOMContentLoaded', () => {
         cargoMeshes.forEach(m => scene.remove(m));
         cargoMeshes = [];
 
-        // Outer Wireframe
         const geometry = new THREE.BoxGeometry(L, H, W);
         containerBox = new THREE.LineSegments(
             new THREE.EdgesGeometry(geometry),
             new THREE.LineBasicMaterial({ color: 0x818cf8, linewidth: 2, transparent: true, opacity: 0.4 })
         );
         
-        // Solid semi-transparent base
         const floorGeo = new THREE.PlaneGeometry(L, W);
-        const floorMat = new THREE.MeshPhongMaterial({ color: 0x1e1b4b, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
-        const floor = new THREE.Mesh(floorGeo, floorMat);
-        floor.rotation.x = Math.PI / 2;
-        floor.position.y = -H/2;
+        const floor = new THREE.Mesh(floorGeo, new THREE.MeshPhongMaterial({ color: 0x1e1b4b, side: THREE.DoubleSide, transparent: true, opacity: 0.2 }));
+        floor.rotation.x = Math.PI / 2; floor.position.y = -H/2;
         containerBox.add(floor);
 
         containerBox.position.set(0, H/2, 0);
@@ -172,42 +148,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addBox(x, y, z, l, h, w, colorCode, contL, contW, contH) {
-        const geo = new THREE.BoxGeometry(l, h, w);
-        const mat = new THREE.MeshStandardMaterial({ 
-            color: colorCode, 
-            transparent: true, 
-            opacity: 0.9, 
-            roughness: 0.3, 
-            metalness: 0.2 
-        });
-        const mesh = new THREE.Mesh(geo, mat);
-        
-        // Distinct Outline
-        const edges = new THREE.LineSegments(
-            new THREE.EdgesGeometry(geo),
-            new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.2 })
-        );
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(l, h, w), new THREE.MeshStandardMaterial({ color: colorCode, transparent: true, opacity: 0.9, roughness: 0.3 }));
+        const edges = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry), new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.2 }));
         mesh.add(edges);
-
         mesh.position.set(-contL/2 + x + l/2, y + h/2, -contW/2 + z + w/2);
         scene.add(mesh);
         cargoMeshes.push(mesh);
     }
 
-    // --- PACKING ALGORITHM ---
+    // --- 4. PACKING ALGORITHM & EFFICIENCY ---
     if(simBtn) simBtn.addEventListener('click', () => {
+        if(!isInitialized) initThreeJS();
         if(!isInitialized) return;
 
         const contType = document.getElementById('container-type').value;
-        let C_L = 590, C_W = 235, C_H = 239;
+        let C_L = 590, C_W = 235, C_H = 239; // 20ft
         if(contType === '40ft') { C_L = 1200; C_W = 235; C_H = 239; }
         if(contType === '40hc') { C_L = 1200; C_W = 235; C_H = 269; }
 
         drawEmptyContainer(C_L, C_W, C_H);
 
         let itemsToPack = [];
-        const inputs = cargoContainer.querySelectorAll('.bg-slate-50');
-        inputs.forEach((row, i) => {
+        const rows = cargoContainer.querySelectorAll('.bg-slate-50');
+        rows.forEach((row, i) => {
             const l = parseFloat(row.querySelector('[id^="c-l-"]').value) || 0;
             const w = parseFloat(row.querySelector('[id^="c-w-"]').value) || 0;
             const h = parseFloat(row.querySelector('[id^="c-h-"]').value) || 0;
@@ -243,19 +206,19 @@ document.addEventListener('DOMContentLoaded', () => {
         itemsToPack.forEach(item => { if(packer.pack(item)) totalVol += (item.l*item.w*item.h); });
 
         packer.packed.forEach((p, idx) => {
-            setTimeout(() => {
-                addBox(p.x, p.y, p.z, p.l, p.h, p.w, p.color, C_L, C_W, C_H);
-            }, idx * 15);
+            setTimeout(() => addBox(p.x, p.y, p.z, p.l, p.h, p.w, p.color, C_L, C_W, C_H), idx * 15);
         });
 
+        // Update Efficiency UI
         const summary = document.getElementById('packing-summary');
         if(summary) {
             summary.classList.remove('hidden');
-            document.getElementById('vol-util').innerText = ((totalVol / (C_L*C_W*C_H)) * 100).toFixed(1) + '%';
-            document.getElementById('packed-count').innerText = `${packer.packed.length}/${itemsToPack.length}`;
+            const efficiency = (totalVol / (C_L*C_W*C_H)) * 100;
+            document.getElementById('vol-util').innerText = efficiency.toFixed(1) + '%';
+            document.getElementById('vol-bar').style.width = efficiency + '%';
+            document.getElementById('packed-count').innerText = `${packer.packed.length} / ${itemsToPack.length}`;
         }
         
-        // Satisfying camera animation
         camera.position.set(C_L * 1.3, C_H + 1200, C_W + 1800);
         controls.target.set(0, C_H/2, 0);
         controls.update();
