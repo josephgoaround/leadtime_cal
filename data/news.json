@@ -443,5 +443,44 @@
       "GlobalFeed"
     ],
     "id": 34
+  },
+  {
+    "date": "2026-03-10",
+    "time": "18:57",
+    "category": "Port Status",
+    "title": "Report: U.S. Intelligence Sees Signs of Iran Mine Threat Emerging in Hormuz",
+    "content": "U.S. intelligence agencies have detected indications that Iran may be preparing to deploy naval mines in the Strait of Hormuz shipping lanes, according to a report by CBS News citing......",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "GlobalFeed"
+    ],
+    "id": 35
+  },
+  {
+    "date": "2026-03-10",
+    "time": "18:57",
+    "category": "Logistics Technology",
+    "title": "Energy Secretary Deletes Post Claiming U.S. Navy Escorted Oil Tanker Through Strait of Hormuz",
+    "content": "U.S. Energy Secretary&#160;Chris Wright&#160;has deleted a social media post claiming that the&#160;United States Navy&#160;successfully escorted an oil tanker through the&#160;Strait of Hormuz, raisi...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "GlobalFeed"
+    ],
+    "id": 36
+  },
+  {
+    "date": "2026-03-10",
+    "time": "18:57",
+    "category": "Liner News",
+    "title": "Royal Navy Sends Missile Destroyer HMS Dragon to Eastern Mediterranean",
+    "content": "The HMS Dragon departed the Royal Navy&#8217;s base in Portsmouth, England on Tuesday bound for the Eastern Mediterranean as the United Kingdom bolsters its military presence in response to escalating...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 37
   }
 ]
