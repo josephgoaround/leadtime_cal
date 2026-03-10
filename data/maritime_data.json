@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-03-10 10:48:59",
+  "last_updated": "2026-03-10 13:13:35",
   "active_risks": [
     {
       "label": "Strait of Hormuz Alert",
       "delay": 5,
       "cost": 800,
-      "source_news": "Trump Weighs Russian Oil Sanctions Relief as Hormuz Disruption Sends Prices Soaring"
+      "source_news": "Gulf Oil Giants Deepen Cuts as Hormuz Halt Chokes Exports"
     },
     {
       "label": "Panama Canal Slot Restriction",
@@ -16,64 +16,64 @@
   ],
   "alerts": [
     {
+      "msg": "Gulf Oil Giants Deepen Cuts as Hormuz Halt Chokes Exports",
+      "url": "https://gcaptain.com/gulf-oil-giants-deepen-cuts-as-hormuz-halt-chokes-exports/",
+      "time": "13:13"
+    },
+    {
       "msg": "Trump Weighs Russian Oil Sanctions Relief as Hormuz Disruption Sends Prices Soaring",
       "url": "https://gcaptain.com/trump-weighs-russian-oil-sanctions-relief-as-hormuz-disruption-sends-prices-soaring/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "NASSCO Christens Final Expeditionary Sea Base Ship for U.S. Navy",
       "url": "https://gcaptain.com/nassco-christens-final-expeditionary-sea-base-ship-for-u-s-navy/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "Oil Surges to Highest Since 2022 as Hormuz Crisis Roils Energy Markets",
       "url": "https://gcaptain.com/oil-prices-hit-highest-since-2022-at-more-than-119-a-barrel-on-iran-war/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "Trump Tells Ships to ‘Show Some Guts’ in Hormuz as Seafarer Death Toll Rises",
       "url": "https://gcaptain.com/trump-tells-ships-to-show-some-guts-in-hormuz-as-seafarer-death-toll-rises/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "France’s Macron Orders Major Naval Deployment to Middle East",
       "url": "https://gcaptain.com/frances-macron-orders-major-naval-deployment-to-middle-east/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "EU Buys 100% of Russian Arctic LNG Just 9 Months Before Planned Gas Ban",
       "url": "https://gcaptain.com/eu-buys-100-of-russian-arctic-lng-just-9-months-before-planned-gas-ban/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "Trump’s Greenland Hospital Ship Now Sailing Up West Coast After Panama Canal Transit",
       "url": "https://gcaptain.com/trumps-greenland-hospital-ship-now-sailing-up-west-coast-after-panama-canal-transit/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "Tariff Uncertainty to Keep U.S. Container Imports Below 2025 Levels, NRF Says",
       "url": "https://gcaptain.com/tariff-uncertainty-to-keep-u-s-container-imports-below-2025-levels-nrf-says/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "‘Critical’ Threat Persists in Hormuz as Attacks and GPS Jamming Shake Shipping",
       "url": "https://gcaptain.com/critical-threat-persists-in-hormuz-as-attacks-and-gps-jamming-shake-shipping/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "ABS and HD Hyundai Launch Nuclear-Powered Mega Containership Study",
       "url": "https://gcaptain.com/abs-and-hd-hyundai-launch-nuclear-powered-mega-containership-study/",
-      "time": "10:48"
+      "time": "13:13"
     },
     {
       "msg": "Greek Oil Tanker Exits Strait of Hormuz With Its Signal Off",
       "url": "https://gcaptain.com/greek-oil-tanker-exits-strait-of-hormuz-with-its-signal-off/",
-      "time": "10:48"
-    },
-    {
-      "msg": "US Defends Waiver On Russian Oil Sanctions",
-      "url": "https://gcaptain.com/us-defends-waiver-on-russian-oil-sanctions/",
-      "time": "10:48"
+      "time": "13:13"
     }
   ]
 }
