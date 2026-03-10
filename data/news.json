@@ -352,5 +352,31 @@
       "GlobalFeed"
     ],
     "id": 27
+  },
+  {
+    "date": "2026-03-10",
+    "time": "14:55",
+    "category": "Port Status",
+    "title": "Jet Fuel Shock Looms on U.S. West Coast as Asian Exports Dry Up",
+    "content": "Energy export data shows South Korean jet fuel exports to the United States West Coast is dropping as countries around the world are holding onto the energy for its own self-preservation....",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "GlobalFeed"
+    ],
+    "id": 28
+  },
+  {
+    "date": "2026-03-10",
+    "time": "14:55",
+    "category": "Liner News",
+    "title": "Qatar Wants to Bolster Security Partnership with US After Iran’s Strikes",
+    "content": "Qatar wants to strengthen its defense partnership with the United States in the wake of Iranian air strikes on Qatari territory, the foreign ministry spokesperson said on Tuesday, even as it sees the ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 29
   }
 ]
