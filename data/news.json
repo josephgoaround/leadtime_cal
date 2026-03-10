@@ -313,5 +313,31 @@
       "GlobalFeed"
     ],
     "id": 24
+  },
+  {
+    "date": "2026-03-10",
+    "time": "02:30",
+    "category": "Liner News",
+    "title": "Trump Weighs Russian Oil Sanctions Relief as Hormuz Disruption Sends Prices Soaring",
+    "content": " U.S. President Donald Trump is considering easing oil sanctions on Russia and releasing emergency crude stockpiles as part of a package of options aimed at curbing spiking global oil prices amid the ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 25
+  },
+  {
+    "date": "2026-03-10",
+    "time": "02:30",
+    "category": "Liner News",
+    "title": "NASSCO Christens Final Expeditionary Sea Base Ship for U.S. Navy",
+    "content": "General Dynamics NASSCO has christened USNS Hector A. Cafferata Jr. (ESB 8) in San Diego, marking the sixth and final vessel in the U.S. Navy’s Expeditionary Sea Base (ESB) program and bringing to a.....",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 26
   }
 ]
