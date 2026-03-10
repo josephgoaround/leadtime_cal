@@ -1,85 +1,79 @@
 {
-  "last_updated": "2026-03-10 14:55:15",
+  "last_updated": "2026-03-10 16:59:43",
   "active_risks": [
     {
       "label": "Strait of Hormuz Alert",
       "delay": 5,
       "cost": 800,
-      "source_news": "Qatar Wants to Bolster Security Partnership with US After Iran’s Strikes"
+      "source_news": "Hormuz Disruptions Threaten Energy Markets, Fertilizer Trade, and Vulnerable Economies, UNCTAD Warns"
     },
     {
       "label": "Port Labor Strike",
       "delay": 3,
       "cost": 300,
       "source_news": "Qatar Wants to Bolster Security Partnership with US After Iran’s Strikes"
-    },
-    {
-      "label": "Panama Canal Slot Restriction",
-      "delay": 4,
-      "cost": 500,
-      "source_news": "Trump’s Greenland Hospital Ship Now Sailing Up West Coast After Panama Canal Transit"
     }
   ],
   "alerts": [
     {
+      "msg": "Opinion: Waiving the Jones Act Won’t Lower Gas Prices—Tanker Markets Prove It",
+      "url": "https://gcaptain.com/opinion-waiving-the-jones-act-wont-lower-gas-prices-tanker-markets-prove-it/",
+      "time": "16:59"
+    },
+    {
+      "msg": "Hormuz Disruptions Threaten Energy Markets, Fertilizer Trade, and Vulnerable Economies, UNCTAD Warns",
+      "url": "https://gcaptain.com/hormuz-disruptions-threaten-energy-markets-fertilizer-trade-and-vulnerable-economies-unctad-warns/",
+      "time": "16:59"
+    },
+    {
+      "msg": "Strait of Hormuz Remains Shut to Almost All Non-Iran-Linked Ships",
+      "url": "https://gcaptain.com/strait-of-hormuz-remains-shut-to-almost-all-non-iran-linked-ships/",
+      "time": "16:59"
+    },
+    {
+      "msg": "Container Shipping Diversions Surge 360% Amid Hormuz Closure",
+      "url": "https://gcaptain.com/container-shipping-diversions-surge-360-amid-hormuz-closure/",
+      "time": "16:59"
+    },
+    {
+      "msg": "ONE Moves Closer to Controlling Stake in World’s Largest Ship Lessor Seaspan",
+      "url": "https://gcaptain.com/one-moves-closer-to-controlling-stake-in-worlds-largest-ship-lessor-seaspan/",
+      "time": "16:59"
+    },
+    {
       "msg": "Jet Fuel Shock Looms on U.S. West Coast as Asian Exports Dry Up",
       "url": "https://gcaptain.com/south-korean-jet-fuel-exports-slowing-warns-kpler/",
-      "time": "14:55"
+      "time": "16:59"
     },
     {
       "msg": "Qatar Wants to Bolster Security Partnership with US After Iran’s Strikes",
       "url": "https://gcaptain.com/qatar-wants-to-bolster-security-partnership-with-us-after-irans-strikes/",
-      "time": "14:55"
+      "time": "16:59"
     },
     {
       "msg": "Gulf Oil Giants Deepen Cuts as Hormuz Halt Chokes Exports",
       "url": "https://gcaptain.com/gulf-oil-giants-deepen-cuts-as-hormuz-halt-chokes-exports/",
-      "time": "14:55"
+      "time": "16:59"
     },
     {
       "msg": "Trump Weighs Russian Oil Sanctions Relief as Hormuz Disruption Sends Prices Soaring",
       "url": "https://gcaptain.com/trump-weighs-russian-oil-sanctions-relief-as-hormuz-disruption-sends-prices-soaring/",
-      "time": "14:55"
+      "time": "16:59"
     },
     {
       "msg": "NASSCO Christens Final Expeditionary Sea Base Ship for U.S. Navy",
       "url": "https://gcaptain.com/nassco-christens-final-expeditionary-sea-base-ship-for-u-s-navy/",
-      "time": "14:55"
+      "time": "16:59"
     },
     {
       "msg": "Oil Surges to Highest Since 2022 as Hormuz Crisis Roils Energy Markets",
       "url": "https://gcaptain.com/oil-prices-hit-highest-since-2022-at-more-than-119-a-barrel-on-iran-war/",
-      "time": "14:55"
+      "time": "16:59"
     },
     {
       "msg": "Trump Tells Ships to ‘Show Some Guts’ in Hormuz as Seafarer Death Toll Rises",
       "url": "https://gcaptain.com/trump-tells-ships-to-show-some-guts-in-hormuz-as-seafarer-death-toll-rises/",
-      "time": "14:55"
-    },
-    {
-      "msg": "France’s Macron Orders Major Naval Deployment to Middle East",
-      "url": "https://gcaptain.com/frances-macron-orders-major-naval-deployment-to-middle-east/",
-      "time": "14:55"
-    },
-    {
-      "msg": "EU Buys 100% of Russian Arctic LNG Just 9 Months Before Planned Gas Ban",
-      "url": "https://gcaptain.com/eu-buys-100-of-russian-arctic-lng-just-9-months-before-planned-gas-ban/",
-      "time": "14:55"
-    },
-    {
-      "msg": "Trump’s Greenland Hospital Ship Now Sailing Up West Coast After Panama Canal Transit",
-      "url": "https://gcaptain.com/trumps-greenland-hospital-ship-now-sailing-up-west-coast-after-panama-canal-transit/",
-      "time": "14:55"
-    },
-    {
-      "msg": "Tariff Uncertainty to Keep U.S. Container Imports Below 2025 Levels, NRF Says",
-      "url": "https://gcaptain.com/tariff-uncertainty-to-keep-u-s-container-imports-below-2025-levels-nrf-says/",
-      "time": "14:55"
-    },
-    {
-      "msg": "‘Critical’ Threat Persists in Hormuz as Attacks and GPS Jamming Shake Shipping",
-      "url": "https://gcaptain.com/critical-threat-persists-in-hormuz-as-attacks-and-gps-jamming-shake-shipping/",
-      "time": "14:55"
+      "time": "16:59"
     }
   ]
 }
