@@ -1,6 +1,71 @@
 [
   {
     "date": "2026-03-11",
+    "time": "09:41",
+    "category": "Liner News",
+    "title": "MOL buys into V.Ships France",
+    "content": "Japan’s Mitsui OSK Lines (MOL) has taken a minority stake in V.Ships France while expanding a long-running partnership covering LNG vessels. The Tokyo-based shipping giant said it has acquired a 25% shareholding in the Nantes-based shipmanager throug...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 93
+  },
+  {
+    "date": "2026-03-11",
+    "time": "09:41",
+    "category": "Liner News",
+    "title": "Multiple ships hit on day 12 of Iran war",
+    "content": "Ships willing to enter the danger zone continue to be struck in and around the Hormuz Strait on day 12 of the conflict between Iran and the US/Israeli coalition. The most severe attack today was against the Precious Shipping-controlled, Thai-flagged ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 92
+  },
+  {
+    "date": "2026-03-11",
+    "time": "09:41",
+    "category": "Logistics Technology",
+    "title": "Cargo vessel hit by projectile in Strait of Hormuz, crew evacuates",
+    "content": "The United Kingdom Maritime Trade Operations (UKMTO) has reported an attack on a cargo vessel in the Strait of Hormuz on 11 March 2026. According to the alert, the incident occurred about 11 nautical miles north of Oman. The vessel was reportedly str...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 91
+  },
+  {
+    "date": "2026-03-11",
+    "time": "09:41",
+    "category": "Port Status",
+    "title": "SITC signs strategic cooperation agreement with Angang Lianzhong and Guangzhou Port",
+    "content": "SITC International Holdings has signed a strategic cooperation agreement with Angang Lianzhong Stainless Steel and Guangzhou Port Group to strengthen collaboration across industry, port operations and shipping logistics. The agreement was signed duri...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 90
+  },
+  {
+    "date": "2026-03-11",
+    "time": "09:41",
+    "category": "Liner News",
+    "title": "‘Arctic Metagaz’ LNG Tanker Still Afloat, Malta Warns Ships to Keep Clear",
+    "content": "Malta's transport authority confirmed on Tuesday that the LNG tanker Arctic Metagaz is drifting in the Mediterranean, contradicting earlier reports from Libya that the vessel had sunk following the March 3 explosion southeast of the island.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 89
+  },
+  {
+    "date": "2026-03-11",
     "time": "08:39",
     "category": "Logistics Technology",
     "title": "RWE to supply Munich Airport with offshore wind power",
