@@ -1,5 +1,590 @@
 [
   {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "RWE to supply Munich Airport with offshore wind power",
+    "content": "Munich Airport and German utility RWE have signed a 10-year power purchase agreement, guaranteeing the airport 40GWh of electricity per year from a new offshore wind farm in the North Sea. The electricity will be supplied by RWE&#8217;s Nordseecluste...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 88
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Jan De Nul to expand fleet with two cable trenching vessels",
+    "content": "Belgian marine contractor Jan De Nul will be expanding its fleet with two trenching vessels to support subsea cable installation and protection. The vessel will come with a new trenching support vessel equipped with a trencher, an ultra-modern subsea...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 87
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "SLB OneSubsea lands subsea systems EPC deal offshore Malaysia",
+    "content": "SLB OneSubsea, a joint venture backed by SLB, Aker Solutions, and Subsea7, has been awarded an engineering, procurement, and construction contract by PTTEP’s subsidiary PTTEP Sabah Oil. The contract expands SLB OneSubsea&#8217;s role in delivering in...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 86
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Port Status",
+    "title": "UK scraps tariffs on offshore wind manufacturing imports",
+    "content": "The UK government will remove tariffs on 33 offshore wind-related industrial goods from April 1 through a new tariff measure, saving offshore wind energy manufacturers millions of dollars a year. The measure will enable British manufacturers to produ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 85
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Sustainability",
+    "title": "IMO delay turns decarbonisation into discipline",
+    "content": "After member states voted a one‑year pause on the Net‑Zero Framework, shipowners and suppliers say decarbonisation has shifted from ambition to pragmatism. The latest installment from Maritime CEO’s guide to shipping in the Year of the Horse. October...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Sustainability",
+      "SCM_Expert"
+    ],
+    "id": 84
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "CMA Shipping switches from Stamford to Houston",
+    "content": "CMA Shipping, Connecticut’s most famous shipping gathering, will head south next year to Texas. The event, founded in the 1980s in Stamford by the Connecticut Maritime Association, and subsequently taken over by Informa Markets, will move to Houston ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 83
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Another outlet launches for container freight futures",
+    "content": "US financial services company Intercontinental Exchange will launch four container freight futures covering freight shipping routes between the US, Asia and Europe, indexed to the New York Shipping Exchange’s (NYSHEX) freight indices (NYFI) price ass...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 82
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Wan Hai deepens newbuild push with LNG and methanol-ready boxships",
+    "content": "Taiwanese boxship owner Wan Hai Lines has added more ships to its already sizeable newbuilding programme, placing orders for six container vessels at Chinese yards. The Taipei-headquartered carrier said it had contracted four 6,000 teu LNG dual-fuel ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 81
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Port Status",
+    "title": "Beijing counters Panama’s port takeover",
+    "content": "Behind closed doors, authorities in Beijing are taking action in response to Panama’s decision to revoke Hong Kong-based CK Hutchison’s running of two container terminals in Panama, and the subsequent handing over temporary operations to subsidiaries...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 80
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "ONE raises Seaspan stake to nearly 49% as Yangzijiang invests $825m",
+    "content": "Singapore-headquartered liner Ocean Network Express is increasing its exposure to the world’s largest containership lessor while new capital from shipbuilder Yangzijiang Shipbuilding enters the same investment vehicle. The shipping line, formed by Ja...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 79
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Interasia Lines launches Cambodia–South China Express service",
+    "content": "Interasia Lines has announced the launch of a new regional service connecting South China with Thailand and Cambodia, further expanding its coverage across Southeast Asia. The new Cambodia–South China Express service (CSX) is scheduled to commence ar...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 78
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Maersk to manage cargo destruction procedures in Spain",
+    "content": "Maersk has announced a new operational process under which the company will take responsibility for managing the destruction of import, export and transshipment cargo in Spain. The initiative is aimed at improving supply chain efficiency while simpli...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 77
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Ho Chi Minh City joins Chinese container shipping reliability scheme",
+    "content": "The Vietnamese port of Ho Chi Minh City has become the first foreign port to join China&#8217;s &#8220;Container Shipping On-Time and Cost Reduction&#8221; program. Launched in December 2023, the scheme, organised by the Ministry of Transport’s Marit...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 76
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "CN Index rises as geopolitical risk reinforces shipping pressure",
+    "content": "The CN Index increased this week, reaching 564, indicating that global container shipping remains firmly within the High Pressure range. The latest reading reflects a combination of strengthening freight rates across several trade lanes and persisten...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 75
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "ABB to power new cable repair vessels for Orange Marine",
+    "content": "ABB will supply an integrated power, propulsion, and automation system for two hybrid-electric cable repair vessels ordered by Orange Marine, a subsidiary of Orange Group. Shipbuilder Colombo Dockyard PLC in Sri Lanka will construct the vessels. Deli...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 74
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Explainer: Stable on the surface, fragile at the core",
+    "content": "DHL&#8217;s Global Connectedness Index points to record trade distances and resilient flows. But beneath the headline numbers, a structurally fragile maritime system is hiding in plain sight.\nThe post Explainer: Stable on the surface, fragile at the ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 73
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Carrier Transicold helps TITAN Containers switch to low-GWP refrigerants",
+    "content": "Carrier Transicold has secured an order from TITAN Containers in Netherlands for new container refrigeration units using low-global warming potential (GWP) refrigerants. The order includes OptimaLINE™ units designed for the R-1234yf refrigerant and N...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 72
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Sustainability",
+    "title": "DP World launches carbon inset trial for ocean freight in Europe",
+    "content": "DP World has launched Insetify, a carbon inset trial for ocean freight forwarding customers in Belgium, Portugal, and Sweden. The program will start April 1, 2026. It aims to reduce customers’ Scope 3 emissions across key European trade lanes. Carbon...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Sustainability",
+      "SCM_Expert"
+    ],
+    "id": 71
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "From corridors to system: China’s maritime strategy enters a new dimension",
+    "content": "A landmark dataset and two years of Red Sea crisis have exposed a fundamental shift in how Beijing deploys port power no longer along routes, but across a self-reinforcing global network. That composure is the clearest evidence yet of a structural tr...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 70
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "HMM declares deviation for Middle East shipments",
+    "content": "HMM has announced a deviation for cargo linked to the Middle East region due to the deteriorating security situation around the Strait of Hormuz and nearby waters. The carrier said the outbreak of war and escalating hostilities in the area, combined ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 69
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Iran war leads largest shipping line to terminate Mideast Gulf voyages, levy $800 charge",
+    "content": "The world’s largest container shipping line in an unusual move is diverting all cargo destined for the Arabian Gulf region to safe ports, and charging shippers $800 for move. \nThe post Iran war leads largest shipping line to terminate Mideast Gulf vo...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 68
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "PlusAI unveils major upgrade to autonomous trucking platform",
+    "content": "PlusAI released SuperDrive 6.0, adding night driving and construction-zone handling to autonomous trucking software. Trucks are already hauling loads in Texas, with 24/7 operations now in reach.\nThe post PlusAI unveils major upgrade to autonomous tru...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 67
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "EXCLUSIVE: Rail merger critics should “quit looking backward,” says Union Pacific CEO",
+    "content": "Union Pacific CEO Jim Vena responded to negative reaction to the proposed rail merger with Norfolk Southern, saying critics should look past history — and his own numbers — to see how the transcontinental tie-up will reshape the U.S. supply chain for...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 66
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "The real barrier to driverless trucks is no longer software",
+    "content": "The future of driverless trucking lies through not software but on how to produce them at scale. That’s according to newly released research by Telemetry, a communications and research firm heavily invested in the space. FreightWaves spoke with Sam A...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 65
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "The Non-Domiciled CDL Crackdown Has Arrived – 13,000 Drivers Out, a National Rule A Few Days Away",
+    "content": "The deadline everyone in trucking has been watching finally arrived. On March 6, 2026, approximately 13,000 non-domiciled commercial driver’s licenses were cancelled in California — not by a clean resolution, not by a negotiated agreement between the...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 64
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "FreightTech innovations unveiled at TCA: tail lights to TMS extensions",
+    "content": "A wide swath of new products for all phases of trucking was rolled out at the recent TCA meeting.\nThe post FreightTech innovations unveiled at TCA: tail lights to TMS extensions appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 63
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "MATS Is Three Weeks Away – Here Is Why Small Carriers Can’t Afford to Skip It",
+    "content": "There is no show like it in this industry. The Mid-America Trucking Show — MATS — returns to the Kentucky Exposition Center in Louisville from March 26 through March 28, 2026, and if you operate a small trucking company, an owner-operator business, o...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 62
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Strait of Hormuz concerns: diesel benchmark sets a record gain",
+    "content": "The price used to set diesel surcharges gained more in a week than it ever has in its 30+ year history.\nThe post Strait of Hormuz concerns: diesel benchmark sets a record gain appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 61
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Freight broker Fura announces 5th acquisition",
+    "content": "Third-party logistics provider Fura announced it has acquired fellow Texas-based broker Barton Logistics.\nThe post Freight broker Fura announces 5th acquisition appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 60
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "How Moving Mission-Critical Tech Requires a Different Approach to Freight Logistics",
+    "content": "Werner’s Jaime Jones explains how AI GPUs, semiconductor wafers, and data center hardware are transforming freight logistics. Shippers are demanding new levels of real-time visibility, engineered transit plans, and carrier-shipper collaboration that ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 59
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Congress Wants to Put Driverless 80,000-Pound Trucks on the Road – Should Small Carriers Be Worried",
+    "content": "A bill moving through the House of Representatives right now would establish the first federal framework for putting fully autonomous heavy-duty trucks on public roads. The SELF DRIVE Act of 2026 — formally H.R. 7390, introduced February 5 by Rep. Bo...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 58
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Amazon defrauded: guilty plea in $3M+ fraud involving trailers",
+    "content": "A Connecticut man has pleaded guilty to charges of wire fraud in connection with a scheme to defraud Amazon by fraudulently making claims for trailer movements that didn’t actually take place. Ameer Nasir, 25, pleaded guilty last week in U.S. Distric...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 57
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Two Things You Can Control Right Now When Fuel Is Trying to Break You",
+    "content": "Diesel is approaching $5 a gallon and the geopolitical situation driving it is not showing signs of a quick resolution. You cannot control what crude does on the futures market. You cannot control what’s happening in the Strait of Hormuz. You cannot ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 56
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "If You Can’t Defend the Hire, You Can’t Defend the Fleet – What Driver File SOPs Mean in the New Era of Compliance",
+    "content": "Most small carriers do not lose in hiring. They lose in what happens after the handshake — the documentation that didn’t get collected, the employer verification that never got followed up on, the drug test that cleared but nobody logged into the rig...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 55
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Port Status",
+    "title": "Latest deal bolsters Redwood’s managed transportation offering",
+    "content": "Redwood Logistics has acquired Stridas, a managed transportation provider, marking its second acquisition in a week.\nThe post Latest deal bolsters Redwood’s managed transportation offering appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 54
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Turning logistics data into a massive competitive advantage",
+    "content": "The newly released Gartner&reg; Market Guide for FAP Providers highlights the rising use of AI to accelerate the audit process. However, the conversation must evolve.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 53
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Manufacturers’ biggest challenge in adopting AI is preparing their systems for it, expert says",
+    "content": "Companies that can adapt their physical environment and workflows are set to benefit the most from the technology.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 52
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "UPS’ future is less e-commerce, more SMB, B2B and healthcare",
+    "content": "The carrier is pursuing growth in high-value verticals as major customer Amazon pulls shorter-distance shipments into its own network.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 51
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "Iran conflict tests 2026 air cargo outlook",
+    "content": "The U.S. air freight market faces vulnerability as some Middle East corridors are critical for pharmaceuticals and retail volumes, Chief Airfreight Officer Niall van de Wouw said.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 50
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "As Trump tariff refund process takes shape, importers remain uncertain",
+    "content": "Shippers face legal risks, unclear timelines and system gaps as they navigate a potentially complex rollout of tariff refund procedures",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 49
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Urban Outfitters builds out second phase of automation in Kansas facility",
+    "content": "The distribution center, which supports its Nuuly rental brand, will accelerate its digital business and deliver expected gains in delivery and logistics.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 48
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Sustainability",
+    "title": "Campbell’s promotes supply chain head Cassandra Green to CSCO",
+    "content": "Green steps into a top leadership role focused on logistics and planning, procurement, manufacturing and food safety and quality.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Sustainability",
+      "SCM_Expert"
+    ],
+    "id": 47
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "General Mills taps interim CSCO for top supply chain post",
+    "content": "Company veteran Jonathan Ness will oversee global supply chain operations and report directly to the CEO.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 46
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Liner News",
+    "title": "Costco to flow tariff refunds, ‘if and when’ received, back to customers",
+    "content": "The retailer, which sued the Trump administration over now-defunct tariffs, is well positioned to navigate a still uncertain refund process, CEO Ron Vachris said.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 45
+  },
+  {
+    "date": "2026-03-11",
+    "time": "08:39",
+    "category": "Logistics Technology",
+    "title": "De minimis: Case aiming to revive exemption can proceed, court rules",
+    "content": "The lawsuit, which challenged the Trump administration&rsquo;s elimination of the trade tool, was paused until the Supreme Court ruled on the president&rsquo;s tariff authority.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 44
+  },
+  {
     "id": 1,
     "date": "2026-03-09",
     "time": "14:20",
