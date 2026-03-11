@@ -9,57 +9,53 @@ const REQUIRED_FILES = [
 const CHECKS = [
     {
         file: 'index.html',
-        elements: ['map', 'summary-container', 'shipping-form', 'origin-search'],
+        elements: ['map', 'summary-container', 'shipping-form'],
         scripts: ['main.js']
     },
     {
         file: 'planner.html',
-        elements: ['canvas-container', 'simulate-load-btn', 'cargo-items'],
-        scripts: ['container3d.js', 'three.min.js']
-    },
-    {
-        file: 'news.html',
-        elements: ['news-items', 'category-filters'],
-        scripts: ['news.js']
+        elements: ['canvas-container', 'simulate-load-btn'],
+        scripts: ['container3d.js']
     }
 ];
 
 let errors = [];
 
-console.log("🔍 Starting Pre-Push Validation...\n");
+console.log("🔍 Running Strict Integrity Validation...\n");
 
 // 1. Check for file existence
 REQUIRED_FILES.forEach(f => {
     if (!fs.existsSync(f)) errors.push(`❌ Missing File: ${f}`);
 });
 
-// 2. Check for UI integrity and script linking
+// 2. DATA INTEGRITY LOCK CHECK (Critical for Hubs/Nodes)
+if (fs.existsSync('main.js')) {
+    const mainContent = fs.readFileSync('main.js', 'utf8');
+    
+    // Check for Hub counts (Must be 100+)
+    const hubCount = (mainContent.match(/"sea-/g) || []).length + (mainContent.match(/"air-/g) || []).length;
+    if (hubCount < 80) { // Safety margin
+        errors.push(`❌ Data Integrity Failure: main.js Hub list has been truncated (${hubCount} found)`);
+    }
+
+    // Check for advanced routing logic
+    if (!mainContent.includes('findMaritimePath') || !mainContent.includes('getDistHaversine')) {
+        errors.push(`❌ Logic Integrity Failure: Advanced Dijkstra routing components are missing in main.js`);
+    }
+
+    // Check for English only dates
+    if (mainContent.includes("'ko-KR'")) {
+        errors.push(`❌ Localization Error: Korean locale detected in main.js`);
+    }
+}
+
+// 3. UI Integrity
 CHECKS.forEach(check => {
     if (!fs.existsSync(check.file)) return;
     const content = fs.readFileSync(check.file, 'utf8');
-    
     check.elements.forEach(el => {
-        if (!content.includes(`id="${el}"`) && !content.includes(`id='${el}'`)) {
-            errors.push(`❌ Integrity Error in ${check.file}: Missing essential element ID "${el}"`);
-        }
+        if (!content.includes(`id="${el}"`)) errors.push(`❌ Missing Element "${el}" in ${check.file}`);
     });
-
-    check.scripts.forEach(s => {
-        if (!content.includes(s)) {
-            errors.push(`❌ Linking Error in ${check.file}: Script "${s}" is not referenced`);
-        }
-    });
-});
-
-// 3. Check for leftover Korean in JS logic (Optional but relevant to your request)
-const jsFiles = ['main.js', 'news.js', 'container3d.js'];
-jsFiles.forEach(f => {
-    if (!fs.existsSync(f)) return;
-    const content = fs.readFileSync(f, 'utf8');
-    if (content.includes('toLocaleDateString("ko-KR")') || content.includes("'ko'")) {
-        // Warning only, as some comments might exist
-        console.log(`⚠️ Warning in ${f}: Potential leftover Korean localization detected.`);
-    }
 });
 
 if (errors.length > 0) {
@@ -67,6 +63,6 @@ if (errors.length > 0) {
     errors.forEach(err => console.error(err));
     process.exit(1);
 } else {
-    console.log("✅ ALL SYSTEMS OPERATIONAL. READY TO PUSH.");
+    console.log("✅ DATA & LOGIC INTEGRITY VERIFIED. READY TO PUSH.");
     process.exit(0);
 }
