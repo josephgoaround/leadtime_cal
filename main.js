@@ -1,5 +1,5 @@
 /**
- * LEADTIME INTELLIGENCE - CORE SYSTEM FILE
+ * LEADTIME INTELLIGENCE - EXPERT SCM ENGINE (v2.0)
  * !!! DATA INTEGRITY LOCK: DO NOT REMOVE HUBS/SEA NODES/EDGES !!!
  */
 
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ["chancay_exit", "pacific_mid_e"], ["chancay_exit", "lax_gate"]
     ];
 
-    // 2. CORE ENGINE
+    // 2. CORE ENGINE INITIALIZATION
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 18 }).addTo(map);
 
@@ -132,13 +132,24 @@ document.addEventListener('DOMContentLoaded', () => {
           destinationSelect = document.getElementById('destination'), 
           modeSelect = document.getElementById('transport-mode'), 
           hscodeSelect = document.getElementById('hscode'), 
-          summaryContainer = document.getElementById('summary-container'),
-          feedContainer = document.getElementById('feed-container');
+          summaryContainer = document.getElementById('summary-container');
     const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
+
+    let activeRisks = [];
+
+    async function loadRiskIntel() {
+        try {
+            const response = await fetch('data/maritime_data.json');
+            const data = await response.json();
+            activeRisks = data.active_risks || [];
+            const list = document.getElementById('risk-summary-list');
+            if(list) list.innerHTML = activeRisks.map(r => `<li>⚠️ ${r.label} (+${r.delay}d)</li>`).join('');
+        } catch(e) { console.error("Risk Intel Sync Offline"); }
+    }
+    loadRiskIntel();
 
     function populate(filterO = '', filterD = '') {
         const mode = modeSelect.value;
-        const curO = originSelect.value, curD = destinationSelect.value;
         const updateSelect = (select, filter) => {
             const currentVal = select.value;
             select.innerHTML = '';
@@ -158,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 
-    function findMaritimePath(start, end) {
+    function findMaritimePath(start, end, isRiskActive) {
         if (!seaNodes[start] || !seaNodes[end]) return [];
         let distances = {}, previous = {}, nodes = new Set();
         Object.keys(seaNodes).forEach(node => { distances[node] = Infinity; nodes.add(node); });
@@ -171,7 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-                let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]);
+                
+                let weight = 1;
+                // EXPERT RISK WEIGHTING
+                if (isRiskActive && ["bab_el_mandeb", "suez_s", "red_sea_1"].includes(neighbor)) weight = 100;
+                
+                let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]) * weight;
                 let alt = distances[closest] + d;
                 if (alt < distances[neighbor]) { distances[neighbor] = alt; previous[neighbor] = closest; }
             });
@@ -183,24 +199,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function calculateAndDisplay() {
         const oId = originSelect.value, dId = destinationSelect.value;
-        if(!oId || !dId || oId === dId) return;
+        if(!oId || !dId || oId === dId || !summaryContainer) return;
         
         const o = hubs[oId], d = hubs[dId];
         let totalDist = 0, routePath = [];
+        const isSuezDisrupted = activeRisks.some(r => r.id === 'suez_disruption');
 
         if (modeSelect.value === 'sea') {
-            const maritimeNodes = findMaritimePath(o.exit, d.exit);
+            const maritimeNodes = findMaritimePath(o.exit, d.exit, isSuezDisrupted);
             const rawPath = [o.coords].concat(maritimeNodes).concat([d.coords]);
             routePath = rawPath;
-            for (let i = 0; i < rawPath.length - 1; i++) {
-                totalDist += getDistHaversine(rawPath[i], rawPath[i+1]);
-            }
+            for (let i = 0; i < rawPath.length - 1; i++) totalDist += getDistHaversine(rawPath[i], rawPath[i+1]);
         } else {
             routePath = [o.coords, d.coords];
             totalDist = getDistHaversine(o.coords, d.coords);
         }
 
-        const transitDays = Math.round(modeSelect.value === 'sea' ? (totalDist / 750) + 7 : (totalDist / 8500) + 2);
+        const cargoDelay = hscodeSelect.value === 'rf' ? 3 : 1;
+        const riskDelay = activeRisks.reduce((sum, r) => sum + r.delay, 0);
+        const transitDays = Math.round(modeSelect.value === 'sea' ? (totalDist / 750) + 7 + cargoDelay + riskDelay : (totalDist / 8500) + 2);
+        const co2 = Math.round(modeSelect.value === 'sea' ? totalDist * 0.012 : totalDist * 0.48);
+        
         const eta = new Date(); eta.setDate(eta.getDate() + transitDays);
         const currency = localStorage.getItem('selectedCurrency') || 'USD';
         const symbols = { USD: "$", KRW: "₩", EUR: "€" };
@@ -210,22 +229,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="p-6 bg-indigo-50 rounded-[2rem] border border-indigo-100 shadow-sm text-center">
                     <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Total Lead Time</p>
                     <p class="text-3xl font-black text-indigo-900">${transitDays} Days</p>
-                    <p class="text-[9px] font-bold text-indigo-400 mt-1">Estimated ETA: ${eta.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                    <p class="text-[9px] font-bold text-indigo-400 mt-1">ETA: ${eta.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                 </div>
                 <div class="p-6 bg-green-50 rounded-[2rem] border border-green-100 shadow-sm text-center">
-                    <p class="text-[10px] font-black text-green-600 uppercase tracking-widest mb-1">Estimated Cost</p>
-                    <p class="text-3xl font-black text-green-900 leading-none"><span class="text-sm mr-1">${symbols[currency]}</span>${Math.round(modeSelect.value === 'sea' ? 1200 + (totalDist * 0.1) : 4500 + (totalDist * 2)).toLocaleString()}</p>
-                    <p class="text-[9px] font-bold text-green-400 mt-1 uppercase">Market Benchmark Rate</p>
+                    <p class="text-[10px] font-black text-green-600 uppercase tracking-widest mb-1">Expert Cost Projection</p>
+                    <p class="text-3xl font-black text-green-900 leading-none"><span class="text-sm mr-1">${symbols[currency]}</span>${Math.round(modeSelect.value === 'sea' ? 1300 + (totalDist * 0.11) : 4800 + (totalDist * 2.1)).toLocaleString()}</p>
+                    <p class="text-[9px] font-bold text-green-400 mt-1 uppercase">Fuel & Risk Adjusted</p>
                 </div>
-                <div class="p-6 bg-orange-50 rounded-[2rem] border border-orange-100 shadow-sm text-center">
-                    <p class="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-1">Voyage Distance</p>
-                    <p class="text-3xl font-black text-orange-900">${Math.round(totalDist * 0.539957).toLocaleString()} NM</p>
+                <div class="p-6 bg-slate-900 rounded-[2rem] text-white text-center">
+                    <p class="text-[10px] font-black text-indigo-300 uppercase mb-1">Carbon (CO2)</p>
+                    <p class="text-3xl font-black text-white">${co2.toLocaleString()} <span class="text-xs">kg/ton</span></p>
+                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Sustainability Impact</p>
                 </div>
             </div>`;
         
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
         L.polyline(routePath, { color: modeSelect.value === 'sea' ? '#4f46e5' : '#f59e0b', weight: 4 }).addTo(map);
-        L.marker(routePath[0]).addTo(map); L.marker(routePath[routePath.length - 1]).addTo(map);
+        L.marker(routePath[0]).addTo(map).bindPopup("Origin");
+        L.marker(routePath[routePath.length - 1]).addTo(map).bindPopup("Destination");
         map.fitBounds(L.polyline(routePath).getBounds(), { padding: [30, 30] });
     }
 
