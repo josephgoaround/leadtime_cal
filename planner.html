@@ -5,132 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Container Load Planner | LeadTime Intelligence</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow: hidden; }
-        .sidebar { background-color: #ffffff; height: calc(100vh - 64px); overflow-y: auto; z-index: 100; border-right: 1px solid #e2e8f0; }
-        #canvas-container { width: 100%; height: calc(100vh - 64px); position: relative; background: #ffffff; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .hud-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.1); }
-        .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; }
-    </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
 
-    <!-- Header with Tab Navigation -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-[3000] shadow-sm">
-        <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
+    <!-- Global Header -->
+    <header class="bg-white/80 border-b border-slate-200 sticky top-0 z-[3000] backdrop-blur-md">
+        <div class="container mx-auto px-4 max-w-7xl flex justify-between items-center py-4">
             <div class="flex items-center gap-8">
                 <a href="index.html" class="block">
-                    <h1 class="logo-brand text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+                    <h1 class="logo-brand text-xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
                 </a>
                 <nav class="hidden md:flex items-center gap-6">
-                    <a href="index.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">Analyzer</a>
-                    <a href="planner.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">3D Load Planner</a>
-                    <a href="news.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">Logistics News</a>
-                    <a href="index.html#how-it-works" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">How it Works</a>
+                    <a href="index.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">Analyzer</a>
+                    <a href="planner.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">3D Load Planner</a>
+                    <a href="news.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">Logistics News</a>
+                    <a href="about.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">About</a>
                 </nav>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="hidden sm:flex bg-slate-100 p-1 rounded-lg mr-2">
-                    <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
-                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">KRW</button>
-                </div>
-                <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
-                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600">KO</button>
-                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-100 text-white shadow-sm">EN</button>
-                </div>
             </div>
         </div>
     </header>
 
-    <div class="flex flex-1">
-        <!-- Sidebar: Input Controls -->
-        <aside class="sidebar w-80 lg:w-96 flex flex-col shadow-2xl">
-            <div class="p-6 border-b border-slate-100">
-                <h1 class="text-xl font-black text-slate-800 tracking-tighter">Load <span class="text-indigo-600">Configuration</span></h1>
-                <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">LCL to FCL Simulation</p>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
-                <!-- Equipment Selection -->
-                <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Container Type</label>
-                    <select id="container-type" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none">
-                        <option value="20ft">20' Standard (5.9m)</option>
-                        <option value="40ft" selected>40' Standard (12.0m)</option>
-                        <option value="40hc">40' High Cube (HC)</option>
-                    </select>
-                </div>
-
-                <!-- Cargo List -->
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cargo Manifest</label>
-                        <button id="add-cargo-btn" class="px-3 py-1.5 bg-indigo-100 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 transition-all shadow-md">+ ADD ITEM</button>
-                    </div>
-                    <div id="cargo-items" class="space-y-3">
-                        <!-- Dynamic Items Injected Here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Execute Action -->
-            <div class="p-6 bg-slate-50 border-t border-slate-100">
-                <button id="simulate-load-btn" class="w-full bg-indigo-100 text-white font-black py-4 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-200 uppercase text-xs tracking-widest flex items-center justify-center gap-3">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Run Simulation
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Content: 3D Visualization -->
-        <main class="flex-1 relative overflow-hidden" id="canvas-container">
-            
-            <!-- Floating HUD -->
-            <div class="absolute top-8 left-8 right-8 z-10 flex justify-between pointer-events-none">
-                <div class="flex gap-4">
-                    <div class="hud-card px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-8">
+    <main class="container mx-auto px-4 max-w-7xl py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left: Controls -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100">
+                    <h2 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Container Config
+                    </h2>
+                    
+                    <div class="space-y-4 mb-8">
                         <div>
-                            <p class="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-1">Volume Efficiency</p>
-                            <div class="flex items-center gap-4">
-                                <p class="text-2xl font-black text-white" id="vol-util">0.0%</p>
-                                <div class="w-24 h-2 bg-white/10 rounded-full overflow-hidden border border-white/5">
-                                    <div id="vol-bar" class="h-full bg-indigo-500 transition-all duration-1000" style="width: 0%"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-px h-10 bg-white/10"></div>
-                        <div class="text-center">
-                            <p class="text-[9px] font-black text-emerald-400 uppercase tracking-widest mb-1">Packed Items</p>
-                            <p class="text-2xl font-black text-white" id="packed-count">0/0</p>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Container Type</label>
+                            <select id="container-type" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                                <option value="20ft">20ft Standard (5.9m)</option>
+                                <option value="40ft">40ft Standard (12.0m)</option>
+                                <option value="40hc">40ft High Cube (12.0m, Extra H)</option>
+                            </select>
                         </div>
                     </div>
+
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-tight">Cargo List</h3>
+                        <button id="add-cargo-btn" class="text-[10px] font-black bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-600 hover:text-white transition-all">+ Add Item</button>
+                    </div>
+
+                    <div id="cargo-items" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Cargo rows added by container3d.js -->
+                    </div>
+
+                    <button id="simulate-load-btn" class="w-full mt-8 bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest">
+                        Run Load Simulation
+                    </button>
                 </div>
 
-                <!-- Controls Guide -->
-                <div class="hud-card px-6 py-4 rounded-2xl shadow-2xl">
-                    <div class="grid grid-cols-3 gap-8 text-center">
-                        <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Rotate</p><p class="text-[10px] font-bold text-white">Left Click</p></div>
-                        <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Zoom</p><p class="text-[10px] font-bold text-white">Scroll</p></div>
-                        <div><p class="text-[9px] font-black text-slate-400 uppercase mb-1">Pan</p><p class="text-[10px] font-bold text-white">Right Click</p></div>
+                <!-- HUD: Efficiency -->
+                <div class="bg-indigo-900 p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+                    <div class="relative z-10">
+                        <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-4">Volume Utilization</p>
+                        <div class="flex items-baseline gap-2 mb-2">
+                            <span id="vol-util" class="text-5xl font-black">0%</span>
+                            <span class="text-indigo-300 font-bold text-sm">Packed</span>
+                        </div>
+                        <div class="w-full bg-indigo-800 h-2 rounded-full overflow-hidden mb-6">
+                            <div id="vol-bar" class="bg-indigo-400 h-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-black text-indigo-300 uppercase">
+                            <span>Packed Units</span>
+                            <span id="packed-count">0/0</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Initial Placeholder -->
-            <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div class="text-center">
-                    <div class="w-20 h-20 border-4 border-indigo-200/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-6"></div>
-                    <p class="text-indigo-300 font-black uppercase tracking-[0.3em] text-sm animate-pulse">Initializing 3D Environment</p>
+            <!-- Right: 3D View -->
+            <div class="lg:col-span-8">
+                <div class="bg-white p-4 rounded-[3rem] shadow-2xl border border-slate-100 h-[700px] relative group">
+                    <div id="canvas-container" class="w-full h-full rounded-[2.5rem] bg-slate-900 overflow-hidden relative">
+                        <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center flex-col text-slate-500">
+                            <svg class="w-12 h-12 mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-width="1.5"/></svg>
+                            <p class="text-xs font-bold uppercase tracking-widest">Initializing 3D Engine...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
-    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="container3d.js"></script>
