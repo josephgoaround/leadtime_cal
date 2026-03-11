@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             news4: "New EU Carbon Border Adjustment Mechanism (CBAM) phase-in starts.",
             updatedRealtime: "Updated: Real-time",
             feedPlaceholder: "Select a route to generate deep-dive intelligence briefing.",
-            compareTitle: "Alternative Analysis",
+            compareTitle: "Comparison",
             compareSea: "Container Shipping",
             compareAir: "Air Alternative",
             finalDisclaimer: "NOTICE: Results are for reference only. For actual logistics operations, please verify all data with your carrier or freight forwarder for absolute precision."
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             news4: "EU 탄소국경조정제도(CBAM) 단계적 도입 시작.",
             updatedRealtime: "업데이트: 실시간",
             feedPlaceholder: "경로를 선택하면 상세 인텔리전스 보고서가 생성됩니다.",
-            compareTitle: "타 운송 수단 비교",
+            compareTitle: "운송 비교",
             compareSea: "컨테이너선 운송",
             compareAir: "항공 운송 시",
             finalDisclaimer: "면책 공지: 본 분석 결과는 참조용이며, 실제 운항 및 선적을 위해서는 반드시 운송사 또는 포워딩사를 통해 최종 확인하시기 바랍니다."
@@ -156,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeRisks = []; 
 
     const hubs = {
-        // --- CONTAINER HUB PORTS (Top Global Hubs) ---
         "sea-sha": { name: "Shanghai", coords: [31.23, 121.47], type: "sea", exit: "shanghai_gate", country: "China" },
         "sea-sin": { name: "Singapore", coords: [1.26, 103.83], type: "sea", exit: "singapore_gate", country: "Singapore" },
         "sea-nbo": { name: "Ningbo-Zhoushan", coords: [29.86, 121.54], type: "sea", exit: "shanghai_gate", country: "China" },
@@ -200,8 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
         "sea-psd": { name: "Port Said", coords: [31.26, 32.30], type: "sea", exit: "suez_n", country: "Egypt" },
         "sea-oak": { name: "Oakland", coords: [37.80, -122.27], type: "sea", exit: "lax_gate", country: "USA" },
         "sea-sea": { name: "Seattle", coords: [47.60, -122.33], type: "sea", exit: "lax_gate", country: "USA" },
-
-        // --- NEW RESEARCH PORTS (Bulk/Tanker/Gas) ---
         "sea-phead": { name: "Port Hedland", coords: [-20.31, 118.57], type: "sea", exit: "indonesia_s", country: "Australia" },
         "sea-tuba": { name: "Tubarao", coords: [-20.28, -40.24], type: "sea", exit: "brazil_e", country: "Brazil" },
         "sea-qatar": { name: "Ras Laffan", coords: [25.90, 51.53], type: "sea", exit: "hormuz_strait", country: "Qatar" },
@@ -214,8 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         "sea-mom": { name: "Mombasa", coords: [-4.04, 39.66], type: "sea", exit: "madagascar_nw", country: "Kenya" },
         "sea-dji": { name: "Djibouti", coords: [11.58, 43.14], type: "sea", exit: "bab_el_mandeb", country: "Djibouti" },
         "sea-chan": { name: "Chancay", coords: [-11.58, -77.27], type: "sea", exit: "chancay_exit", country: "Peru" },
-
-        // --- CARGO AIRPORTS ---
         "air-icn": { name: "Incheon (ICN)", coords: [37.46, 126.44], type: "air", country: "South Korea" },
         "air-hkg": { name: "Hong Kong (HKG)", coords: [22.31, 113.91], type: "air", country: "HK" },
         "air-fra": { name: "Frankfurt (FRA)", coords: [50.03, 8.57], type: "air", country: "Germany" },
@@ -286,7 +281,8 @@ document.addEventListener('DOMContentLoaded', () => {
           destinationSelect = document.getElementById('destination'), 
           modeSelect = document.getElementById('transport-mode'), 
           hscodeSelect = document.getElementById('hscode'), 
-          resultContainer = document.getElementById('feed-container');
+          summaryContainer = document.getElementById('summary-container'),
+          feedContainer = document.getElementById('feed-container');
     const newsTicker = document.getElementById('news-ticker');
     const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
 
@@ -322,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 newsTicker.innerHTML = data.alerts.map(a => `<span class="mx-4">${a.msg}</span>`).join('');
             }
             if (activeRisks.length > 0 && riskSummaryList) {
-                riskSummaryList.classList.remove('hidden');
                 riskSummaryList.innerHTML = activeRisks.map(r => `<li>${r.label} (+${r.delay}d)</li>`).join('');
             }
         } catch (e) { console.error("Failed to load live news:", e); }
@@ -420,10 +415,10 @@ document.addEventListener('DOMContentLoaded', () => {
             newsHtml += `<div class="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm hover:border-indigo-300 transition-all hover:shadow-md"><div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span><h5 class="text-xs font-bold text-indigo-600 uppercase tracking-tighter">${item.title}</h5></div><p class="text-[11px] text-gray-500 leading-relaxed font-medium">${item.content}</p></div>`;
         });
         newsHtml += `</div><div class="mt-10 p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><p class="text-[11px] font-black text-gray-500 text-center leading-relaxed"><span class="text-indigo-600">⚠️</span> ${t.finalDisclaimer}</p></div></div>`;
-        if (resultContainer) resultContainer.innerHTML += newsHtml;
+        if (feedContainer) feedContainer.innerHTML = newsHtml;
     }
 
-    const cargoDelays = { general: 1, rf: 3, dg: 5, special: 7, electronics: 2, pharma: 4 };
+    const cargoDelays = { general: 1, rf: 3, dg: 5, electronics: 2, pharma: 4 };
 
     function solveRoute(oId, dId, mode, cargo) {
         const o = hubs[oId], d = hubs[dId];
@@ -471,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function calculateAndDisplay() {
         const oId = originSelect.value, dId = destinationSelect.value;
-        if(!oId || !dId || oId === dId || !resultContainer) return;
+        if(!oId || !dId || oId === dId || !summaryContainer) return;
         const t = translations[currentLang];
         const seaRoute = solveRoute(oId, dId, 'sea', hscodeSelect ? hscodeSelect.value : 'general');
         const airRoute = solveRoute(oId, dId, 'air', hscodeSelect ? hscodeSelect.value : 'general');
@@ -481,55 +476,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const dayDiff = Math.abs(Math.round(seaRoute.transitDays - airRoute.transitDays));
         const costDiff = Math.abs(Math.round((seaRoute.costUSD - airRoute.costUSD) * rates[currentCurrency])).toLocaleString();
         const comparisonHTML = modeSelect.value === 'sea' 
-            ? `<div class="text-left w-full h-full flex flex-col justify-center">
-                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Air Cargo</p>
-                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${dayDiff} Days</span></p>
-                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Extra <span class="text-red-600">${symbols[currentCurrency]}${costDiff}</span></p>
-               </div>`
-            : `<div class="text-left w-full h-full flex flex-col justify-center">
-                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Container Sea</p>
-                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${symbols[currentCurrency]}${costDiff}</span></p>
-                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Add <span class="text-red-600">${dayDiff} Days</span></p>
-               </div>`;
-        let riskAlertHTML = '';
-        if (modeSelect.value === 'sea' && currentRoute.appliedRisks.length > 0) {
-            const riskLabels = currentRoute.appliedRisks.map(r => r.label).join(' & ');
-            const totalRiskDelay = currentRoute.appliedRisks.reduce((sum, r) => sum + r.delay, 0);
-            riskAlertHTML = `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${riskLabels}: Rerouting Active (+${totalRiskDelay} Days Delay)</div>`;
-        }
-        resultContainer.innerHTML = `
-            <div id="analysis-results" class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-                <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                    <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">${t.totalLead}</p>
-                    <p class="text-5xl font-black text-indigo-900 leading-none">${Math.round(currentRoute.transitDays)} ${t.unitDays}</p>
-                    <p class="text-[10px] font-bold text-indigo-500 mt-2">${t.eta}: ${currentRoute.eta.toLocaleDateString()}</p>
-                    <p class="text-[9px] text-gray-400 mt-2 font-bold">${t.totalDist}: ${Math.round(currentRoute.totalDist * 0.539957).toLocaleString()} NM</p>
+            ? `<p class="text-[10px] font-black text-orange-600 uppercase mb-1">vs Air Cargo</p><p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${dayDiff} Days</span></p><p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Extra <span class="text-red-600">${symbols[currentCurrency]}${costDiff}</span></p>`
+            : `<p class="text-[10px] font-black text-orange-600 uppercase mb-1">vs Container Sea</p><p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${symbols[currentCurrency]}${costDiff}</span></p><p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Add <span class="text-red-600">${dayDiff} Days</span></p>`;
+        
+        summaryContainer.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
+                <div class="p-6 bg-indigo-50 rounded-[2rem] border border-indigo-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">${t.totalLead}</p>
+                    <p class="text-3xl font-black text-indigo-900">${Math.round(currentRoute.transitDays)} ${t.unitDays}</p>
+                    <p class="text-[9px] font-bold text-indigo-400 mt-1">${t.eta}: ${currentRoute.eta.toLocaleDateString()}</p>
                 </div>
-                <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                    <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
-                    <p class="${fontSizeClass} font-black text-gray-900 leading-none flex items-baseline justify-center"><span class="text-2xl text-gray-400 mr-1 font-bold">${symbols[currentCurrency]}</span>${formattedCost}</p>
-                    <p class="text-xs font-bold text-gray-500 mt-2 uppercase">${t.marketRateLabel}</p>
+                <div class="p-6 bg-green-50 rounded-[2rem] border border-green-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <p class="text-[10px] font-black text-green-600 uppercase tracking-widest mb-1">${t.labelCost}</p>
+                    <p class="${fontSizeClass} font-black text-green-900 leading-none"><span class="text-sm mr-1">${symbols[currentCurrency]}</span>${formattedCost}</p>
+                    <p class="text-[9px] font-bold text-green-400 mt-1 uppercase">${t.marketRateLabel}</p>
                 </div>
-                <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                    <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.compareTitle}</p>
+                <div class="p-6 bg-orange-50 rounded-[2rem] border border-orange-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <p class="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-1">${t.compareTitle}</p>
                     ${comparisonHTML}
                 </div>
-            </div>
-            ${riskAlertHTML}`;
+            </div>`;
+        
         renderMap(currentRoute.routePath, modeSelect.value);
         await fetchSummarizedNews(hubs[oId], hubs[dId]);
-        const resultEl = document.getElementById('analysis-results');
-        if (resultEl) resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function renderMap(path, mode) {
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker || l instanceof L.Circle) map.removeLayer(l); });
-        const color = mode === 'sea' ? '#2563eb' : '#f59e0b';
+        const color = mode === 'sea' ? '#4f46e5' : '#f59e0b';
         renderRiskMarkers();
-        L.polyline(path, { color: color, weight: 5, opacity: 0.9, dashArray: mode === 'sea' ? '10, 10' : null }).addTo(map);
-        L.marker(path[0]).addTo(map).bindPopup("Origin"); 
-        L.marker(path[path.length - 1]).addTo(map).bindPopup("Destination");
-        map.fitBounds(L.polyline(path).getBounds(), { padding: [50, 50] });
+        L.polyline(path, { color: color, weight: 4, opacity: 0.8, dashArray: mode === 'sea' ? '8, 8' : null }).addTo(map);
+        L.marker(path[0]).addTo(map); L.marker(path[path.length - 1]).addTo(map);
+        map.fitBounds(L.polyline(path).getBounds(), { padding: [30, 30] });
     }
 
     if(document.getElementById('shipping-form')) document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
@@ -542,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k]; });
         ['USD', 'KRW', 'EUR'].forEach(c => { const btn = document.getElementById(`curr-${c.toLowerCase()}`); if (btn) btn.className = (c === currentCurrency) ? "px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600" : "px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700"; });
-        if(resultContainer && resultContainer.innerHTML.includes('analysis-results')) calculateAndDisplay();
+        if(summaryContainer && summaryContainer.innerHTML.includes('analysis-results')) calculateAndDisplay();
         populate();
     }
     updateUI();
