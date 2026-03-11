@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-03-10 22:33:59",
+  "last_updated": "2026-03-11 02:29:32",
   "active_risks": [
     {
       "label": "Strait of Hormuz Alert",
       "delay": 5,
       "cost": 800,
-      "source_news": "Behind Closed Doors, U.S. Navy Says Hormuz Escorts Are Too Dangerous—for Now"
+      "source_news": "Electronic Fog of War: GPS Spoofing Distorts Ship Traffic Near Hormuz"
     },
     {
       "label": "Port Labor Strike",
@@ -16,64 +16,64 @@
   ],
   "alerts": [
     {
+      "msg": "Electronic Fog of War: GPS Spoofing Distorts Ship Traffic Near Hormuz",
+      "url": "https://gcaptain.com/electronic-fog-of-war-gps-spoofing-distorts-ship-traffic-near-hormuz/",
+      "time": "02:29"
+    },
+    {
       "msg": "Behind Closed Doors, U.S. Navy Says Hormuz Escorts Are Too Dangerous—for Now",
       "url": "https://gcaptain.com/behind-closed-doors-u-s-navy-says-hormuz-escorts-are-too-dangerous-for-now/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Coast Guard Responding to Large Barge Fire in Delaware Bay",
       "url": "https://gcaptain.com/coast-guard-responding-to-large-barge-fire-in-delaware-bay/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "U.S. Maritime Administrator Carmel Warns U.S. Must Rebuild Entire Maritime ‘System,’ Not Just Shipyards",
       "url": "https://gcaptain.com/u-s-maritime-administrator-carmel-warns-u-s-must-rebuild-entire-maritime-system-not-just-shipyards/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "The Last Hitch 5 Financial Moves Every Mariner Should Make Before Going Shoreside",
       "url": "https://gcaptain.com/the-last-hitch-5-financial-moves-every-mariner-should-make-before-going-shoreside/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Trump Warns Iran Over Hormuz Mines, Claims U.S. Strikes on Mine-Laying Vessels",
       "url": "https://gcaptain.com/report-u-s-intelligence-sees-signs-of-iran-mine-threat-emerging-in-hormuz/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Energy Secretary Deletes Post Claiming U.S. Navy Escorted Oil Tanker Through Strait of Hormuz",
       "url": "https://gcaptain.com/energy-secretary-deletes-post-claiming-u-s-navy-escorted-oil-tanker-through-strait-of-hormuz/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Royal Navy Sends Missile Destroyer HMS Dragon to Eastern Mediterranean",
       "url": "https://gcaptain.com/royal-navy-sends-missile-destroyer-hms-dragon-to-eastern-mediterranean/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Opinion: Waiving the Jones Act Won’t Lower Gas Prices—Tanker Markets Prove It",
       "url": "https://gcaptain.com/opinion-waiving-the-jones-act-wont-lower-gas-prices-tanker-markets-prove-it/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Hormuz Disruptions Threaten Energy Markets, Fertilizer Trade, and Vulnerable Economies, UNCTAD Warns",
       "url": "https://gcaptain.com/hormuz-disruptions-threaten-energy-markets-fertilizer-trade-and-vulnerable-economies-unctad-warns/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Strait of Hormuz Remains Shut to Almost All Non-Iran-Linked Ships",
       "url": "https://gcaptain.com/strait-of-hormuz-remains-shut-to-almost-all-non-iran-linked-ships/",
-      "time": "22:33"
+      "time": "02:29"
     },
     {
       "msg": "Container Shipping Diversions Surge 360% Amid Hormuz Closure",
       "url": "https://gcaptain.com/container-shipping-diversions-surge-360-amid-hormuz-closure/",
-      "time": "22:33"
-    },
-    {
-      "msg": "ONE Moves Closer to Controlling Stake in World’s Largest Ship Lessor Seaspan",
-      "url": "https://gcaptain.com/one-moves-closer-to-controlling-stake-in-worlds-largest-ship-lessor-seaspan/",
-      "time": "22:33"
+      "time": "02:29"
     }
   ]
 }

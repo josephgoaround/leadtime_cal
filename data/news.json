@@ -547,5 +547,18 @@
       "GlobalFeed"
     ],
     "id": 42
+  },
+  {
+    "date": "2026-03-11",
+    "time": "02:29",
+    "category": "Liner News",
+    "title": "Electronic Fog of War: GPS Spoofing Distorts Ship Traffic Near Hormuz",
+    "content": "Satellite navigation interference detected near the United Arab Emirates coast is creating the appearance of vessels sailing in straight lines toward the Strait of Hormuz—even though the ships are not...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "GlobalFeed"
+    ],
+    "id": 43
   }
 ]
