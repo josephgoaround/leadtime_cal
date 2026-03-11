@@ -5,26 +5,35 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-# --- CONFIGURATION ---
+# --- CONFIGURATION: Comprehensive Global SCM & Logistics Feeds ---
 RSS_FEEDS = [
     "https://gcaptain.com/feed/",
     "https://www.shippingazette.com/rss/news.xml",
-    "https://www.joc.com/feed/news"
+    "https://www.joc.com/feed/news",
+    "https://www.supplychaindive.com/feeds/news/",
+    "https://www.freightwaves.com/feed",
+    "https://www.logisticsmgmt.com/rss/all",
+    "https://www.worldcargonews.com/feed/",
+    "https://www.supplychain-mechanics.com/feed/",
+    "https://container-news.com/feed/",
+    "https://splash247.com/feed/"
 ]
 
-# Define Risk Keywords and their Impact
+# Define Risk Keywords and their Impact (SCM Expert Tuning)
 RISK_RULES = [
-    {"keywords": ["Suez", "Red Sea", "Houthi"], "id": "suez_disruption", "label": "Suez/Red Sea Rerouting", "delay": 12, "cost": 1500},
+    {"keywords": ["Suez", "Red Sea", "Houthi", "Bab el-Mandeb"], "id": "suez_disruption", "label": "Suez/Red Sea Rerouting", "delay": 12, "cost": 1500},
     {"keywords": ["Hormuz", "Iran", "Strait"], "id": "hormuz_disruption", "label": "Strait of Hormuz Alert", "delay": 5, "cost": 800},
-    {"keywords": ["Panama", "Drought", "Water"], "id": "panama_disruption", "label": "Panama Canal Slot Restriction", "delay": 4, "cost": 500},
-    {"keywords": ["Strike", "Labor", "Union"], "id": "port_strike", "label": "Port Labor Strike", "delay": 3, "cost": 300},
-    {"keywords": ["Blizzard", "Storm", "Hurricane", "Typhoon"], "id": "weather_severe", "label": "Extreme Weather Impact", "delay": 2, "cost": 200}
+    {"keywords": ["Panama", "Drought", "Water", "Gatun"], "id": "panama_disruption", "label": "Panama Canal Restriction", "delay": 6, "cost": 700},
+    {"keywords": ["Strike", "Labor", "Union", "ILA", "ILA strike"], "id": "port_strike", "label": "Port Labor Action", "delay": 4, "cost": 400},
+    {"keywords": ["Congestion", "Backlog", "Queue"], "id": "port_congestion", "label": "Port Congestion Warning", "delay": 3, "cost": 200},
+    {"keywords": ["Hurricane", "Typhoon", "Cyclone", "Storm"], "id": "weather_severe", "label": "Extreme Weather Impact", "delay": 3, "cost": 250},
+    {"keywords": ["Cyber", "Hack", "Ransomware"], "id": "cyber_attack", "label": "Digital Infrastructure Risk", "delay": 2, "cost": 300}
 ]
 
 def fetch_and_analyze_risks():
-    print("Fetching and analyzing live maritime risks...")
+    print("Fetching and analyzing global SCM intelligence...")
     alerts = []
-    active_risks = {} # Use dict to avoid duplicates
+    active_risks = {} 
     headers = {'User-Agent': 'Mozilla/5.0'}
     
     new_feed_items = []
@@ -38,9 +47,14 @@ def fetch_and_analyze_risks():
                 for item in root.findall('.//item')[:15]:
                     title = item.find('title').text
                     link = item.find('link').text
-                    description = item.find('description').text if item.find('description') is not None else ""
-                    # Clean description from HTML tags
-                    description = re.sub('<[^<]+?>', '', description)[:200] + "..." if description else ""
+                    description_node = item.find('description')
+                    description = description_node.text if description_node is not None else ""
+                    
+                    # Clean description
+                    if description:
+                        description = re.sub('<[^<]+?>', '', description)
+                        description = description.replace('&nbsp;', ' ').strip()
+                        description = description[:250] + "..." if len(description) > 250 else description
                     
                     # Analyze for specific risks
                     for rule in RISK_RULES:
@@ -54,17 +68,19 @@ def fetch_and_analyze_risks():
                                     "source_news": title
                                 }
                             
-                    # General alerts
+                    # General alerts for marquee
                     alerts.append({
                         "msg": title,
                         "url": link,
                         "time": datetime.now().strftime("%H:%M")
                     })
                     
-                    # Prepare for news.json
+                    # Categorization logic
                     category = "Liner News"
-                    if any(kw in title.lower() for kw in ["port", "terminal", "berth"]): category = "Port Status"
-                    if any(kw in title.lower() for kw in ["ai", "tech", "digital", "data"]): category = "Logistics Technology"
+                    t_low = title.lower()
+                    if any(kw in t_low for kw in ["port", "terminal", "berth", "strike", "labor"]): category = "Port Status"
+                    if any(kw in t_low for kw in ["ai", "tech", "digital", "data", "blockchain", "visibility"]): category = "Logistics Technology"
+                    if any(kw in t_low for kw in ["esg", "carbon", "emission", "green", "sustainable"]): category = "Sustainability"
                     
                     new_feed_items.append({
                         "date": datetime.now().strftime("%Y-%m-%d"),
@@ -73,7 +89,7 @@ def fetch_and_analyze_risks():
                         "title": title,
                         "content": description if description else title,
                         "author": "Global Intelligence Bot",
-                        "tags": [category.split()[0], "GlobalFeed"]
+                        "tags": [category.split()[0], "SCM_Expert"]
                     })
         except Exception as e:
             print(f"Error fetching {url}: {e}")
@@ -86,17 +102,17 @@ if __name__ == "__main__":
     
     alerts, analyzed_risks, new_feed_items = fetch_and_analyze_risks()
     
-    # Update maritime_data.json
+    # Update maritime_data.json (Active status)
     output = {
         "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "active_risks": analyzed_risks,
-        "alerts": alerts
+        "alerts": alerts[:20] # Keep marquee lean
     }
     
     with open(os.path.join(data_dir, 'maritime_data.json'), 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    # Update news.json (Cumulative)
+    # Update news.json (Archive)
     news_file = os.path.join(data_dir, 'news.json')
     existing_news = []
     if os.path.exists(news_file):
@@ -104,21 +120,19 @@ if __name__ == "__main__":
             try: existing_news = json.load(f)
             except: existing_news = []
 
-    # Filter out duplicates by title
     existing_titles = set(item['title'] for item in existing_news)
     new_count = 0
     for item in new_feed_items:
         if item['title'] not in existing_titles:
-            # Assign a new ID
             item['id'] = len(existing_news) + 1
-            existing_news.append(item)
+            existing_news.insert(0, item) # Insert at beginning
             existing_titles.add(item['title'])
             new_count += 1
 
-    # Keep only the last 100 items to avoid bloated file
-    existing_news = existing_news[-100:]
+    # Keep only the last 150 items
+    existing_news = existing_news[:150]
 
     with open(news_file, 'w', encoding='utf-8') as f:
         json.dump(existing_news, f, ensure_ascii=False, indent=2)
 
-    print(f"Sync Complete: {len(analyzed_risks)} risks, {new_count} new news items added.")
+    print(f"Expert Sync Complete: {len(analyzed_risks)} active risks found. {new_count} new intelligence items added.")

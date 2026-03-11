@@ -2,8 +2,8 @@ name: Maritime News Sync Automation
 
 on:
   schedule:
-    # Runs every 2 hours
-    - cron: '0 */2 * * *'
+    # Runs every 1 hour for high-frequency SCM updates
+    - cron: '0 * * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -29,5 +29,5 @@ jobs:
           git config --global user.name 'GitHub Action Bot'
           git config --global user.email 'action@github.com'
           git add data/maritime_data.json data/news.json
-          git commit -m "chore: automated maritime & logistics news sync [skip ci]" || echo "No changes to commit"
+          git commit -m "chore: automated global SCM & logistics intelligence sync [skip ci]" || echo "No changes to commit"
           git push
