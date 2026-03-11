@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
             newsTitle: "Country-Specific SCM & Customs Intel",
             autoRiskLabel: "Automated Risk Intelligence Active",
             navAnalyzer: "Analyzer",
+            navPlanner: "3D Load Planner",
+            navNews: "Logistics News",
             navHowItWorks: "How it Works",
             navAbout: "About",
             navPrivacy: "Privacy Policy",
@@ -104,6 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
             newsTitle: "출/도착 국가별 SCM 및 관세 인텔리전스",
             autoRiskLabel: "자동 리스크 분석 시스템 가동 중",
             navAnalyzer: "분석기",
+            navPlanner: "3D 적재 플래너",
+            navNews: "물류 뉴스",
             navHowItWorks: "작동 원리",
             navAbout: "소개",
             navPrivacy: "개인정보처리방침",
@@ -149,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rates = { USD: 1, KRW: 1350, EUR: 0.92 };
     const symbols = { USD: "$", KRW: "₩", EUR: "€" };
 
-    let activeRisks = []; // Dynamic risks from sync_data.py
+    let activeRisks = []; 
 
     const hubs = {
         // --- CONTAINER HUB PORTS (Top Global Hubs) ---
@@ -246,7 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const seaNodes = {
-        // FIXED CONTAINER LINER ARTERIES
         "pusan_gate": [35.0, 129.1], "namhae_s": [34.2, 128.0], "jeju_s": [32.5, 126.5], "incheon_gate": [37.2, 126.1],
         "shanghai_gate": [31.2, 122.5], "ningbo_exit": [29.8, 122.5], "taipei_outer": [25.5, 123.0], "hongkong_outer": [21.5, 115.0], "luzon_strait": [20.0, 121.5],
         "vietnam_s": [9.0, 108.0], "vietnam_tip": [8.2, 105.0], "malacca_e": [1.5, 104.8], "singapore_gate": [1.2, 103.8], "malacca_mid": [2.8, 101.0], "malacca_west": [5.2, 97.5], "andaman_sea": [6.5, 94.0],
@@ -263,19 +266,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const seaEdges = [
-        // Arteries: FE-Europe
         ["pusan_gate", "namhae_s"], ["namhae_s", "jeju_s"], ["jeju_s", "shanghai_gate"], ["incheon_gate", "jeju_s"],
         ["shanghai_gate", "ningbo_exit"], ["ningbo_exit", "taipei_outer"], ["taipei_outer", "hongkong_outer"], ["hongkong_outer", "luzon_strait"], ["hongkong_outer", "vietnam_s"], ["vietnam_s", "vietnam_tip"], ["vietnam_tip", "malacca_e"], ["malacca_e", "singapore_gate"], ["singapore_gate", "malacca_mid"], ["malacca_mid", "malacca_west"], ["malacca_west", "andaman_sea"], ["andaman_sea", "srilanka_s"],
         ["srilanka_s", "arabian_sea_mid"], ["arabian_sea_mid", "hormuz_strait"], ["hormuz_strait", "jebel_ali_gate"], ["arabian_sea_mid", "bab_el_mandeb"], ["bab_el_mandeb", "red_sea_1"], ["red_sea_1", "red_sea_2"], ["red_sea_2", "red_sea_3"], ["red_sea_3", "suez_s"], ["suez_s", "suez_n"], ["suez_n", "med_mid"], ["med_mid", "gibraltar"], ["gibraltar", "portugal_w"], ["portugal_w", "rotterdam_exit"], ["rotterdam_exit", "hamburg_exit"], ["rotterdam_exit", "antwerp_exit"],
-        // Arteries: Trans-Pacific
         ["taipei_outer", "pacific_mid_w"], ["pacific_mid_w", "pacific_mid_e"], ["pacific_mid_e", "lax_gate"], ["tokyo_outer", "pacific_mid_w"], ["lax_gate", "panama_w"],
-        // Arteries: Trans-Atlantic
         ["portugal_w", "nyc_gate"], ["english_channel", "atlantic_mid_n"], ["atlantic_mid_n", "nyc_gate"], ["hamburg_exit", "english_channel"], ["rotterdam_exit", "english_channel"], ["antwerp_exit", "english_channel"], ["gibraltar", "azores"], ["azores", "atlantic_mid_n"], ["atlantic_mid_n", "savannah_exit"],
-        // Arteries: Southern Hemisphere
         ["brazil_e", "portugal_w"], ["brazil_e", "good_hope"], ["good_hope", "west_africa_1"], ["west_africa_1", "portugal_w"], ["srilanka_s", "madagascar_ne"], ["madagascar_ne", "madagascar_se"], ["madagascar_se", "good_hope"], ["srilanka_s", "madagascar_nw"], ["madagascar_nw", "madagascar_sw"], ["madagascar_sw", "good_hope"],
         ["panama_e", "brazil_e"], ["panama_e", "nyc_gate"], ["panama_e", "savannah_exit"], ["savannah_exit", "nyc_gate"],
         ["singapore_gate", "sydney_outer"], ["sydney_outer", "tasman_sea"], ["tasman_sea", "pacific_mid_e"],
-        // New Connections
         ["arctic_n", "rotterdam_exit"], ["arctic_n", "bering_strait"], ["bering_strait", "pacific_mid_w"],
         ["indonesia_s", "singapore_gate"], ["indonesia_s", "sydney_outer"],
         ["chancay_exit", "pacific_mid_e"], ["chancay_exit", "lax_gate"]
@@ -284,20 +282,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 18 }).addTo(map);
 
-    const originSelect = document.getElementById('origin'), destinationSelect = document.getElementById('destination'), modeSelect = document.getElementById('transport-mode'), hscodeSelect = document.getElementById('hscode'), resultContainer = document.getElementById('feed-container');
+    const originSelect = document.getElementById('origin'), 
+          destinationSelect = document.getElementById('destination'), 
+          modeSelect = document.getElementById('transport-mode'), 
+          hscodeSelect = document.getElementById('hscode'), 
+          resultContainer = document.getElementById('feed-container');
     const newsTicker = document.getElementById('news-ticker');
     const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
 
     function renderRiskMarkers() {
-        // Clear existing risk circles before re-rendering
         map.eachLayer(l => { if (l instanceof L.Circle) map.removeLayer(l); });
-        
         const riskPoints = {
-            "suez_disruption": [12.6, 43.3], // Bab el Mandeb
+            "suez_disruption": [12.6, 43.3],
             "panama_disruption": [9.0, -79.6],
             "hormuz_disruption": [26.5, 56.5]
         };
-
         activeRisks.forEach(risk => {
             if (riskPoints[risk.id]) {
                 L.circle(riskPoints[risk.id], {
@@ -316,48 +315,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('data/maritime_data.json');
             if (!response.ok) return;
             const data = await response.json();
-            
-            // Set dynamic risks
             activeRisks = data.active_risks || [];
             const riskSummaryList = document.getElementById('risk-summary-list');
-
-            // Render risks on map immediately
             renderRiskMarkers();
-
-            if (data.alerts && data.alerts.length > 0) {
-                // Update Ticker
+            if (data.alerts && data.alerts.length > 0 && newsTicker) {
                 newsTicker.innerHTML = data.alerts.map(a => `<span class="mx-4">${a.msg}</span>`).join('');
-                
-                // Inject into deep-dive feed if it's empty (initial state)
-                if (resultContainer.innerHTML.includes('feedPlaceholder')) {
-                    resultContainer.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            ${data.alerts.slice(0, 4).map(a => `
-                                <a href="${a.url}" target="_blank" class="p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-200 transition-all group flex flex-col gap-2">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[9px] font-bold text-indigo-500 uppercase tracking-tighter">Security Intel</span>
-                                        <span class="text-[9px] font-bold text-gray-300 uppercase">${a.time}</span>
-                                    </div>
-                                    <p class="text-[11px] font-bold text-gray-700 group-hover:text-indigo-600 leading-snug">${a.msg}</p>
-                                </a>
-                            `).join('')}
-                        </div>
-                    `;
-                }
             }
-
-            // Update Risk Intelligence Summary UI
-            if (activeRisks.length > 0) {
+            if (activeRisks.length > 0 && riskSummaryList) {
                 riskSummaryList.classList.remove('hidden');
-                riskSummaryList.innerHTML = activeRisks.map(r => `
-                    <li>${r.label} (+${r.delay}d)</li>
-                `).join('');
-            } else {
-                riskSummaryList.classList.add('hidden');
+                riskSummaryList.innerHTML = activeRisks.map(r => `<li>${r.label} (+${r.delay}d)</li>`).join('');
             }
-        } catch (e) {
-            console.error("Failed to load live news:", e);
-        }
+        } catch (e) { console.error("Failed to load live news:", e); }
     }
 
     loadLiveNews();
@@ -365,24 +333,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function populate(filterO = '', filterD = '') {
         const mode = modeSelect.value;
         const curO = originSelect.value, curD = destinationSelect.value;
-        
         const updateSelect = (select, filter) => {
             const currentVal = select.value;
             select.innerHTML = '';
             Object.entries(hubs)
                 .filter(([id, h]) => h.type === mode && (h.name.toLowerCase().includes(filter.toLowerCase()) || h.country.toLowerCase().includes(filter.toLowerCase())))
                 .sort((a,b)=>a[1].name.localeCompare(b[1].name))
-                .forEach(([id,h]) => {
-                    select.add(new Option(`${h.name} (${h.country})`, id));
-                });
+                .forEach(([id,h]) => { select.add(new Option(`${h.name} (${h.country})`, id)); });
             if(currentVal && hubs[currentVal] && hubs[currentVal].type === mode) select.value = currentVal;
         };
-
         updateSelect(originSelect, filterO);
         updateSelect(destinationSelect, filterD);
     }
 
-    modeSelect.onchange = () => populate();
+    if(modeSelect) modeSelect.onchange = () => populate();
     if(originSearch) originSearch.oninput = (e) => populate(e.target.value, destSearch ? destSearch.value : '');
     if(destSearch) destSearch.oninput = (e) => populate(originSearch ? originSearch.value : '', e.target.value);
     populate();
@@ -420,19 +384,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-
-                // Bottleneck & Risk Weighting
                 let weightMultiplier = 1;
-                if (isRiskActive && ["bab_el_mandeb", "suez_s", "red_sea_1", "red_sea_2", "red_sea_3"].includes(neighbor)) {
-                    weightMultiplier = 100; // Force reroute via Good Hope
-                }
-                
-                // Apply dynamic weights from active risks
+                if (isRiskActive && ["bab_el_mandeb", "suez_s", "red_sea_1", "red_sea_2", "red_sea_3"].includes(neighbor)) weightMultiplier = 100;
                 activeRisks.forEach(risk => {
                     if (risk.id === 'panama_disruption' && ["panama_e", "panama_w"].includes(neighbor)) weightMultiplier = 2;
                     if (risk.id === 'hormuz_disruption' && ["hormuz_strait"].includes(neighbor)) weightMultiplier = 5;
                 });
-
                 let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]) * weightMultiplier;
                 let alt = distances[closest] + d;
                 if (alt < distances[neighbor]) { distances[neighbor] = alt; previous[neighbor] = closest; }
@@ -451,141 +408,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchSummarizedNews(oHub, dHub) {
         const t = translations[currentLang];
+        const hs = hscodeSelect ? hscodeSelect.value : 'general';
         let newsHtml = `<div class="mt-12 border-t pt-8 animate-fade-in" id="detailed-intelligence"><h4 class="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">${t.newsTitle}</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
         const insights = [
-            { title: `${oHub.country} - Container Terminal Pulse`, content: `Liner services in ${oHub.country} report 98% schedule reliability. Major alliances are prioritizing berth windows for mega-vessels (>18k TEU).` },
-            { title: `${dHub.country} - Port Ops & SCM`, content: `${dHub.country} customs has prioritized clearance for Reefer containers. ${hscodeSelect.value} shipments face standard scrutiny with average 24h gate-out time.` },
-            { title: `Global Liner Alert`, content: `SCFI (Shanghai Containerized Freight Index) indicates a stable trend for this trade lane. Expect standard bunker adjustment factors (BAF) for next month's bookings.` },
-            { title: `Decarbonization Impact`, content: `New IMO 2024 compliance regulations are being strictly enforced at ${oHub.country} and ${dHub.country}, ensuring greener transits for containerized cargo.` }
+            { title: `${oHub.country} - Terminal Pulse`, content: `Services in ${oHub.country} report high efficiency. Standard gate-in/out protocols active.` },
+            { title: `${dHub.country} - Customs Intel`, content: `Customs in ${dHub.country} has prioritized ${hs} cargo categories for standard clearance.` },
+            { title: `Global Logistics Trend`, content: `SCFI and fuel indexes show stable trends for this trade corridor.` },
+            { title: `Compliance Alert`, content: `New maritime environment regulations (IMO 2024) apply to all vessels on this route.` }
         ];
         insights.forEach(item => {
             newsHtml += `<div class="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm hover:border-indigo-300 transition-all hover:shadow-md"><div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span><h5 class="text-xs font-bold text-indigo-600 uppercase tracking-tighter">${item.title}</h5></div><p class="text-[11px] text-gray-500 leading-relaxed font-medium">${item.content}</p></div>`;
         });
         newsHtml += `</div><div class="mt-10 p-6 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"><p class="text-[11px] font-black text-gray-500 text-center leading-relaxed"><span class="text-indigo-600">⚠️</span> ${t.finalDisclaimer}</p></div></div>`;
-        resultContainer.innerHTML += newsHtml;
+        if (resultContainer) resultContainer.innerHTML += newsHtml;
     }
 
-    async function calculateAndDisplay() {
-        const oId = originSelect.value, dId = destinationSelect.value;
-        if(!oId || !dId || oId === dId) return;
-        const t = translations[currentLang];
-        
-        // Solve for both modes to compare
-        const seaRoute = solveRoute(oId, dId, 'sea', hscodeSelect.value);
-        const airRoute = solveRoute(oId, dId, 'air', hscodeSelect.value);
-        
-        const currentRoute = modeSelect.value === 'sea' ? seaRoute : airRoute;
-        
-        const costConverted = currentRoute.costUSD * rates[currentCurrency], formattedCost = Math.round(costConverted).toLocaleString();
-        let fontSizeClass = formattedCost.length > 10 ? "text-3xl" : (formattedCost.length > 7 ? "text-4xl" : "text-5xl");
-        
-        // Comparison details
-        const dayDiff = Math.abs(Math.round(seaRoute.transitDays - airRoute.transitDays));
-        const costDiff = Math.abs(Math.round((seaRoute.costUSD - airRoute.costUSD) * rates[currentCurrency])).toLocaleString();
-        
-        const comparisonHTML = modeSelect.value === 'sea' 
-            ? `<div class="text-left w-full h-full flex flex-col justify-center">
-                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Air Cargo</p>
-                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${dayDiff} Days</span></p>
-                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Extra <span class="text-red-600">${symbols[currentCurrency]}${costDiff}</span></p>
-               </div>`
-            : `<div class="text-left w-full h-full flex flex-col justify-center">
-                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Container Sea</p>
-                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${symbols[currentCurrency]}${costDiff}</span></p>
-                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Add <span class="text-red-600">${dayDiff} Days</span></p>
-               </div>`;
-
-        // Active Risk UI logic
-        let riskAlertHTML = '';
-        if (modeSelect.value === 'sea' && currentRoute.appliedRisks.length > 0) {
-            const riskLabels = currentRoute.appliedRisks.map(r => r.label).join(' & ');
-            const totalRiskDelay = currentRoute.appliedRisks.reduce((sum, r) => sum + r.delay, 0);
-            riskAlertHTML = `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${riskLabels}: Rerouting Active (+${totalRiskDelay} Days Delay)</div>`;
-        }
-
-        resultContainer.innerHTML = `
-            <div id="analysis-results" class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-                <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                    <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">${t.totalLead}</p>
-                    <p class="text-5xl font-black text-indigo-900 leading-none">${Math.round(currentRoute.transitDays)} ${t.unitDays}</p>
-                    <p class="text-[10px] font-bold text-indigo-500 mt-2">${t.eta}: ${currentRoute.eta.toLocaleDateString()}</p>
-                    <p class="text-[9px] text-gray-400 mt-2 font-bold">${t.totalDist}: ${Math.round(currentRoute.totalDist * 0.539957).toLocaleString()} NM</p>
-                </div>
-                <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                    <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
-                    <p class="${fontSizeClass} font-black text-gray-900 leading-none flex items-baseline justify-center"><span class="text-2xl text-gray-400 mr-1 font-bold">${symbols[currentCurrency]}</span>${formattedCost}</p>
-                    <p class="text-xs font-bold text-gray-500 mt-2 uppercase">${t.marketRateLabel}</p>
-                </div>
-                <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center min-h-[240px]">
-                    <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.compareTitle}</p>
-                    ${comparisonHTML}
-                </div>
-            </div>
-            ${riskAlertHTML}`;
-        
-        renderMap(currentRoute.routePath, modeSelect.value);
-        await fetchSummarizedNews(hubs[oId], hubs[dId]);
-
-        // Auto-scroll to results
-        const resultEl = document.getElementById('analysis-results');
-        if (resultEl) resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function renderMap(path, mode) {
-        // Clear all layers except tiles
-        map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker || l instanceof L.Circle) map.removeLayer(l); });
-        
-        const color = mode === 'sea' ? '#2563eb' : '#f59e0b';
-        
-        // Re-render Risk Markers (since we just cleared the map)
-        renderRiskMarkers();
-
-        // Add Path
-        L.polyline(path, { color: color, weight: 5, opacity: 0.9, dashArray: mode === 'sea' ? '10, 10' : null }).addTo(map);
-        
-        // Add Origin/Dest Markers
-        L.marker(path[0]).addTo(map).bindPopup("Origin"); 
-        L.marker(path[path.length - 1]).addTo(map).bindPopup("Destination");
-        
-        map.fitBounds(L.polyline(path).getBounds(), { padding: [50, 50] });
-    }
-
-    const cargoDelays = { 
-        general: 1, // Standard Container
-        rf: 3,      // Reefer (Cold Chain)
-        dg: 5,      // Dangerous Goods (Chemicals/Battery)
-        special: 7, // Oversized/Project Cargo
-        electronics: 2, // High-value Electronics (Security scan)
-        pharma: 4   // Pharmaceuticals (Customs priority but strict temp check)
-    };
+    const cargoDelays = { general: 1, rf: 3, dg: 5, special: 7, electronics: 2, pharma: 4 };
 
     function solveRoute(oId, dId, mode, cargo) {
         const o = hubs[oId], d = hubs[dId];
         let routePath = [], totalDist = 0;
-        
-        // Inland Transport Simulation (Simulate 50-200km land transit to/from hub)
-        const inlandDist = 150; // Average land-to-port/airport distance in km
-        const inlandDays = mode === 'sea' ? 1.5 : 0.5; // Trucking vs Express Delivery
-
-        // Dynamic Risk Assessment
+        const inlandDist = 150, inlandDays = mode === 'sea' ? 1.5 : 0.5;
         let appliedRisks = [];
         if (mode === 'sea') {
             activeRisks.forEach(risk => {
-                if (risk.id === 'suez_disruption' && ((o.exit === 'suez_n' || d.exit === 'suez_n') || (o.country === 'China' || o.country === 'Singapore' || o.country === 'South Korea') && (d.country === 'Netherlands' || d.country === 'Germany' || d.country === 'Belgium'))) {
-                    appliedRisks.push(risk);
-                }
-                if (risk.id === 'panama_disruption' && (o.name.includes('Panama') || d.name.includes('Panama') || o.exit === 'panama_e' || d.exit === 'panama_e')) {
-                    appliedRisks.push(risk);
-                }
-                if (risk.id === 'hormuz_disruption' && (o.exit === 'hormuz_strait' || d.exit === 'hormuz_strait')) {
-                    appliedRisks.push(risk);
-                }
+                if (risk.id === 'suez_disruption' && ((o.exit === 'suez_n' || d.exit === 'suez_n') || (o.country === 'China' || o.country === 'Singapore' || o.country === 'South Korea') && (d.country === 'Netherlands' || d.country === 'Germany' || d.country === 'Belgium'))) appliedRisks.push(risk);
+                if (risk.id === 'panama_disruption' && (o.name.includes('Panama') || d.name.includes('Panama') || o.exit === 'panama_e' || d.exit === 'panama_e')) appliedRisks.push(risk);
+                if (risk.id === 'hormuz_disruption' && (o.exit === 'hormuz_strait' || d.exit === 'hormuz_strait')) appliedRisks.push(risk);
             });
         }
-
         const riskDelay = appliedRisks.reduce((sum, r) => sum + r.delay, 0);
         const riskCost = appliedRisks.reduce((sum, r) => sum + r.cost, 0);
-
         if (mode === 'sea') {
             const isSuezDisrupted = appliedRisks.some(r => r.id === 'suez_disruption');
             const maritimeNodes = findMaritimePath(o.exit, d.exit, isSuezDisrupted);
@@ -609,23 +462,87 @@ document.addEventListener('DOMContentLoaded', () => {
             routePath = getOptimizedPath(o.coords, d.coords, 100);
             totalDist = getDistHaversine(o.coords, d.coords);
         }
-        
         const transitDays = (totalDist / ((mode === 'sea' ? 17 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1) + riskDelay + inlandDays;
         const costUSD = (mode === 'sea' ? 1200 + (totalDist * 0.15) : 4000 + (totalDist * 2.8)) + riskCost + (inlandDist * 0.5);
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + transitDays);
-        
         return { transitDays, eta, routePath, totalDist, costUSD, appliedRisks };
     }
 
-    document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
-    ['usd', 'krw', 'eur'].forEach(curr => { document.getElementById(`curr-${curr}`).onclick = () => { currentCurrency = curr.toUpperCase(); updateUI(); }; });
-    document.getElementById('lang-ko').onclick = () => { currentLang='ko'; updateUI(); };
-    document.getElementById('lang-en').onclick = () => { currentLang='en'; updateUI(); };
+    async function calculateAndDisplay() {
+        const oId = originSelect.value, dId = destinationSelect.value;
+        if(!oId || !dId || oId === dId || !resultContainer) return;
+        const t = translations[currentLang];
+        const seaRoute = solveRoute(oId, dId, 'sea', hscodeSelect ? hscodeSelect.value : 'general');
+        const airRoute = solveRoute(oId, dId, 'air', hscodeSelect ? hscodeSelect.value : 'general');
+        const currentRoute = modeSelect.value === 'sea' ? seaRoute : airRoute;
+        const costConverted = currentRoute.costUSD * rates[currentCurrency], formattedCost = Math.round(costConverted).toLocaleString();
+        let fontSizeClass = formattedCost.length > 10 ? "text-3xl" : (formattedCost.length > 7 ? "text-4xl" : "text-5xl");
+        const dayDiff = Math.abs(Math.round(seaRoute.transitDays - airRoute.transitDays));
+        const costDiff = Math.abs(Math.round((seaRoute.costUSD - airRoute.costUSD) * rates[currentCurrency])).toLocaleString();
+        const comparisonHTML = modeSelect.value === 'sea' 
+            ? `<div class="text-left w-full h-full flex flex-col justify-center">
+                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Air Cargo</p>
+                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${dayDiff} Days</span></p>
+                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Extra <span class="text-red-600">${symbols[currentCurrency]}${costDiff}</span></p>
+               </div>`
+            : `<div class="text-left w-full h-full flex flex-col justify-center">
+                <p class="text-[10px] font-bold text-orange-600 uppercase mb-1">vs Container Sea</p>
+                <p class="text-[11px] font-black text-slate-700 leading-tight">Save <span class="text-blue-600">${symbols[currentCurrency]}${costDiff}</span></p>
+                <p class="text-[11px] font-black text-slate-700 mt-1 leading-tight">Add <span class="text-red-600">${dayDiff} Days</span></p>
+               </div>`;
+        let riskAlertHTML = '';
+        if (modeSelect.value === 'sea' && currentRoute.appliedRisks.length > 0) {
+            const riskLabels = currentRoute.appliedRisks.map(r => r.label).join(' & ');
+            const totalRiskDelay = currentRoute.appliedRisks.reduce((sum, r) => sum + r.delay, 0);
+            riskAlertHTML = `<div class="mt-6 p-5 bg-red-50 text-red-700 text-xs font-extrabold rounded-2xl border-l-8 border-red-500 shadow-sm animate-pulse">${riskLabels}: Rerouting Active (+${totalRiskDelay} Days Delay)</div>`;
+        }
+        resultContainer.innerHTML = `
+            <div id="analysis-results" class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+                <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px]">
+                    <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">${t.totalLead}</p>
+                    <p class="text-5xl font-black text-indigo-900 leading-none">${Math.round(currentRoute.transitDays)} ${t.unitDays}</p>
+                    <p class="text-[10px] font-bold text-indigo-500 mt-2">${t.eta}: ${currentRoute.eta.toLocaleDateString()}</p>
+                    <p class="text-[9px] text-gray-400 mt-2 font-bold">${t.totalDist}: ${Math.round(currentRoute.totalDist * 0.539957).toLocaleString()} NM</p>
+                </div>
+                <div class="p-8 bg-green-50 rounded-3xl shadow-xl border border-green-100 text-center flex flex-col items-center justify-center min-h-[240px]">
+                    <p class="text-xs font-black text-green-600 uppercase tracking-widest mb-3">${t.labelCost}</p>
+                    <p class="${fontSizeClass} font-black text-gray-900 leading-none flex items-baseline justify-center"><span class="text-2xl text-gray-400 mr-1 font-bold">${symbols[currentCurrency]}</span>${formattedCost}</p>
+                    <p class="text-xs font-bold text-gray-500 mt-2 uppercase">${t.marketRateLabel}</p>
+                </div>
+                <div class="p-8 bg-orange-50 rounded-3xl shadow-xl border border-orange-100 text-center flex flex-col items-center justify-center min-h-[240px]">
+                    <p class="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">${t.compareTitle}</p>
+                    ${comparisonHTML}
+                </div>
+            </div>
+            ${riskAlertHTML}`;
+        renderMap(currentRoute.routePath, modeSelect.value);
+        await fetchSummarizedNews(hubs[oId], hubs[dId]);
+        const resultEl = document.getElementById('analysis-results');
+        if (resultEl) resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderMap(path, mode) {
+        map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker || l instanceof L.Circle) map.removeLayer(l); });
+        const color = mode === 'sea' ? '#2563eb' : '#f59e0b';
+        renderRiskMarkers();
+        L.polyline(path, { color: color, weight: 5, opacity: 0.9, dashArray: mode === 'sea' ? '10, 10' : null }).addTo(map);
+        L.marker(path[0]).addTo(map).bindPopup("Origin"); 
+        L.marker(path[path.length - 1]).addTo(map).bindPopup("Destination");
+        map.fitBounds(L.polyline(path).getBounds(), { padding: [50, 50] });
+    }
+
+    if(document.getElementById('shipping-form')) document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
+    ['usd', 'krw', 'eur'].forEach(curr => { 
+        const btn = document.getElementById(`curr-${curr}`);
+        if(btn) btn.onclick = () => { currentCurrency = curr.toUpperCase(); updateUI(); }; 
+    });
+    if(document.getElementById('lang-ko')) document.getElementById('lang-ko').onclick = () => { currentLang='ko'; updateUI(); };
+    if(document.getElementById('lang-en')) document.getElementById('lang-en').onclick = () => { currentLang='en'; updateUI(); };
     function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k]; });
         ['USD', 'KRW', 'EUR'].forEach(c => { const btn = document.getElementById(`curr-${c.toLowerCase()}`); if (btn) btn.className = (c === currentCurrency) ? "px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600" : "px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700"; });
-        if(resultContainer.innerHTML.includes('analysis-results')) calculateAndDisplay();
+        if(resultContainer && resultContainer.innerHTML.includes('analysis-results')) calculateAndDisplay();
         populate();
     }
     updateUI();
