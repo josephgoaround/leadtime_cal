@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-11",
+    "time": "23:24",
+    "category": "Logistics Technology",
+    "title": "Freightos Weekly Update: Air rates continue to climb on Mid-East closures",
+    "content": "Very few vessels have passed through the Strait of Hormuz since the start of the war in Iran a week and a half ago. The closure is of global concern due to its stifling of oil tanker movements which is already slowing production and pushing oil price...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 143
+  },
+  {
+    "date": "2026-03-11",
+    "time": "23:24",
+    "category": "Port Status",
+    "title": "Descartes reports record quarter; announces acquisition",
+    "content": "Supply chain SaaS provider Descartes reported another record financial performance as tariff uncertainty pushes the top line higher. \nThe post Descartes reports record quarter; announces acquisition appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 142
+  },
+  {
+    "date": "2026-03-11",
     "time": "22:25",
     "category": "Port Status",
     "title": "Lufthansa Cargo minimizes delays during pilot strike",
