@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const newsItemsContainer = document.getElementById('news-items');
+    const newsContainer = document.getElementById('news-items');
     const filterBtns = document.querySelectorAll('.filter-btn');
     let allNews = [];
 
     async function fetchNews() {
-        if (!newsItemsContainer) return;
+        if (!newsContainer) return;
         try {
             const response = await fetch('data/news.json');
             allNews = await response.json();
@@ -12,93 +12,58 @@ document.addEventListener('DOMContentLoaded', () => {
             renderNews('all');
         } catch (error) {
             console.error('Failed to fetch news:', error);
-            newsItemsContainer.innerHTML = '<div class="text-center py-20"><p class="text-red-500 font-bold">Failed to load intelligence feed.</p></div>';
+            newsContainer.innerHTML = '<p class="text-center py-20 text-red-500 font-bold">Failed to load news.</p>';
         }
     }
 
     function renderNews(categoryFilter) {
-        if (!newsItemsContainer) return;
-        newsItemsContainer.innerHTML = '';
-        
-        const filteredNews = categoryFilter === 'all' 
-            ? allNews 
-            : allNews.filter(item => item.category === categoryFilter);
+        if (!newsContainer) return;
+        newsContainer.innerHTML = '';
+        const filtered = categoryFilter === 'all' ? allNews : allNews.filter(n => n.category === categoryFilter);
 
-        if (filteredNews.length === 0) {
-            newsItemsContainer.innerHTML = '<p class="text-center text-slate-400 py-20 font-bold uppercase tracking-widest text-xs">No news found in this category</p>';
+        if (filtered.length === 0) {
+            newsContainer.innerHTML = '<p class="text-center py-20 text-slate-400 font-bold uppercase tracking-widest text-xs">No news found</p>';
             return;
         }
 
-        const grouped = filteredNews.reduce((acc, item) => {
+        const grouped = filtered.reduce((acc, item) => {
             if (!acc[item.date]) acc[item.date] = [];
             acc[item.date].push(item);
             return acc;
         }, {});
 
         Object.keys(grouped).forEach(date => {
-            const dateHeader = document.createElement('div');
-            dateHeader.className = 'relative flex justify-center mb-8';
-            dateHeader.innerHTML = `<div class="bg-indigo-50 text-indigo-600 px-6 py-2 rounded-full text-xs font-black shadow-sm relative z-20 border border-indigo-100 uppercase tracking-tighter">${formatDate(date)}</div>`;
-            newsItemsContainer.appendChild(dateHeader);
+            const header = document.createElement('div');
+            header.className = 'flex justify-center mb-8';
+            header.innerHTML = `<div class="bg-indigo-50 text-indigo-600 px-6 py-2 rounded-full text-xs font-black border border-indigo-100 uppercase tracking-tighter">${new Date(date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>`;
+            newsContainer.appendChild(header);
 
-            grouped[date].forEach((item, index) => {
-                const isEven = index % 2 === 0;
+            grouped[date].forEach(item => {
                 const card = document.createElement('div');
-                card.className = `flex flex-col md:flex-row items-center gap-8 mb-12 relative w-full`;
-                const categoryColor = getCategoryColor(item.category);
-                
+                card.className = 'news-card bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm mb-8';
                 card.innerHTML = `
-                    <div class="hidden md:block w-1/2 ${isEven ? 'order-1 text-right' : 'order-3 text-left'} px-8">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${item.time}</span>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full">${item.category}</span>
+                        <span class="text-[10px] font-black text-slate-300 uppercase">${item.time}</span>
                     </div>
-                    <div class="absolute left-[20px] md:left-1/2 top-0 bottom-0 md:-translate-x-1/2 flex items-center justify-center z-30">
-                        <div class="w-4 h-4 rounded-full bg-white border-4 ${categoryColor.border} shadow-sm"></div>
-                    </div>
-                    <div class="w-full md:w-1/2 ${isEven ? 'md:order-3' : 'md:order-1'} pl-12 md:px-8">
-                        <div class="news-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="category-badge ${categoryColor.bg} ${categoryColor.text}">${item.category}</span>
-                                <span class="md:hidden text-[10px] font-black text-slate-400 uppercase tracking-widest">${item.time}</span>
-                            </div>
-                            <h3 class="text-lg font-black text-slate-800 mb-3 leading-tight">${item.title}</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-6 font-medium">${item.content}</p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                ${item.tags.map(tag => `<span class="text-[9px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded">#${tag}</span>`).join('')}
-                            </div>
-                            <div class="flex items-center gap-3 pt-4 border-t border-slate-50">
-                                <div class="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center text-[10px] font-black text-indigo-600">${item.author.charAt(0)}</div>
-                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${item.author}</span>
-                            </div>
-                        </div>
+                    <h3 class="text-xl font-black text-slate-800 mb-4 leading-tight">${item.title}</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6 font-medium">${item.content}</p>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-50">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Source: ${item.author}</span>
                     </div>`;
-                newsItemsContainer.appendChild(card);
+                newsContainer.appendChild(card);
             });
         });
-    }
-
-    function formatDate(dateStr) {
-        return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' });
-    }
-
-    function getCategoryColor(category) {
-        switch(category) {
-            case 'Liner News': return { bg: 'bg-blue-100', text: 'text-blue-600', border: 'border-blue-500' };
-            case 'Port Status': return { bg: 'bg-emerald-100', text: 'text-emerald-600', border: 'border-emerald-500' };
-            case 'Logistics Technology': return { bg: 'bg-purple-100', text: 'text-purple-600', border: 'border-purple-500' };
-            default: return { bg: 'bg-slate-100', text: 'text-slate-600', border: 'border-slate-500' };
-        }
     }
 
     filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => {
-                b.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg');
-                b.classList.add('bg-white', 'text-slate-600');
-            });
-            btn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg');
-            btn.classList.remove('bg-white', 'text-slate-600');
+        btn.onclick = () => {
+            filterBtns.forEach(b => b.classList.replace('bg-indigo-600', 'bg-white'));
+            filterBtns.forEach(b => b.classList.replace('text-white', 'text-slate-600'));
+            btn.classList.replace('bg-white', 'bg-indigo-600');
+            btn.classList.replace('text-slate-600', 'text-white');
             renderNews(btn.getAttribute('data-category'));
-        });
+        };
     });
 
     fetchNews();

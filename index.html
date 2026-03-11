@@ -3,18 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeadTime Intelligence | Global Logistics & Container Shipping Pathfinder</title>
-    <meta name="description" content="LeadTime Intelligence is a high-performance logistics simulation platform. We provide data-driven insights into container shipping, air cargo, and port congestion using advanced Dijkstra routing.">
-    <meta name="keywords" content="global logistics, container shipping, air cargo, lead time, routing, 3D load planner, maritime news, supply chain, shipping costs">
+    <title>LeadTime Intelligence | Global Logistics Pathfinder</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6930584793965742" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css?v=1.1">
 </head>
 <body class="bg-gray-50 font-sans text-gray-900">
 
-    <!-- Global Header -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-[3000] shadow-sm">
         <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
             <div class="flex items-center gap-8">
@@ -28,150 +24,60 @@
                     <a href="about.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">About</a>
                 </nav>
             </div>
-            <div class="flex items-center gap-3">
-                <div class="hidden sm:flex bg-slate-100 p-1 rounded-lg mr-2">
-                    <button id="curr-usd" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600">USD</button>
-                    <button id="curr-eur" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">EUR</button>
-                    <button id="curr-krw" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700">KRW</button>
-                </div>
-            </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 max-w-6xl mt-8">
-        <!-- News Ticker -->
-        <div class="bg-white text-white p-3 rounded-2xl flex items-center gap-4 overflow-hidden shadow-sm border border-slate-200 mb-8">
-            <div class="bg-indigo-100 text-[9px] font-black px-2 py-1 rounded uppercase tracking-widest animate-pulse shrink-0">Live Intel</div>
-            <div class="text-[11px] font-bold whitespace-nowrap overflow-hidden flex-1">
-                <div id="news-ticker" class="flex gap-12 animate-marquee">
-                    <span>Shanghai Port automation upgrades improving turnaround by 15%.</span>
-                    <span>Suez Canal transit volume down 42% YoY.</span>
-                    <span>Panama Canal daily slots restricted due to low water levels.</span>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-            <!-- Sidebar: Config Form -->
             <div class="lg:col-span-4 flex flex-col gap-6">
                 <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-100 border border-slate-100">
-                    <h3 class="text-xl font-black text-slate-800 mb-8 flex items-center gap-2">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Shipment Config
-                    </h3>
+                    <h3 class="text-xl font-black text-slate-800 mb-8 flex items-center gap-2">Shipment Config</h3>
                     <form id="shipping-form" class="space-y-6">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode</label>
-                                <select id="transport-mode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none">
-                                    <option value="sea">🚢 Container (Liner)</option>
-                                    <option value="air">✈️ Air Cargo</option>
+                                <select id="transport-mode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold">
+                                    <option value="sea">🚢 Sea</option>
+                                    <option value="air">✈️ Air</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Departure Date (ETD)</label>
-                                <input type="date" id="departure-date" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Departure Date</label>
+                                <input type="date" id="departure-date" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold">
                             </div>
                         </div>
-
                         <div class="space-y-4">
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Origin Port</label>
-                                <input type="text" id="origin-search" placeholder="Search port..." class="w-full mb-2 py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold text-slate-600 focus:ring-1 focus:ring-indigo-500 outline-none">
-                                <select id="origin" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"></select>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Dest. Port</label>
-                                <input type="text" id="dest-search" placeholder="Search port..." class="w-full mb-2 py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold text-slate-600 focus:ring-1 focus:ring-indigo-500 outline-none">
-                                <select id="destination" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"></select>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Cargo Type</label>
-                                <select id="hscode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none">
-                                    <option value="general">📦 General Cargo</option>
-                                    <option value="rf">❄️ Reefer</option>
-                                    <option value="dg">⚠️ Dangerous Goods</option>
-                                    <option value="pharma">💊 Pharma</option>
-                                    <option value="electronics">💻 Electronics</option>
-                                </select>
-                            </div>
+                            <input type="text" id="origin-search" placeholder="Search Origin..." class="w-full py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold">
+                            <select id="origin" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold"></select>
+                            <input type="text" id="dest-search" placeholder="Search Destination..." class="w-full py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold">
+                            <select id="destination" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold"></select>
+                            <select id="hscode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold">
+                                <option value="general">📦 General</option>
+                                <option value="rf">❄️ Reefer</option>
+                            </select>
                         </div>
-
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest">
-                            Run Analysis Engine
-                        </button>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest">Run Analysis</button>
                     </form>
                 </div>
-
-                <!-- Risk Summary (Persistent) -->
                 <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                        Active Risks
-                    </h4>
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Active Risks</h4>
                     <ul id="risk-summary-list" class="text-[11px] font-bold text-red-600 space-y-2"></ul>
                 </div>
             </div>
 
-            <!-- Main: Map & Core Results -->
             <div class="lg:col-span-8 space-y-6">
-                <div class="bg-white p-3 rounded-[2.5rem] shadow-2xl shadow-indigo-100 border border-slate-100 overflow-hidden relative h-[450px]">
+                <div class="bg-white p-3 rounded-[2.5rem] shadow-2xl border border-slate-100 h-[450px]">
                     <div id="map" class="w-full h-full rounded-[2rem]"></div>
                 </div>
-
-                <!-- Results Summary (Immediate Visibility) -->
                 <div id="summary-container" class="animate-fade-in min-h-[180px]">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="p-6 bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Waiting for Analysis...</p>
-                        </div>
-                        <div class="p-6 bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">---</p>
-                        </div>
-                        <div class="p-6 bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">---</p>
-                        </div>
-                    </div>
+                    <div class="text-center py-10 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 text-slate-400 font-bold uppercase tracking-widest text-xs">Waiting for Analysis...</div>
                 </div>
             </div>
         </div>
-
-        <!-- Detailed Feed (News & SCM) -->
         <section id="feed-container" class="mb-20"></section>
-
-        <!-- Deep Content -->
-        <section id="insights" class="py-20 border-t border-slate-200">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-sm">
-                <div class="space-y-2">
-                    <h3 class="font-black text-slate-900">Dijkstra Routing</h3>
-                    <p class="text-slate-500 leading-relaxed">Optimal route simulation based on 300+ global maritime nodes.</p>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="font-black text-slate-900">Risk Factor</h3>
-                    <p class="text-slate-500 leading-relaxed">Real-time geopolitical risks and port congestion weights integration.</p>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="font-black text-slate-900">Cost Intel</h3>
-                    <p class="text-slate-500 leading-relaxed">Market benchmark rates for major TEU/FEU trade corridors.</p>
-                </div>
-            </div>
-        </section>
     </main>
 
-    <!-- Global Footer -->
-    <footer class="bg-white py-12 border-t border-slate-100">
-        <div class="container mx-auto px-4 max-w-6xl flex flex-col md:flex-row justify-between items-center gap-6">
-            <h2 class="logo-brand text-xl font-black italic text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h2>
-            <div class="flex gap-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                <a href="about.html">About</a>
-                <a href="privacy.html">Privacy</a>
-                <a href="terms.html">Terms</a>
-                <p>© 2026 LEADTIME INTELLIGENCE</p>
-            </div>
-        </div>
-    </footer>
-
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="main.js"></script>
+    <script src="main.js?v=1.1"></script>
 </body>
 </html>
