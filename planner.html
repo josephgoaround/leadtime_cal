@@ -11,6 +11,7 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        #canvas-container canvas { display: block; width: 100% !important; height: 100% !important; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
@@ -58,7 +59,9 @@
                         <button id="add-cargo-btn" class="text-[10px] font-black bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-600 hover:text-white transition-all">+ Add Item</button>
                     </div>
 
-                    <div id="cargo-items" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    <div id="cargo-items" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Cargo items populated by container3d.js -->
+                    </div>
 
                     <button id="simulate-load-btn" class="w-full mt-8 bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest">
                         Run Load Simulation
@@ -86,8 +89,9 @@
 
             <!-- Right: 3D View -->
             <div class="lg:col-span-8">
-                <div class="bg-white p-4 rounded-[3rem] shadow-2xl border border-slate-100 h-[700px] relative group">
+                <div class="bg-white p-4 rounded-[3rem] shadow-2xl border border-slate-100 h-[700px] relative">
                     <div id="canvas-container" class="w-full h-full rounded-[2.5rem] bg-slate-900 overflow-hidden relative">
+                        <!-- Three.js Canvas will be here -->
                         <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center flex-col text-slate-500">
                             <svg class="w-12 h-12 mb-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-width="1.5"/></svg>
                             <p class="text-xs font-bold uppercase tracking-widest">Initializing 3D Engine...</p>
@@ -99,7 +103,7 @@
     </main>
 
     <!-- Essential Three.js Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="container3d.js"></script>
 </body>
