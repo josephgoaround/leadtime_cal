@@ -288,6 +288,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const newsTicker = document.getElementById('news-ticker');
     const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
 
+    function renderRiskMarkers() {
+        // Clear existing risk circles before re-rendering
+        map.eachLayer(l => { if (l instanceof L.Circle) map.removeLayer(l); });
+        
+        const riskPoints = {
+            "suez_disruption": [12.6, 43.3], // Bab el Mandeb
+            "panama_disruption": [9.0, -79.6],
+            "hormuz_disruption": [26.5, 56.5]
+        };
+
+        activeRisks.forEach(risk => {
+            if (riskPoints[risk.id]) {
+                L.circle(riskPoints[risk.id], {
+                    color: '#ef4444',
+                    fillColor: '#ef4444',
+                    fillOpacity: 0.4,
+                    radius: 800000,
+                    weight: 2
+                }).addTo(map).bindPopup(`<b>RISK ALERT: ${risk.label}</b><br>${risk.source_news}`);
+            }
+        });
+    }
+
     async function loadLiveNews() {
         try {
             const response = await fetch('data/maritime_data.json');
@@ -297,6 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set dynamic risks
             activeRisks = data.active_risks || [];
             const riskSummaryList = document.getElementById('risk-summary-list');
+
+            // Render risks on map immediately
+            renderRiskMarkers();
 
             if (data.alerts && data.alerts.length > 0) {
                 // Update Ticker
@@ -425,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchSummarizedNews(oHub, dHub) {
         const t = translations[currentLang];
-        let newsHtml = `<div class="mt-12 border-t pt-8 animate-fade-in"><h4 class="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">${t.newsTitle}</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
+        let newsHtml = `<div class="mt-12 border-t pt-8 animate-fade-in" id="detailed-intelligence"><h4 class="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">${t.newsTitle}</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
         const insights = [
             { title: `${oHub.country} - Container Terminal Pulse`, content: `Liner services in ${oHub.country} report 98% schedule reliability. Major alliances are prioritizing berth windows for mega-vessels (>18k TEU).` },
             { title: `${dHub.country} - Port Ops & SCM`, content: `${dHub.country} customs has prioritized clearance for Reefer containers. ${hscodeSelect.value} shipments face standard scrutiny with average 24h gate-out time.` },
@@ -478,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         resultContainer.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+            <div id="analysis-results" class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
                 <div class="p-8 bg-indigo-50 rounded-3xl shadow-xl border border-indigo-100 text-center flex flex-col items-center justify-center min-h-[240px]">
                     <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">${t.totalLead}</p>
                     <p class="text-5xl font-black text-indigo-900 leading-none">${Math.round(currentRoute.transitDays)} ${t.unitDays}</p>
@@ -499,12 +525,21 @@ document.addEventListener('DOMContentLoaded', () => {
         
         renderMap(currentRoute.routePath, modeSelect.value);
         await fetchSummarizedNews(hubs[oId], hubs[dId]);
+
+        // Auto-scroll to results
+        const resultEl = document.getElementById('analysis-results');
+        if (resultEl) resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function renderMap(path, mode) {
+        // Clear all layers except tiles
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker || l instanceof L.Circle) map.removeLayer(l); });
+        
         const color = mode === 'sea' ? '#2563eb' : '#f59e0b';
         
+        // Re-render Risk Markers (since we just cleared the map)
+        renderRiskMarkers();
+
         // Add Path
         L.polyline(path, { color: color, weight: 5, opacity: 0.9, dashArray: mode === 'sea' ? '10, 10' : null }).addTo(map);
         
@@ -512,25 +547,6 @@ document.addEventListener('DOMContentLoaded', () => {
         L.marker(path[0]).addTo(map).bindPopup("Origin"); 
         L.marker(path[path.length - 1]).addTo(map).bindPopup("Destination");
         
-        // Add Risk Markers if applicable
-        if (mode === 'sea') {
-            const riskPoints = {
-                "suez_disruption": [12.6, 43.3], // Bab el Mandeb
-                "panama_disruption": [9.0, -79.6],
-                "hormuz_disruption": [26.5, 56.5]
-            };
-            activeRisks.forEach(risk => {
-                if (riskPoints[risk.id]) {
-                    L.circle(riskPoints[risk.id], {
-                        color: 'red',
-                        fillColor: '#f03',
-                        fillOpacity: 0.5,
-                        radius: 500000
-                    }).addTo(map).bindPopup(`<b>RISK ALERT: ${risk.label}</b><br>${risk.source_news}`);
-                }
-            });
-        }
-
         map.fitBounds(L.polyline(path).getBounds(), { padding: [50, 50] });
     }
 
@@ -609,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUI() {
         document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(translations[currentLang][k]) el.textContent = translations[currentLang][k]; });
         ['USD', 'KRW', 'EUR'].forEach(c => { const btn = document.getElementById(`curr-${c.toLowerCase()}`); if (btn) btn.className = (c === currentCurrency) ? "px-2 py-1 rounded text-[10px] font-bold transition-all bg-white shadow-sm text-indigo-600" : "px-2 py-1 rounded text-[10px] font-bold transition-all text-gray-500 hover:text-gray-700"; });
-        if(resultContainer.innerHTML.includes('indigo-50')) calculateAndDisplay();
+        if(resultContainer.innerHTML.includes('analysis-results')) calculateAndDisplay();
         populate();
     }
     updateUI();
