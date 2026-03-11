@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-11",
+    "time": "12:57",
+    "category": "Logistics Technology",
+    "title": "Attack reported on three vessels in Strait of Hormuz",
+    "content": "The United Kingdom Maritime Trade Operations (UKMTO) has reported an attack on a cargo vessel in the Strait of Hormuz on 11 March 2026. According to the alert, the incident occurred about 11 nautical miles north of Oman. The vessel was reportedly str...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 102
+  },
+  {
+    "date": "2026-03-11",
+    "time": "12:57",
+    "category": "Liner News",
+    "title": "Maersk updates emergency contingency surcharge for shipments to Middle East",
+    "content": "Maersk has announced changes to the Emergency Contingency Surcharge (ECS) affecting shipments from North America and Central and West Coast South America to key ports in the Middle East. The revised surcharge applies to cargo moving on the North Amer...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 101
+  },
+  {
+    "date": "2026-03-11",
     "time": "11:32",
     "category": "Liner News",
     "title": "Viking Supply Ships adds modern AHTS in deal with Kistefos",
