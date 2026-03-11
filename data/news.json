@@ -1,6 +1,84 @@
 [
   {
     "date": "2026-03-11",
+    "time": "14:08",
+    "category": "Liner News",
+    "title": "ONE expands stake in Poseidon Corp. to 48.9%",
+    "content": "Ocean Network Express (ONE) has signed agreements to acquire an additional stake in Poseidon Corp., the parent company of Seaspan Corporation, the world’s largest non-operating owner of containerships. Once the transaction closes, ONE’s total ownersh...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 108
+  },
+  {
+    "date": "2026-03-11",
+    "time": "14:08",
+    "category": "Logistics Technology",
+    "title": "EXCLUSIVE: 10,000 ships crews trapped by Strait of Hormuz blockade",
+    "content": "Thousands of merchant mariners and hundreds of cargo ships remain trapped in the Persian Gulf region as violence escalated in the Strait of Hormuz.\nThe post EXCLUSIVE: 10,000 ships crews trapped by Strait of Hormuz blockade appeared first on FreightW...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 107
+  },
+  {
+    "date": "2026-03-11",
+    "time": "14:08",
+    "category": "Liner News",
+    "title": "UPS navigates Amazon draw down in hard pivot to premium services",
+    "content": "UPS is pulling back from its relationship with Amazon, undergoing a huge restructuring to prioritize healthcare, SMBs, and premium e-commerce customers.\nThe post UPS navigates Amazon draw down in hard pivot to premium services appeared first on Freig...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 106
+  },
+  {
+    "date": "2026-03-11",
+    "time": "14:08",
+    "category": "Liner News",
+    "title": "Intel has manufacturing capacity issues. They may take years to fix.",
+    "content": "The company redirected some of its chips production to meet surging server demand, but analysts say it&#39;s missing out on emerging AI-driven trends.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 105
+  },
+  {
+    "date": "2026-03-11",
+    "time": "14:08",
+    "category": "Logistics Technology",
+    "title": "Three More Vessels Hit by Projectiles in Strait of Hormuz, Showing Merchant Ships Remain in Firing Line",
+    "content": "Three more vessels have been hit by unknown projectiles in the Strait of Hormuz, maritime security and risk firms said on Wednesday, bringing the number of ships struck in the region since the Iran conflict began to at least 14.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 104
+  },
+  {
+    "date": "2026-03-11",
+    "time": "14:08",
+    "category": "Port Status",
+    "title": "China’s Cosco Halts Panama Port Operations as Tensions Rise",
+    "content": "China Cosco Shipping Corp. suspended its services at Panama’s Balboa port, a local media report said, after Beijing warned of a “heavy price” for the Central American country’s forced takeover of the facility from Hong Kong conglomerate CK Hutchison ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 103
+  },
+  {
+    "date": "2026-03-11",
     "time": "12:57",
     "category": "Logistics Technology",
     "title": "Attack reported on three vessels in Strait of Hormuz",
