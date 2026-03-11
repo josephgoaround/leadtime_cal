@@ -5,32 +5,31 @@
 
 ## **Core Features**
 
-### **1. Container Liner Logistics Engine**
-- **Mode Simulation:** Container Shipping (17kts avg), Air Cargo (850km/h) 간의 정밀 비교.
-- **Fixed Oceanic Arteries:** 300개 이상의 노드와 실제 정기선 경로를 결합한 '글로벌 컨테이너 백본' 구축.
-- **Advanced Cost Analysis:** 노선별 TEU/FEU 벤치마크 운임과 리스크 할증료를 반영한 비용 산출.
+### **1. Advanced Logistics Analysis Engine**
+- **Dynamic Bottleneck Algorithm:** Dijkstra 알고리즘에 실시간 리스크(Active Risks) 가중치를 부여하여 병목 구간 자동 우회 및 지연 시간 산출.
+- **Inland Transport Simulation:** 항만/공항에서 최종 목적지까지의 내륙 운송(First/Last Mile) 시간 및 비용 시뮬레이션 통합.
+- **Granular Cargo Delays:** HS 코드 및 화물 특성(Reefer, DG, Pharma 등)에 따른 세분화된 통관/검역 지연 시간 반영.
 
-### **2. 3D Load Planner (FCL/LCL Simulation)**
-- **Interactive 3D Visualization:** Three.js 기반의 20ft/40ft/40HC 컨테이너 적재 시뮬레이션.
-- **Advanced Bin Packing Algorithm:** 2D 회전, 동적 공간 분할(Guillotine split) 및 휴리스틱 최적화 알고리즘 적용.
-- **Stackability Control:** 화물별 2단 적재(Stackable) 옵션 제공 및 적재 시뮬레이션 반영.
-- **Real-time Efficiency HUD:** 적재율(Volume Efficiency) 및 적재 아이템 수를 실시간으로 계산하여 반영.
+### **2. 3D Load Planner (Professional Edition)**
+- **Weight Distribution Optimization:** 화물 중량(Weight) 데이터를 기반으로 하중 분산을 고려한 적재 순서 최적화 (중량물 하단 배치).
+- **Cargo Grouping (Mixing Restrictions):** 화물 그룹(Group) 지정을 통해 혼적 금지 제약 조건을 시뮬레이션에 반영.
+- **Interactive HUD:** 적재 효율, 중량 밸런스 및 미적재 항목 수를 실시간으로 모니터링.
 
-### **3. Logistics Daily Feed (News Board)**
-- **Cumulative News Feed:** 전 세계 물류 뉴스 및 항만 상태를 일자별 타임라인 형태로 누적 관리.
-- **Dynamic Category Filtering:** 선사 동향(Liner), 항만 상태(Port), 물류 기술(Tech) 등 카테고리별 필터링 제공.
-- **Automated Data Sync:** `news.json` 기반의 데이터 구조로 실시간 뉴스 업데이트 및 누적 저장 기능 구현.
+### **3. UI/UX & Map Intelligence**
+- **Map Risk Visualization:** 홍해, 파나마 등 주요 지연 발생 구역을 지도상에 Red-Zone으로 시각화하고 팝업 정보를 통해 원인 뉴스 연동.
+- **Smart Port Search:** UN/LOCODE 및 국가 기반의 실시간 자동완성(Autocomplete) 필터링 시스템 도입.
+- **Multi-modal Comparison:** 해상과 항공 운송 간의 리드타임 및 비용 차이를 대조 분석하는 컴페어러 기능 고도화.
 
-### **4. UI/UX & Intelligence**
-- **Liner-Specific Intel:** 항만 선석 대기 및 컨테이너 터미널 상황을 반영한 동적 정보 생성.
-- **Multi-language Support:** UI 및 분석 리포트의 실시간 한/영 전환.
+### **4. System Infrastructure**
+- **Automated Data Pipeline:** GitHub Actions를 활용한 2시간 단위의 전 세계 물류 뉴스 및 리스크 데이터 동기화 (`sync_data.py`).
+- **Firebase MCP Integration:** 서버리스 인프라 확장을 위한 Firebase 도구 연동 설정 완료.
 
-## **Latest Updates & Fixes**
-- **Logistics News Feed Implementation:** 블로그 형태의 타임라인 뉴스 게시판(`news.html`) 신규 개발.
-- **Packing Optimization:** 3D Load Planner의 적재 알고리즘 고도화 및 2단 적재 옵션 추가.
-- **Volume Efficiency Reflection Fix:** 3D Load Planner에서 적재 효율이 HUD에 실시간으로 반영되지 않던 버그 수정.
+## **Latest Updates**
+- **Bottleneck & Weights:** 리스크 데이터 기반의 동적 가중치 알고리즘 구현.
+- **3D Refinement:** 중량 기반 적재 및 그룹 제약 로직 추가.
+- **Search UI:** 출발/도착항 검색 필터링 기능 `index.html` 및 `main.js` 반영.
+- **Risk Markers:** 지도 레이어 상에 리스크 마커 시각화 기능 추가.
 
 ## **Current Implementation Plan**
-1. **News Architecture:** `data/news.json`을 통한 데이터 관리 및 `news.js`를 이용한 동적 렌더링.
-2. **Navigation Sync:** 모든 메인 페이지 헤더에 'Logistics News' 메뉴 통합.
-3. **Data Accumulation:** 새로운 뉴스가 추가될 때마다 JSON 데이터에 누적하여 관리.
+1. **Intelligence Expansion:** 외부 물류 API 연동을 통한 실시간 선사 스케줄링 반영 준비.
+2. **Account Integration:** 사용자별 경로 히스토리 및 선적 템플릿 저장을 위한 Firebase Auth 연동.

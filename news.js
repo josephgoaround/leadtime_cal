@@ -111,10 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => {
-                b.classList.remove('active', 'bg-indigo-600', 'text-white');
+                b.classList.remove('active', 'bg-indigo-100', 'text-white');
                 b.classList.add('bg-white', 'text-slate-600');
             });
-            btn.classList.add('active', 'bg-indigo-600', 'text-white');
+            btn.classList.add('active', 'bg-indigo-100', 'text-white');
             btn.classList.remove('bg-white', 'text-slate-600');
             renderNews(btn.dataset.category);
         });

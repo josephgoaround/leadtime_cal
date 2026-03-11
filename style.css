@@ -12,6 +12,20 @@ body {
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
+    color: #000000;
+}
+
+/* Global Text Unification to Black (excluding logo) */
+*:not(.logo-brand):not(.logo-brand *) {
+    color: #000000 !important;
+}
+
+.logo-brand {
+    color: #1e293b !important; /* slate-800 */
+}
+
+.logo-brand span {
+    color: #4f46e5 !important; /* indigo-600 */
 }
 
 h1, h2, h3, .font-poppins {

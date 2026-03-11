@@ -286,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const originSelect = document.getElementById('origin'), destinationSelect = document.getElementById('destination'), modeSelect = document.getElementById('transport-mode'), hscodeSelect = document.getElementById('hscode'), resultContainer = document.getElementById('feed-container');
     const newsTicker = document.getElementById('news-ticker');
+    const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
 
     async function loadLiveNews() {
         try {
@@ -335,18 +336,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadLiveNews();
 
-    function populate() {
+    function populate(filterO = '', filterD = '') {
         const mode = modeSelect.value;
         const curO = originSelect.value, curD = destinationSelect.value;
-        originSelect.innerHTML = ''; destinationSelect.innerHTML = '';
-        Object.entries(hubs).filter(([id, h]) => h.type === mode).sort((a,b)=>a[1].name.localeCompare(b[1].name)).forEach(([id,h]) => {
-            originSelect.add(new Option(`${h.name} (${h.country})`, id));
-            destinationSelect.add(new Option(`${h.name} (${h.country})`, id));
-        });
-        if(curO && hubs[curO] && hubs[curO].type === mode) originSelect.value = curO;
-        if(curD && hubs[curD] && hubs[curD].type === mode) destinationSelect.value = curD;
+        
+        const updateSelect = (select, filter) => {
+            const currentVal = select.value;
+            select.innerHTML = '';
+            Object.entries(hubs)
+                .filter(([id, h]) => h.type === mode && (h.name.toLowerCase().includes(filter.toLowerCase()) || h.country.toLowerCase().includes(filter.toLowerCase())))
+                .sort((a,b)=>a[1].name.localeCompare(b[1].name))
+                .forEach(([id,h]) => {
+                    select.add(new Option(`${h.name} (${h.country})`, id));
+                });
+            if(currentVal && hubs[currentVal] && hubs[currentVal].type === mode) select.value = currentVal;
+        };
+
+        updateSelect(originSelect, filterO);
+        updateSelect(destinationSelect, filterD);
     }
-    modeSelect.onchange = populate;
+
+    modeSelect.onchange = () => populate();
+    if(originSearch) originSearch.oninput = (e) => populate(e.target.value, destSearch ? destSearch.value : '');
+    if(destSearch) destSearch.oninput = (e) => populate(originSearch ? originSearch.value : '', e.target.value);
     populate();
 
     function getOptimizedPath(start, end, points = 50) {
@@ -382,8 +394,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-                if (isRiskActive && ["bab_el_mandeb", "suez_s", "red_sea_1", "red_sea_2", "red_sea_3"].includes(neighbor)) return;
-                let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]);
+
+                // Bottleneck & Risk Weighting
+                let weightMultiplier = 1;
+                if (isRiskActive && ["bab_el_mandeb", "suez_s", "red_sea_1", "red_sea_2", "red_sea_3"].includes(neighbor)) {
+                    weightMultiplier = 100; // Force reroute via Good Hope
+                }
+                
+                // Apply dynamic weights from active risks
+                activeRisks.forEach(risk => {
+                    if (risk.id === 'panama_disruption' && ["panama_e", "panama_w"].includes(neighbor)) weightMultiplier = 2;
+                    if (risk.id === 'hormuz_disruption' && ["hormuz_strait"].includes(neighbor)) weightMultiplier = 5;
+                });
+
+                let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]) * weightMultiplier;
                 let alt = distances[closest] + d;
                 if (alt < distances[neighbor]) { distances[neighbor] = alt; previous[neighbor] = closest; }
             });
@@ -478,18 +502,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderMap(path, mode) {
-        map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
+        map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker || l instanceof L.Circle) map.removeLayer(l); });
         const color = mode === 'sea' ? '#2563eb' : '#f59e0b';
-        L.marker(path[0]).addTo(map); L.marker(path[path.length - 1]).addTo(map);
+        
+        // Add Path
         L.polyline(path, { color: color, weight: 5, opacity: 0.9, dashArray: mode === 'sea' ? '10, 10' : null }).addTo(map);
+        
+        // Add Origin/Dest Markers
+        L.marker(path[0]).addTo(map).bindPopup("Origin"); 
+        L.marker(path[path.length - 1]).addTo(map).bindPopup("Destination");
+        
+        // Add Risk Markers if applicable
+        if (mode === 'sea') {
+            const riskPoints = {
+                "suez_disruption": [12.6, 43.3], // Bab el Mandeb
+                "panama_disruption": [9.0, -79.6],
+                "hormuz_disruption": [26.5, 56.5]
+            };
+            activeRisks.forEach(risk => {
+                if (riskPoints[risk.id]) {
+                    L.circle(riskPoints[risk.id], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5,
+                        radius: 500000
+                    }).addTo(map).bindPopup(`<b>RISK ALERT: ${risk.label}</b><br>${risk.source_news}`);
+                }
+            });
+        }
+
         map.fitBounds(L.polyline(path).getBounds(), { padding: [50, 50] });
     }
 
-    const cargoDelays = { general: 1, rf: 2, dg: 4, special: 5 };
+    const cargoDelays = { 
+        general: 1, // Standard Container
+        rf: 3,      // Reefer (Cold Chain)
+        dg: 5,      // Dangerous Goods (Chemicals/Battery)
+        special: 7, // Oversized/Project Cargo
+        electronics: 2, // High-value Electronics (Security scan)
+        pharma: 4   // Pharmaceuticals (Customs priority but strict temp check)
+    };
+
     function solveRoute(oId, dId, mode, cargo) {
         const o = hubs[oId], d = hubs[dId];
         let routePath = [], totalDist = 0;
         
+        // Inland Transport Simulation (Simulate 50-200km land transit to/from hub)
+        const inlandDist = 150; // Average land-to-port/airport distance in km
+        const inlandDays = mode === 'sea' ? 1.5 : 0.5; // Trucking vs Express Delivery
+
         // Dynamic Risk Assessment
         let appliedRisks = [];
         if (mode === 'sea') {
@@ -533,8 +594,8 @@ document.addEventListener('DOMContentLoaded', () => {
             totalDist = getDistHaversine(o.coords, d.coords);
         }
         
-        const transitDays = (totalDist / ((mode === 'sea' ? 17 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1) + riskDelay;
-        const costUSD = (mode === 'sea' ? 1200 + (totalDist * 0.15) : 4000 + (totalDist * 2.8)) + riskCost;
+        const transitDays = (totalDist / ((mode === 'sea' ? 17 : 850) * 1.852 * 24)) + (mode === 'sea' ? 7 : 2) + (cargoDelays[cargo] || 1) + riskDelay + inlandDays;
+        const costUSD = (mode === 'sea' ? 1200 + (totalDist * 0.15) : 4000 + (totalDist * 2.8)) + riskCost + (inlandDist * 0.5);
         const eta = new Date(document.getElementById('departure-date').value || new Date());
         eta.setDate(eta.getDate() + transitDays);
         

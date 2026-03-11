@@ -15,11 +15,19 @@ document.addEventListener('DOMContentLoaded', () => {
         div.className = 'bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3 animate-fade-in relative group';
         div.innerHTML = `
             <button class="absolute -top-2 -right-2 w-6 h-6 bg-white shadow-md rounded-full text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center border border-slate-100" onclick="this.parentElement.remove()">×</button>
-            <input type="text" placeholder="Cargo Description" class="w-full text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Unit ${id+1}" id="c-name-${id}">
-            <div class="grid grid-cols-5 gap-2">
+            <div class="flex items-center justify-between gap-2">
+                <input type="text" placeholder="Cargo Description" class="flex-1 text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Unit ${id+1}" id="c-name-${id}">
+                <select id="c-group-${id}" class="text-[9px] bg-white border border-slate-200 rounded px-1 font-bold text-slate-500">
+                    <option value="A">Group A</option>
+                    <option value="B">Group B</option>
+                    <option value="C">Group C</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-6 gap-2">
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">L (cm)</p><input type="number" value="120" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-l-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">W (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-w-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">H (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-h-${id}"></div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">Weight (kg)</p><input type="number" value="500" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-wt-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">QTY</p><input type="number" value="5" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-q-${id}"></div>
                 <div class="space-y-1 flex flex-col items-center justify-end pb-1">
                     <p class="text-[8px] font-black text-slate-400 uppercase mb-1">Stack</p>
@@ -153,19 +161,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const l = parseFloat(row.querySelector('[id^="c-l-"]').value) || 0;
             const w = parseFloat(row.querySelector('[id^="c-w-"]').value) || 0;
             const h = parseFloat(row.querySelector('[id^="c-h-"]').value) || 0;
+            const wt = parseFloat(row.querySelector('[id^="c-wt-"]').value) || 0;
             const q = parseInt(row.querySelector('[id^="c-q-"]').value) || 0;
             const s = row.querySelector('[id^="c-s-"]').checked;
+            const g = row.querySelector('[id^="c-group-"]').value;
             if(l > 0 && w > 0 && h > 0 && q > 0) {
-                for(let j=0; j<q; j++) itemsToPack.push({ l, w, h, stackable: s, color: colors[i % colors.length] });
+                for(let j=0; j<q; j++) itemsToPack.push({ l, w, h, weight: wt, group: g, stackable: s, color: colors[i % colors.length] });
             }
         });
 
-        // Sort by Volume descending to fill largest first
-        itemsToPack.sort((a,b) => (b.l*b.w*b.h) - (a.l*a.w*a.h));
+        // Enhanced Sorting: Weight First (Heavier at bottom), then Volume
+        itemsToPack.sort((a,b) => (b.weight - a.weight) || (b.l*b.w*b.h) - (a.l*a.w*a.h));
 
         class Packer {
             constructor(L, W, H) { 
-                this.spaces = [{x:0, y:0, z:0, l:L, w:W, h:H}]; 
+                this.spaces = [{x:0, y:0, z:0, l:L, w:W, h:H, allowedGroups: []}]; 
                 this.packed = []; 
             }
             
@@ -176,6 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let i = 0; i < this.spaces.length; i++) {
                     let s = this.spaces[i];
                     
+                    // Mixing Restriction: If space already has a group assigned, check compatibility
+                    if (s.allowedGroups.length > 0 && !s.allowedGroups.includes(box.group)) continue;
+
                     // Try normal orientation and 90-degree rotation (floor-wise)
                     const orientations = [
                         { l: box.l, w: box.w, h: box.h },
@@ -187,30 +200,30 @@ document.addEventListener('DOMContentLoaded', () => {
                             this.packed.push({
                                 x: s.x, y: s.y, z: s.z, 
                                 l: orient.l, w: orient.w, h: orient.h, 
-                                color: box.color
+                                color: box.color, group: box.group
                             });
                             
                             this.spaces.splice(i, 1);
                             
-                            // 3D Guillotine Split with heuristic: Split along axis that leaves largest contiguous space
-                            // Top Space (only if item is stackable)
+                            // Propagate group restriction to child spaces
+                            const childAllowedGroups = [box.group];
+
+                            // 3D Guillotine Split with heuristic
+                            // Top Space
                             if (box.stackable && s.h - orient.h > 0) {
                                 this.spaces.push({
                                     x: s.x, y: s.y + orient.h, z: s.z, 
-                                    l: orient.l, w: orient.w, h: s.h - orient.h
+                                    l: orient.l, w: orient.w, h: s.h - orient.h,
+                                    allowedGroups: childAllowedGroups
                                 });
                             }
                             
-                            // Split remaining volume into two large boxes (Side and Front)
-                            // We split in a way that allows longer items to fit next to shorter ones
                             if (s.l - orient.l > (s.w - orient.w)) {
-                                // Split Front first
-                                if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: s.w, h: s.h});
-                                if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: orient.l, w: s.w - orient.w, h: s.h});
+                                if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: s.w, h: s.h, allowedGroups: []});
+                                if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: orient.l, w: s.w - orient.w, h: s.h, allowedGroups: []});
                             } else {
-                                // Split Side first
-                                if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: s.l, w: s.w - orient.w, h: s.h});
-                                if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: orient.w, h: s.h});
+                                if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: s.l, w: s.w - orient.w, h: s.h, allowedGroups: []});
+                                if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: orient.w, h: s.h, allowedGroups: []});
                             }
                             
                             return true;

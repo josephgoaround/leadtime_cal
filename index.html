@@ -37,7 +37,7 @@
         <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
             <div class="flex items-center gap-8">
                 <a href="index.html" class="block">
-                    <h1 class="text-xl md:text-2xl font-black tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+                    <h1 class="logo-brand text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
                 </a>
                 <nav class="hidden md:flex items-center gap-6">
                     <a href="index.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">Analyzer</a>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
                     <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600">KO</button>
-                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm">EN</button>
+                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-100 text-white shadow-sm">EN</button>
                 </div>
             </div>
         </div>
@@ -62,8 +62,8 @@
     <main class="container mx-auto px-4 max-w-6xl mt-8">
         <!-- Hero & News Ticker -->
         <div class="mb-12">
-            <div class="bg-slate-900 text-white p-3 rounded-2xl flex items-center gap-4 overflow-hidden shadow-xl border border-slate-800 mb-8">
-                <div class="bg-indigo-600 text-[9px] font-black px-2 py-1 rounded uppercase tracking-widest animate-pulse shrink-0">Live Intel</div>
+            <div class="bg-white text-white p-3 rounded-2xl flex items-center gap-4 overflow-hidden shadow-xl border border-slate-200 mb-8">
+                <div class="bg-indigo-100 text-[9px] font-black px-2 py-1 rounded uppercase tracking-widest animate-pulse shrink-0">Live Intel</div>
                 <div class="text-[11px] font-bold whitespace-nowrap overflow-hidden flex-1">
                     <div id="news-ticker" class="flex gap-12 animate-marquee">
                         <span>Shanghai Port automation upgrades improving turnaround by 15%.</span>
@@ -110,15 +110,17 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Origin Port</label>
+                                <input type="text" id="origin-search" placeholder="Search port or country..." class="w-full mb-2 py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold text-slate-600 focus:ring-1 focus:ring-indigo-500 outline-none">
                                 <select id="origin" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"></select>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Dest. Port</label>
+                                <input type="text" id="dest-search" placeholder="Search port or country..." class="w-full mb-2 py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold text-slate-600 focus:ring-1 focus:ring-indigo-500 outline-none">
                                 <select id="destination" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"></select>
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest">
+                        <button type="submit" class="w-full bg-indigo-100 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest">
                             Run Analysis Engine
                         </button>
                     </form>
@@ -165,18 +167,18 @@
                     <input type="text" name="name" placeholder="Full Name" required class="px-6 py-4 rounded-2xl bg-white border-transparent focus:ring-2 focus:ring-indigo-600 text-sm font-bold">
                     <input type="email" name="email" placeholder="Business Email" required class="px-6 py-4 rounded-2xl bg-white border-transparent focus:ring-2 focus:ring-indigo-600 text-sm font-bold">
                     <textarea name="message" placeholder="Message" required class="col-span-full px-6 py-4 rounded-2xl bg-white border-transparent focus:ring-2 focus:ring-indigo-600 text-sm font-bold h-32"></textarea>
-                    <button type="submit" class="col-span-full bg-slate-900 text-white font-black py-5 rounded-2xl hover:bg-black transition-all uppercase tracking-widest text-xs">Send Inquiry</button>
+                    <button type="submit" class="col-span-full bg-white text-white font-black py-5 rounded-2xl hover:bg-black transition-all uppercase tracking-widest text-xs">Send Inquiry</button>
                 </form>
             </div>
         </section>
     </main>
 
     <!-- Global Footer -->
-    <footer class="bg-slate-900 text-white py-20">
+    <footer class="bg-white text-white py-20">
         <div class="container mx-auto px-4 max-w-6xl">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                 <div class="col-span-1 md:col-span-2">
-                    <h2 class="text-2xl font-black mb-6 italic">LeadTime<span class="text-indigo-400">Intelligence</span></h2>
+                    <h2 class="logo-brand text-2xl font-black mb-6 italic">LeadTime<span class="text-indigo-400">Intelligence</span></h2>
                     <p class="text-slate-400 text-sm leading-relaxed max-w-sm">Global logistics decision-making platform. Empowering SCM professionals with AI-driven maritime insights.</p>
                 </div>
                 <div>
@@ -196,7 +198,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="pt-12 border-t border-slate-800 flex justify-between items-center text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+            <div class="pt-12 border-t border-slate-200 flex justify-between items-center text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
                 <p>© 2026 LEADTIME INTELLIGENCE. ALL RIGHTS RESERVED.</p>
                 <div class="flex gap-6">
                     <a href="#" class="hover:text-white">API Docs</a>

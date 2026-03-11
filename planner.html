@@ -8,12 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow: hidden; }
         .sidebar { background-color: #ffffff; height: calc(100vh - 64px); overflow-y: auto; z-index: 100; border-right: 1px solid #e2e8f0; }
-        #canvas-container { width: 100%; height: calc(100vh - 64px); position: relative; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); }
+        #canvas-container { width: 100%; height: calc(100vh - 64px); position: relative; background: #ffffff; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .hud-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .hud-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.1); }
         .tab-active { color: #4f46e5; border-bottom: 2px solid #4f46e5; }
     </style>
 </head>
@@ -24,7 +24,7 @@
         <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
             <div class="flex items-center gap-8">
                 <a href="index.html" class="block">
-                    <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
+                    <h1 class="logo-brand text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
                 </a>
                 <nav class="hidden md:flex items-center gap-6">
                     <a href="index.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">Analyzer</a>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
                     <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600">KO</button>
-                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm">EN</button>
+                    <button class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-100 text-white shadow-sm">EN</button>
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cargo Manifest</label>
-                        <button id="add-cargo-btn" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 transition-all shadow-md">+ ADD ITEM</button>
+                        <button id="add-cargo-btn" class="px-3 py-1.5 bg-indigo-100 text-white rounded-lg text-[10px] font-black hover:bg-indigo-700 transition-all shadow-md">+ ADD ITEM</button>
                     </div>
                     <div id="cargo-items" class="space-y-3">
                         <!-- Dynamic Items Injected Here -->
@@ -79,7 +79,7 @@
 
             <!-- Execute Action -->
             <div class="p-6 bg-slate-50 border-t border-slate-100">
-                <button id="simulate-load-btn" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-200 uppercase text-xs tracking-widest flex items-center justify-center gap-3">
+                <button id="simulate-load-btn" class="w-full bg-indigo-100 text-white font-black py-4 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-200 uppercase text-xs tracking-widest flex items-center justify-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Run Simulation
                 </button>
@@ -123,7 +123,7 @@
             <!-- Initial Placeholder -->
             <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div class="text-center">
-                    <div class="w-20 h-20 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-6"></div>
+                    <div class="w-20 h-20 border-4 border-indigo-200/20 border-t-indigo-500 rounded-full animate-spin mx-auto mb-6"></div>
                     <p class="text-indigo-300 font-black uppercase tracking-[0.3em] text-sm animate-pulse">Initializing 3D Environment</p>
                 </div>
             </div>
