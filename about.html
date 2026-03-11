@@ -5,75 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us | LeadTime Intelligence</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50 font-sans text-gray-900">
-
-    <!-- Global Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-[3000] shadow-sm">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-[3000]">
         <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
-            <div class="flex items-center gap-8">
-                <a href="index.html" class="block">
-                    <h1 class="logo-brand text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
-                </a>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a href="index.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1" data-i18n="navAnalyzer">Analyzer</a>
-                    <a href="planner.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1" data-i18n="navPlanner">3D Load Planner</a>
-                    <a href="news.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1" data-i18n="navNews">Logistics News</a>
-                    <a href="about.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1" data-i18n="navAbout">About</a>
-                </nav>
-            </div>
-            <div class="flex items-center gap-1 border-l pl-3 border-slate-200">
-                <button id="lang-ko" class="px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600">KO</button>
-                <button id="lang-en" class="px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm">EN</button>
-            </div>
+            <a href="index.html" class="block"><h1 class="logo-brand text-xl md:text-2xl font-extrabold tracking-tight">LeadTime<span class="text-indigo-600">Intelligence</span></h1></a>
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="index.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors">Analyzer</a>
+                <a href="planner.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors">3D Load Planner</a>
+                <a href="news.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors">Logistics News</a>
+                <a href="about.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">About</a>
+            </nav>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 max-w-4xl py-20">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-6" data-i18n="aboutTitle">About LeadTime Intelligence</h2>
-            <p class="text-lg text-slate-500 font-medium leading-relaxed" data-i18n="aboutDesc">Fusing maritime expertise with advanced AI to illuminate global supply chains.</p>
-        </div>
+    <main class="container mx-auto px-4 max-w-4xl py-16">
+        <h2 class="text-4xl font-black text-slate-900 mb-8">Empowering Global Trade with <span class="text-indigo-600">Intelligence</span></h2>
+        
+        <div class="prose prose-indigo max-w-none space-y-8 text-slate-600 leading-relaxed">
+            <section>
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">Our Mission</h3>
+                <p>LeadTime Intelligence는 글로벌 공급망의 불투명성을 해소하기 위해 탄생했습니다. 우리는 데이터 과학과 해운 물류 전문 지식을 결합하여, 화주와 물류 전문가들이 더 나은 의사결정을 내릴 수 있도록 돕는 도구를 제공합니다.</p>
+            </section>
 
-        <div class="prose max-w-none text-slate-600 font-medium space-y-8">
-            <p>LeadTime Intelligence was born from a simple observation: the world's most critical infrastructure—global logistics—is often the least transparent. By combining decades of seafaring experience with cutting-edge graph theory and real-time data processing, we've built a platform that doesn't just calculate distances, but predicts the heartbeat of global trade.</p>
-            <p>Our mission is to empower logistics professionals with the tools they need to navigate an increasingly complex geopolitical landscape. Whether it's rerouting around the Suez Canal or optimizing a single container's load, we provide the intelligence that moves the world.</p>
+            <section class="grid md:grid-cols-2 gap-8 py-8">
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                    <h4 class="font-bold text-slate-900 mb-2">Data-Driven Precision</h4>
+                    <p class="text-sm">250개 이상의 글로벌 허브 항구와 고정된 정기선 항로 데이터를 기반으로 Dijkstra 알고리즘을 활용한 정밀한 경로 시뮬레이션을 제공합니다.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                    <h4 class="font-bold text-slate-900 mb-2">Sustainable Logistics</h4>
+                    <p class="text-sm">경로 최적화를 통해 연료 소모를 줄이고, 효율적인 컨테이너 적재 계획을 통해 불필요한 운송 비용과 탄소 배출을 최소화하는 것을 목표로 합니다.</p>
+                </div>
+            </section>
+
+            <section>
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">Why LeadTime Intelligence?</h3>
+                <p>많은 물류 도구들이 단순히 거리를 계산할 때, 우리는 실제 해상 고속도로(Maritime Arteries)와 지오폴리틱 리스크, 항만 적체 상황을 실시간으로 반영합니다. AdSense 파트너로서 우리는 사용자에게 가치 있고 신뢰할 수 있는 물류 인사이트를 제공하기 위해 최선을 다합니다.</p>
+            </section>
         </div>
     </main>
 
-    <footer class="bg-white py-12 border-t border-slate-100 mt-20">
-        <div class="container mx-auto px-4 max-w-6xl flex flex-col md:flex-row justify-between items-center gap-6">
-            <h2 class="logo-brand text-xl font-black italic text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h2>
-            <div class="flex gap-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                <a href="about.html">About</a>
-                <a href="privacy.html">Privacy</a>
-                <a href="terms.html">Terms</a>
-                <p>© 2026 LEADTIME INTELLIGENCE</p>
+    <!-- Footer -->
+    <footer class="bg-white text-white py-12 mt-20">
+        <div class="container mx-auto px-4 max-w-6xl text-center">
+            <h1 class="logo-brand text-xl font-black mb-6">LeadTime Intelligence</h1>
+            <div class="flex justify-center flex-wrap gap-6 text-slate-400 text-xs font-bold tracking-widest uppercase">
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+                <a href="terms.html" class="hover:text-white">Terms of Service</a>
+                <a href="index.html#contact" class="hover:text-white">Contact</a>
             </div>
+            <p class="mt-8 text-slate-500 text-[10px]">© 2026 LEADTIME INTELLIGENCE. ALL RIGHTS RESERVED.</p>
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const translations = {
-                en: { navAnalyzer: "Analyzer", navPlanner: "3D Load Planner", navNews: "Logistics News", navAbout: "About", aboutTitle: "About LeadTime Intelligence", aboutDesc: "Fusing maritime expertise with advanced AI to illuminate global supply chains." },
-                ko: { navAnalyzer: "분석기", navPlanner: "3D 적재 플래너", navNews: "물류 뉴스", navAbout: "소개", aboutTitle: "LeadTime Intelligence 소개", aboutDesc: "해운 전문 지식과 고급 AI를 결합하여 글로벌 공급망을 혁신합니다." }
-            };
-            const updateUI = () => {
-                const lang = localStorage.getItem('selectedLang') || 'en';
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if(translations[lang][key]) el.textContent = translations[lang][key];
-                });
-                document.getElementById('lang-ko').className = lang === 'ko' ? "px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm" : "px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600";
-                document.getElementById('lang-en').className = lang === 'en' ? "px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm" : "px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600";
-            };
-            document.getElementById('lang-ko').onclick = () => { localStorage.setItem('selectedLang', 'ko'); updateUI(); };
-            document.getElementById('lang-en').onclick = () => { localStorage.setItem('selectedLang', 'en'); updateUI(); };
-            updateUI();
-        });
-    </script>
 </body>
 </html>

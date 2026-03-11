@@ -1,111 +1,124 @@
-// news.js - Specialized Engine for Logistics News Feed
 document.addEventListener('DOMContentLoaded', () => {
-    const translations = {
-        en: {
-            navAnalyzer: "Analyzer", navPlanner: "3D Load Planner", navNews: "Logistics News", navAbout: "About",
-            pageTitle: "Logistics Risk & News",
-            pageDesc: "Real-time updates on global maritime bottlenecks and SCM intelligence.",
-            readMore: "Read Original Article",
-            sourceLabel: "Source",
-            allCategories: "All Categories",
-            maritime: "Maritime",
-            customs: "Customs",
-            disruption: "Disruption",
-            noNews: "No news found for the selected category."
-        },
-        ko: {
-            navAnalyzer: "분석기", navPlanner: "3D 적재 플래너", navNews: "물류 뉴스", navAbout: "소개",
-            pageTitle: "물류 리스크 및 뉴스",
-            pageDesc: "글로벌 해운 병목 현상 및 SCM 인텔리전스 실시간 업데이트.",
-            readMore: "원문 기사 읽기",
-            sourceLabel: "출처",
-            allCategories: "모든 카테고리",
-            maritime: "해운",
-            customs: "통관",
-            disruption: "운항 지연",
-            noNews: "선택한 카테고리에 뉴스가 없습니다."
-        }
-    };
+    const newsItemsContainer = document.getElementById('news-items');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    let allNews = [];
 
-    let currentLang = localStorage.getItem('selectedLang') || 'en';
-    const newsGrid = document.getElementById('news-grid');
-    const categoryFilters = document.getElementById('category-filters');
-
-    function updateLanguageUI() {
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[currentLang][key]) el.textContent = translations[currentLang][key];
-        });
-        
-        // Sync with buttons
-        document.getElementById('lang-ko').className = currentLang === 'ko' ? "px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm" : "px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600";
-        document.getElementById('lang-en').className = currentLang === 'en' ? "px-3 py-1.5 rounded-md text-xs font-bold bg-indigo-600 text-white shadow-sm" : "px-3 py-1.5 rounded-md text-xs font-bold bg-white border border-slate-200 text-slate-600";
-        
-        loadNews(); // Re-render news with new language
-    }
-
-    async function loadNews(category = 'all') {
-        if (!newsGrid) return;
-        newsGrid.innerHTML = '<div class="col-span-full text-center py-20 animate-pulse text-slate-400 font-bold">Loading Intelligence...</div>';
-
+    // Fetch news data
+    async function fetchNews() {
         try {
             const response = await fetch('data/news.json');
-            const news = await response.json();
-            
-            const filteredNews = category === 'all' ? news : news.filter(n => n.category === category);
-            
-            if (filteredNews.length === 0) {
-                newsGrid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-400 font-bold">${translations[currentLang].noNews}</div>`;
-                return;
-            }
-
-            newsGrid.innerHTML = filteredNews.map(item => `
-                <article class="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-indigo-50/50 overflow-hidden group hover:border-indigo-200 transition-all flex flex-col">
-                    <div class="p-8 flex-1">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-full">${currentLang === 'ko' ? (translations.ko[item.category] || item.category) : item.category}</span>
-                            <span class="text-[10px] font-bold text-slate-300 uppercase">${item.date}</span>
-                        </div>
-                        <h3 class="text-xl font-black text-slate-800 mb-4 leading-tight group-hover:text-indigo-600 transition-colors">
-                            ${currentLang === 'ko' && item.titleKo ? item.titleKo : item.title}
-                        </h3>
-                        <p class="text-sm text-slate-500 leading-relaxed font-medium mb-6">
-                            ${currentLang === 'ko' && item.summaryKo ? item.summaryKo : item.summary}
-                        </p>
-                    </div>
-                    <div class="px-8 pb-8">
-                        <div class="flex items-center justify-between pt-6 border-t border-slate-50">
-                            <div class="flex flex-col">
-                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">${translations[currentLang].sourceLabel}</span>
-                                <span class="text-xs font-bold text-slate-700">${item.source}</span>
-                            </div>
-                            <a href="${item.url}" target="_blank" class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            `).join('');
-        } catch (e) {
-            console.error("News Load Failed:", e);
+            allNews = await response.json();
+            // Sort by date and time (newest first)
+            allNews.sort((a, b) => new Date(`${b.date} ${b.time}`) - new Date(`${a.date} ${a.time}`));
+            renderNews('all');
+        } catch (error) {
+            console.error('Failed to fetch news:', error);
+            newsItemsContainer.innerHTML = `
+                <div class="text-center py-20">
+                    <p class="text-red-500 font-bold">뉴스 데이터를 불러오는 데 실패했습니다.</p>
+                </div>
+            `;
         }
     }
 
-    // EVENT LISTENERS
-    if(document.getElementById('lang-ko')) document.getElementById('lang-ko').onclick = () => { currentLang='ko'; localStorage.setItem('selectedLang', 'ko'); updateLanguageUI(); };
-    if(document.getElementById('lang-en')) document.getElementById('lang-en').onclick = () => { currentLang='en'; localStorage.setItem('selectedLang', 'en'); updateLanguageUI(); };
+    function renderNews(categoryFilter) {
+        newsItemsContainer.innerHTML = '';
+        
+        const filteredNews = categoryFilter === 'all' 
+            ? allNews 
+            : allNews.filter(item => item.category === categoryFilter);
 
-    if(categoryFilters) {
-        categoryFilters.querySelectorAll('button').forEach(btn => {
-            btn.onclick = () => {
-                categoryFilters.querySelectorAll('button').forEach(b => b.classList.replace('bg-indigo-600', 'bg-white'));
-                categoryFilters.querySelectorAll('button').forEach(b => b.classList.replace('text-white', 'text-slate-600'));
-                btn.classList.replace('bg-white', 'bg-indigo-600');
-                btn.classList.replace('text-slate-600', 'text-white');
-                loadNews(btn.getAttribute('data-category'));
-            };
+        if (filteredNews.length === 0) {
+            newsItemsContainer.innerHTML = '<p class="text-center text-slate-400 py-20 font-bold uppercase tracking-widest text-xs">No news found in this category</p>';
+            return;
+        }
+
+        // Group by date
+        const grouped = filteredNews.reduce((acc, item) => {
+            if (!acc[item.date]) acc[item.date] = [];
+            acc[item.date].push(item);
+            return acc;
+        }, {});
+
+        Object.keys(grouped).forEach(date => {
+            // Date Header
+            const dateHeader = document.createElement('div');
+            dateHeader.className = 'relative flex justify-center mb-8';
+            dateHeader.innerHTML = `
+                <div class="bg-indigo-50 text-indigo-600 px-6 py-2 rounded-full text-xs font-black shadow-sm relative z-20 border border-indigo-100 uppercase tracking-tighter">
+                    ${formatDate(date)}
+                </div>
+            `;
+            newsItemsContainer.appendChild(dateHeader);
+
+            // News Cards for this date
+            grouped[date].forEach((item, index) => {
+                const isEven = index % 2 === 0;
+                const card = document.createElement('div');
+                card.className = `flex flex-col md:flex-row items-center gap-8 mb-12 relative w-full`;
+                
+                const categoryColor = getCategoryColor(item.category);
+                
+                card.innerHTML = `
+                    <div class="hidden md:block w-1/2 ${isEven ? 'order-1 text-right' : 'order-3 text-left'} px-8">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${item.time}</span>
+                    </div>
+                    
+                    <div class="absolute left-[20px] md:left-1/2 top-0 bottom-0 md:-translate-x-1/2 flex items-center justify-center z-30">
+                        <div class="w-4 h-4 rounded-full bg-white border-4 ${categoryColor.border} shadow-sm"></div>
+                    </div>
+
+                    <div class="w-full md:w-1/2 ${isEven ? 'md:order-3' : 'md:order-1'} pl-12 md:px-8">
+                        <div class="news-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="category-badge ${categoryColor.bg} ${categoryColor.text}">${item.category}</span>
+                                <span class="md:hidden text-[10px] font-black text-slate-400 uppercase tracking-widest">${item.time}</span>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-800 mb-3 leading-tight">${item.title}</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-6 font-medium">${item.content}</p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                ${item.tags.map(tag => `<span class="text-[9px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded">#${tag}</span>`).join('')}
+                            </div>
+                            <div class="flex items-center gap-3 pt-4 border-t border-slate-50">
+                                <div class="w-6 h-6 bg-indigo-100 rounded-full flex items-center justify-center text-[10px] font-black text-indigo-600">
+                                    ${item.author.charAt(0)}
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">${item.author}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                newsItemsContainer.appendChild(card);
+            });
         });
     }
 
-    updateLanguageUI();
+    function formatDate(dateStr) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
+        return new Date(dateStr).toLocaleDateString('ko-KR', options);
+    }
+
+    function getCategoryColor(category) {
+        switch(category) {
+            case 'Liner News': return { bg: 'bg-blue-100', text: 'text-blue-600', border: 'border-blue-500' };
+            case 'Port Status': return { bg: 'bg-emerald-100', text: 'text-emerald-600', border: 'border-emerald-500' };
+            case 'Logistics Technology': return { bg: 'bg-purple-100', text: 'text-purple-600', border: 'border-purple-500' };
+            default: return { bg: 'bg-slate-100', text: 'text-slate-600', border: 'border-slate-500' };
+        }
+    }
+
+    // Filter Logic
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => {
+                b.classList.remove('active', 'bg-indigo-100', 'text-white');
+                b.classList.add('bg-white', 'text-slate-600');
+            });
+            btn.classList.add('active', 'bg-indigo-100', 'text-white');
+            btn.classList.remove('bg-white', 'text-slate-600');
+            renderNews(btn.dataset.category);
+        });
+    });
+
+    fetchNews();
 });
