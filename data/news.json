@@ -1,6 +1,97 @@
 [
   {
     "date": "2026-03-11",
+    "time": "15:47",
+    "category": "Liner News",
+    "title": "CMA CGM announces PSS for Oceania–Mediterranean and Asia–West Africa Trades",
+    "content": "CMA CGM has introduced new Peak Season Surcharges (PSS) on several international trade routes to maintain reliable shipping services. Oceania to East Mediterranean A PSS will apply to shipments from Australia, New Zealand, Papua New Guinea, and Timor...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 115
+  },
+  {
+    "date": "2026-03-11",
+    "time": "15:47",
+    "category": "Liner News",
+    "title": "CNC introduces Emergency Fuel Surcharge for Intra-Asia shipping",
+    "content": "CNC Line will implement an Emergency Fuel Surcharge (EFS) for Intra-Asia shipments following a sharp rise in global fuel prices. Fuel markets reopened on 2 March 2026, but prices surged due to ongoing geopolitical tensions in the Near and Middle East...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 114
+  },
+  {
+    "date": "2026-03-11",
+    "time": "15:47",
+    "category": "Liner News",
+    "title": "ONE vessel in U.S. service attacked in Persian Gulf",
+    "content": "A ONE container ship in U.S. service was attacked in the Persian Gulf, the first confirmed targeting of merchant shipping beyond the Strait of Hormuz.\nThe post ONE vessel in U.S. service attacked in Persian Gulf appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 113
+  },
+  {
+    "date": "2026-03-11",
+    "time": "15:47",
+    "category": "Logistics Technology",
+    "title": "US Navy won’t escort strait shipping: Report ",
+    "content": "Despite near-daily requests from shipping, the U.S. Navy has refused to provide escorts in the Strait of Hormuz, according to a report.\nThe post US Navy won’t escort strait shipping: Report  appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 112
+  },
+  {
+    "date": "2026-03-11",
+    "time": "15:47",
+    "category": "Liner News",
+    "title": "Enter the shark tank: How Kenvue innovates its operations",
+    "content": "Monthly meetings give employees the chance to pitch their ideas and potentially have them deployed, said Meri Stevens, COO of the Tylenol and Neutrogena brand owner.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 111
+  },
+  {
+    "date": "2026-03-11",
+    "time": "15:47",
+    "category": "Logistics Technology",
+    "title": "Three Crew Missing from Thai Cargo Ship Hit in Hormuz",
+    "content": "A Thai-flagged cargo vessel was struck in the Strait of Hormuz on Wednesday shortly after departing from the United Arab Emirates, as regional tensions continue to disrupt one of the world’s most critical shipping lanes. Three people are missing.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 110
+  },
+  {
+    "date": "2026-03-11",
+    "time": "15:47",
+    "category": "Port Status",
+    "title": "CENTCOM Warns Iranian Ports Used by Military Could Become Targets",
+    "content": "U.S. Central Command (CENTCOM) on Tuesday warned civilians to avoid port facilities in Iran where naval forces are operating, saying the Iranian military is using commercial ports along the Strait...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 109
+  },
+  {
+    "date": "2026-03-11",
     "time": "14:08",
     "category": "Liner News",
     "title": "ONE expands stake in Poseidon Corp. to 48.9%",
