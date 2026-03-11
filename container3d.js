@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <button class="absolute -top-2 -right-2 w-6 h-6 bg-white shadow-md rounded-full text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center border border-slate-100" onclick="this.parentElement.remove()">×</button>
             <div class="flex items-center justify-between gap-2">
-                <input type="text" placeholder="Cargo Description" class="flex-1 text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Unit ${id+1}" id="c-name-${id}">
+                <input type="text" placeholder="Description" class="flex-1 text-[11px] font-bold bg-transparent border-b border-slate-200 focus:border-indigo-500 outline-none pb-1" value="Unit ${id+1}" id="c-name-${id}">
                 <select id="c-group-${id}" class="text-[9px] bg-white border border-slate-200 rounded px-1 font-bold text-slate-500">
                     <option value="A">Group A</option>
                     <option value="B">Group B</option>
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">L (cm)</p><input type="number" value="120" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-l-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">W (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-w-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">H (cm)</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-h-${id}"></div>
-                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">Weight (kg)</p><input type="number" value="500" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-wt-${id}"></div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">Wt (kg)</p><input type="number" value="500" class="w-full p-2 bg-white rounded-lg text-xs font-bold shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-wt-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">QTY</p><input type="number" value="5" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black shadow-sm focus:ring-1 focus:ring-indigo-500 outline-none" id="c-q-${id}"></div>
                 <div class="space-y-1 flex flex-col items-center justify-end pb-1">
                     <p class="text-[8px] font-black text-slate-400 uppercase mb-1">Stack</p>
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     if(addBtn) addBtn.addEventListener('click', addCargoRow);
-    addCargoRow(); addCargoRow(); // Initial items
+    addCargoRow(); addCargoRow(); 
 
     // --- 2. THREE.JS RENDERING ENGINE ---
     let scene, camera, renderer, controls;
@@ -68,9 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             canvasContainer.appendChild(renderer.domElement);
 
-            const OrbitControls = window.THREE.OrbitControls || THREE.OrbitControls;
-            if (OrbitControls) {
-                controls = new OrbitControls(camera, renderer.domElement);
+            if (window.THREE.OrbitControls) {
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
                 controls.enableDamping = true;
                 controls.dampingFactor = 0.05;
             }
@@ -92,14 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
             animate();
             
             isInitialized = true;
-            drawEmptyContainer(1200, 235, 239); // Render default container
+            drawEmptyContainer(590, 235, 239); 
             console.log("3D Engine Operational");
         } catch (e) {
             console.error("3D Init Failed:", e);
         }
     }
 
-    // Auto-Initialization & Responsive Handling
+    // Direct init attempt
+    setTimeout(initThreeJS, 100);
+
     if (window.ResizeObserver) {
         new ResizeObserver(entries => {
             const w = entries[0].contentRect.width, h = entries[0].contentRect.height;
@@ -149,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!isInitialized) return;
 
         const contType = document.getElementById('container-type').value;
-        let C_L = 590, C_W = 235, C_H = 239; // 20ft
+        let C_L = 590, C_W = 235, C_H = 239; 
         if(contType === '40ft') { C_L = 1200; C_W = 235; C_H = 239; }
         if(contType === '40hc') { C_L = 1200; C_W = 235; C_H = 269; }
 
@@ -170,7 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Enhanced Sorting: Weight First (Heavier at bottom), then Volume
         itemsToPack.sort((a,b) => (b.weight - a.weight) || (b.l*b.w*b.h) - (a.l*a.w*a.h));
 
         class Packer {
@@ -178,46 +178,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.spaces = [{x:0, y:0, z:0, l:L, w:W, h:H, allowedGroups: []}]; 
                 this.packed = []; 
             }
-            
             pack(box) {
-                // Heuristic: Prefer spaces that are lower (y), then closer to side (z), then front (x)
                 this.spaces.sort((a, b) => (a.y - b.y) || (a.z - b.z) || (a.x - b.x));
-                
                 for (let i = 0; i < this.spaces.length; i++) {
                     let s = this.spaces[i];
-                    
-                    // Mixing Restriction: If space already has a group assigned, check compatibility
                     if (s.allowedGroups.length > 0 && !s.allowedGroups.includes(box.group)) continue;
-
-                    // Try normal orientation and 90-degree rotation (floor-wise)
-                    const orientations = [
-                        { l: box.l, w: box.w, h: box.h },
-                        { l: box.w, w: box.l, h: box.h }
-                    ];
-
+                    const orientations = [{ l: box.l, w: box.w, h: box.h }, { l: box.w, w: box.l, h: box.h }];
                     for (let orient of orientations) {
                         if (orient.l <= s.l && orient.w <= s.w && orient.h <= s.h) {
-                            this.packed.push({
-                                x: s.x, y: s.y, z: s.z, 
-                                l: orient.l, w: orient.w, h: orient.h, 
-                                color: box.color, group: box.group
-                            });
-                            
+                            this.packed.push({ x: s.x, y: s.y, z: s.z, l: orient.l, w: orient.w, h: orient.h, color: box.color, group: box.group });
                             this.spaces.splice(i, 1);
-                            
-                            // Propagate group restriction to child spaces
                             const childAllowedGroups = [box.group];
-
-                            // 3D Guillotine Split with heuristic
-                            // Top Space
                             if (box.stackable && s.h - orient.h > 0) {
-                                this.spaces.push({
-                                    x: s.x, y: s.y + orient.h, z: s.z, 
-                                    l: orient.l, w: orient.w, h: s.h - orient.h,
-                                    allowedGroups: childAllowedGroups
-                                });
+                                this.spaces.push({ x: s.x, y: s.y + orient.h, z: s.z, l: orient.l, w: orient.w, h: s.h - orient.h, allowedGroups: childAllowedGroups });
                             }
-                            
                             if (s.l - orient.l > (s.w - orient.w)) {
                                 if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: s.w, h: s.h, allowedGroups: []});
                                 if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: orient.l, w: s.w - orient.w, h: s.h, allowedGroups: []});
@@ -225,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 if (s.w - orient.w > 0) this.spaces.push({x: s.x, y: s.y, z: s.z + orient.w, l: s.l, w: s.w - orient.w, h: s.h, allowedGroups: []});
                                 if (s.l - orient.l > 0) this.spaces.push({x: s.x + orient.l, y: s.y, z: s.z, l: s.l - orient.l, w: orient.w, h: s.h, allowedGroups: []});
                             }
-                            
                             return true;
                         }
                     }
@@ -242,17 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => addBox(p.x, p.y, p.z, p.l, p.h, p.w, p.color, C_L, C_W, C_H), idx * 15);
         });
 
-        // Update Efficiency HUD
         const efficiency = (totalVol / (C_L*C_W*C_H)) * 100;
-        
         const volUtil = document.getElementById('vol-util');
         const volBar = document.getElementById('vol-bar');
         const packedCount = document.getElementById('packed-count');
-
         if(volUtil) volUtil.innerText = efficiency.toFixed(1) + '%';
         if(volBar) volBar.style.width = efficiency + '%';
         if(packedCount) packedCount.innerText = `${packer.packed.length}/${itemsToPack.length}`;
-        
         camera.position.set(C_L * 1.3, C_H + 1200, C_W + 1800);
         controls.target.set(0, C_H/2, 0);
         controls.update();

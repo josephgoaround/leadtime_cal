@@ -22,10 +22,10 @@
                     <h1 class="logo-brand text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
                 </a>
                 <nav class="hidden md:flex items-center gap-6">
-                    <a href="index.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1" data-i18n="navAnalyzer">Analyzer</a>
-                    <a href="planner.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1" data-i18n="navPlanner">3D Load Planner</a>
-                    <a href="news.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1" data-i18n="navNews">Logistics News</a>
-                    <a href="about.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1" data-i18n="navAbout">About</a>
+                    <a href="index.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">Analyzer</a>
+                    <a href="planner.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">3D Load Planner</a>
+                    <a href="news.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">Logistics News</a>
+                    <a href="about.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">About</a>
                 </nav>
             </div>
             <div class="flex items-center gap-3">
@@ -57,47 +57,47 @@
                 <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-100 border border-slate-100">
                     <h3 class="text-xl font-black text-slate-800 mb-8 flex items-center gap-2">
                         <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <span data-i18n="formTitle">Route Config</span>
+                        Shipment Config
                     </h3>
                     <form id="shipping-form" class="space-y-6">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2" data-i18n="labelMode">Mode</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode</label>
                                 <select id="transport-mode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none">
                                     <option value="sea">🚢 Container (Liner)</option>
                                     <option value="air">✈️ Air Cargo</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2" data-i18n="labelDate">ETD</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Departure Date (ETD)</label>
                                 <input type="date" id="departure-date" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none">
                             </div>
                         </div>
 
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2" data-i18n="labelOrigin">Origin Port</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Origin Port</label>
                                 <input type="text" id="origin-search" placeholder="Search port..." class="w-full mb-2 py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold text-slate-600 focus:ring-1 focus:ring-indigo-500 outline-none">
                                 <select id="origin" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"></select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2" data-i18n="labelDest">Dest. Port</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Dest. Port</label>
                                 <input type="text" id="dest-search" placeholder="Search port..." class="w-full mb-2 py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold text-slate-600 focus:ring-1 focus:ring-indigo-500 outline-none">
                                 <select id="destination" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"></select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2" data-i18n="labelHSCode">Cargo Type</label>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Cargo Type</label>
                                 <select id="hscode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none">
                                     <option value="general">📦 General Cargo</option>
                                     <option value="rf">❄️ Reefer</option>
-                                    <option value="dg">⚠️ Dangerous</option>
+                                    <option value="dg">⚠️ Dangerous Goods</option>
                                     <option value="pharma">💊 Pharma</option>
                                     <option value="electronics">💻 Electronics</option>
                                 </select>
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest" data-i18n="btnAnalyze">
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest">
                             Run Analysis Engine
                         </button>
                     </form>
@@ -123,7 +123,7 @@
                 <div id="summary-container" class="animate-fade-in min-h-[180px]">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="p-6 bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1" data-i18n="feedPlaceholder">Waiting for Analysis...</p>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Waiting for Analysis...</p>
                         </div>
                         <div class="p-6 bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">---</p>
@@ -142,9 +142,18 @@
         <!-- Deep Content -->
         <section id="insights" class="py-20 border-t border-slate-200">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-sm">
-                <div class="space-y-2"><h3 class="font-black text-slate-900" data-i18n="step1Title">Dijkstra Routing</h3><p class="text-slate-500 leading-relaxed" data-i18n="step1Desc">전 세계 300개 이상의 노드 기반 최적 항로 시뮬레이션.</p></div>
-                <div class="space-y-2"><h3 class="font-black text-slate-900" data-i18n="step2Title">Risk Factor</h3><p class="text-slate-500 leading-relaxed" data-i18n="step2Desc">실시간 지정학적 리스크 및 항만 정체 가중치 반영.</p></div>
-                <div class="space-y-2"><h3 class="font-black text-slate-900" data-i18n="step3Title">Cost Intel</h3><p class="text-slate-500 leading-relaxed" data-i18n="step3Desc">Corridor별 TEU/FEU 벤치마크 마켓 운임 제시.</p></div>
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-900">Dijkstra Routing</h3>
+                    <p class="text-slate-500 leading-relaxed">Optimal route simulation based on 300+ global maritime nodes.</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-900">Risk Factor</h3>
+                    <p class="text-slate-500 leading-relaxed">Real-time geopolitical risks and port congestion weights integration.</p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-black text-slate-900">Cost Intel</h3>
+                    <p class="text-slate-500 leading-relaxed">Market benchmark rates for major TEU/FEU trade corridors.</p>
+                </div>
             </div>
         </section>
     </main>

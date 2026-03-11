@@ -7,6 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
 
@@ -53,9 +58,7 @@
                         <button id="add-cargo-btn" class="text-[10px] font-black bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-600 hover:text-white transition-all">+ Add Item</button>
                     </div>
 
-                    <div id="cargo-items" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                        <!-- Cargo rows added by container3d.js -->
-                    </div>
+                    <div id="cargo-items" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
 
                     <button id="simulate-load-btn" class="w-full mt-8 bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transform active:scale-95 transition-all shadow-xl shadow-indigo-100 uppercase text-xs tracking-widest">
                         Run Load Simulation
@@ -95,6 +98,7 @@
         </div>
     </main>
 
+    <!-- Essential Three.js Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="container3d.js"></script>
