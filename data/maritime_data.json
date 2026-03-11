@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-11 20:32:35",
+  "last_updated": "2026-03-11 21:32:19",
   "active_risks": [
     {
       "label": "Strait of Hormuz Alert",
@@ -12,108 +12,120 @@
       "delay": 6,
       "cost": 700,
       "source_news": "China’s Cosco Halts Panama Port Operations as Tensions Rise"
+    },
+    {
+      "label": "Port Labor Action",
+      "delay": 4,
+      "cost": 400,
+      "source_news": "MSC strikes 45-year deal for Nigerian box terminal"
+    },
+    {
+      "label": "Suez/Red Sea Rerouting",
+      "delay": 12,
+      "cost": 1500,
+      "source_news": "Venergy targets crude segment with suezmax newbuilds in China"
     }
   ],
   "alerts": [
     {
+      "msg": "Explosive Sea Drones Emerge as New Threat to Tankers in Gulf Attacks",
+      "url": "https://gcaptain.com/explosive-sea-drones-emerge-as-new-threat-to-tankers-in-gulf-attacks/",
+      "time": "21:32"
+    },
+    {
       "msg": "Photos from Lifeboat Show Human Cost of Hormuz Crisis",
       "url": "https://gcaptain.com/photos-from-lifeboat-show-human-cost-of-hormuz-crisis/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "U.S. Taps Chubb to Lead Trump’s $20B Insurance Plan for Hormuz Shipping",
       "url": "https://gcaptain.com/u-s-taps-chubb-to-lead-trumps-20b-insurance-plan-for-hormuz-shipping/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Iran Warns World to Brace for $200 Oil",
       "url": "https://gcaptain.com/iran-warns-world-to-brace-for-200-oil/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Maritime Attacks Reach 13 in First 12 Days of Middle East Conflict",
       "url": "https://gcaptain.com/maritime-attacks-reach-13-in-first-12-days-of-middle-east-conflict/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "U.S. Maritime Commission Warns Shipping Lines Over Hormuz Crisis Surcharges",
       "url": "https://gcaptain.com/u-s-maritime-commission-warns-shipping-lines-over-hormuz-crisis-surcharges/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Offshore Lease Bidding Falls Off a Cliff in Trump’s Second ‘Big Beautiful’ Gulf Sale",
       "url": "https://gcaptain.com/offshore-lease-bidding-falls-off-a-cliff-in-trumps-second-big-beautiful-gulf-sale/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "IEA Plans Historic 400-Million-Barrel Oil Release",
       "url": "https://gcaptain.com/iea-plans-historic-400-million-barrel-oil-release/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Maersk Says Hormuz Crisis is Squeezing Global Marine Fuel Supply",
       "url": "https://gcaptain.com/maersk-says-hormuz-crisis-is-squeezing-global-marine-fuel-supply/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "CENTCOM Warns Iranian Ports Used by Military Could Become Targets",
       "url": "https://gcaptain.com/centcom-warns-iranian-ports-used-by-military-could-become-targets/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Three Crew Missing from Thai Cargo Ship Hit in Hormuz",
       "url": "https://gcaptain.com/three-crew-missing-from-thai-cargo-ship-hit-in-hormuz/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "China’s Cosco Halts Panama Port Operations as Tensions Rise",
       "url": "https://gcaptain.com/chinas-cosco-halts-panama-port-operations-as-tensions-rise/",
-      "time": "20:32"
-    },
-    {
-      "msg": "Three More Vessels Hit by Projectiles in Strait of Hormuz, Showing Merchant Ships Remain in Firing Line",
-      "url": "https://gcaptain.com/three-more-vessels-hit-by-projectiles-in-strait-of-hormuz-showing-merchant-ships-remain-in-firing-line/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "How the Iran conflict is impacting global ocean shipping flows",
       "url": "https://www.supplychaindive.com/news/iran-conflict-global-ocean-shipping-flows-lars-jensen-tpm26/814250/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Intel has manufacturing capacity issues. They may take years to fix.",
       "url": "https://www.supplychaindive.com/news/intel-manufacturing-capacity-issues-may-take-years-to-fix-amd-nvidia-tsmc/813964/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Enter the shark tank: How Kenvue innovates its operations",
       "url": "https://www.supplychaindive.com/news/kenvue-manifest-2026-innovation-panel/814089/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "De minimis: Case aiming to revive exemption can proceed, court rules",
       "url": "https://www.supplychaindive.com/news/de-minimis-exemption-lawsuit-case-status/814329/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Costco to flow tariff refunds, ‘if and when’ received, back to customers",
       "url": "https://www.supplychaindive.com/news/costco-flow-tariff-refunds-if-when-received-back-customers/814112/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "General Mills taps interim CSCO for top supply chain post",
       "url": "https://www.supplychaindive.com/news/general-mills-taps-jonathan-ness-for-csco/814013/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Campbell’s promotes supply chain head Cassandra Green to CSCO",
       "url": "https://www.supplychaindive.com/news/campbells-promotes-supply-chain-head-cassandra-green-to-csco/813951/",
-      "time": "20:32"
+      "time": "21:32"
     },
     {
       "msg": "Urban Outfitters builds out second phase of automation in Kansas facility",
       "url": "https://www.supplychaindive.com/news/urban-outfitters-nuuly-rental-brand-logistics-investments-q4-2026/814036/",
-      "time": "20:32"
+      "time": "21:32"
     }
   ]
 }
