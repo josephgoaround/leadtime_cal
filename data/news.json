@@ -1,6 +1,58 @@
 [
   {
     "date": "2026-03-12",
+    "time": "11:30",
+    "category": "Logistics Technology",
+    "title": "Explainer: How Hormuz was reallocated",
+    "content": "Transit volumes have collapsed by 97%. The US Navy is refusing escort requests. Chinese tankers are moving freely while Western operators face mines, drones, and GPS warfare. The Strait of Hormuz is no longer simply closed it is being selectively ope...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 154
+  },
+  {
+    "date": "2026-03-12",
+    "time": "11:30",
+    "category": "Logistics Technology",
+    "title": "FMC issues Statement on Strait of Hormuz surcharges",
+    "content": "The Federal Maritime Commission (FMC) has issued a statement on shipping surcharges related to tensions in the Strait of Hormuz. The Commission said it is closely monitoring the impact on global shipping conditions. Rules on Surcharge Implementation ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "11:30",
+    "category": "Logistics Technology",
+    "title": "Supply chain layoffs spread across warehouses, factories and rail terminals",
+    "content": "Layoffs across manufacturing and logistics operations signal companies are recalibrating supply chains amid shifting freight demand and industrial output.\nThe post Supply chain layoffs spread across warehouses, factories and rail terminals appeared f...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "11:30",
+    "category": "Liner News",
+    "title": "6th Circuit rejects NLRB’s Cemex rule, dealing blow to unionization efforts",
+    "content": "Unionization of the workplace thought it hadgotten a boost by the Cemex standard, but it took a hit in a recent court case.\nThe post 6th Circuit rejects NLRB’s Cemex rule, dealing blow to unionization efforts appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "10:37",
     "category": "Liner News",
     "title": "Salt trade seasoned with strong Egyptian flows",
@@ -1899,57 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 23
-  },
-  {
-    "date": "2026-03-09",
-    "time": "22:34",
-    "category": "Liner News",
-    "title": "France’s Macron Orders Major Naval Deployment to Middle East",
-    "content": "France is deploying about a dozen naval vessels, including its aircraft carrier strike group, to the Mediterranean, Red Sea and potentially the Strait of Hormuz as part of defensive support to allies ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 24
-  },
-  {
-    "date": "2026-03-10",
-    "time": "02:30",
-    "category": "Liner News",
-    "title": "Trump Weighs Russian Oil Sanctions Relief as Hormuz Disruption Sends Prices Soaring",
-    "content": " U.S. President Donald Trump is considering easing oil sanctions on Russia and releasing emergency crude stockpiles as part of a package of options aimed at curbing spiking global oil prices amid the ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 25
-  },
-  {
-    "date": "2026-03-10",
-    "time": "02:30",
-    "category": "Liner News",
-    "title": "NASSCO Christens Final Expeditionary Sea Base Ship for U.S. Navy",
-    "content": "General Dynamics NASSCO has christened USNS Hector A. Cafferata Jr. (ESB 8) in San Diego, marking the sixth and final vessel in the U.S. Navy’s Expeditionary Sea Base (ESB) program and bringing to a.....",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 26
-  },
-  {
-    "date": "2026-03-10",
-    "time": "13:13",
-    "category": "Port Status",
-    "title": "Gulf Oil Giants Deepen Cuts as Hormuz Halt Chokes Exports",
-    "content": "Oil supply cuts in the Middle East are deepening, shaving about 6% off global output, as the effective closure of the Strait of Hormuz piles more pressure on producers with every day the Iran war goes...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Port",
-      "GlobalFeed"
-    ],
-    "id": 27
   }
 ]
