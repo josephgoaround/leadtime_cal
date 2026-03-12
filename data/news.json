@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-12",
+    "time": "20:33",
+    "category": "Port Status",
+    "title": "ID Logistics reports robust 2025 revenue growth",
+    "content": "ID Logistics posted revenues of EUR€ 3,737 million for 2025, an increase of 14.2% on 2024. Adjusted for unfavourable currency effects, like-for-like growth reached 16% , reflecting strong organic momentum across all operational regions. Revenue perfo...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "20:33",
+    "category": "Liner News",
+    "title": "USITC probes USMCA auto rules’ impact on industry competitiveness",
+    "content": "The new study will assess how the major trade pact shapes auto supply chains, technology shifts, and the future of electric vehicle manufacturing.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "19:41",
     "category": "Liner News",
     "title": "Cool Carriers takes delivery of first snow-class reefer vessel",
@@ -1922,31 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 64
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "FreightTech innovations unveiled at TCA: tail lights to TMS extensions",
-    "content": "A wide swath of new products for all phases of trucking was rolled out at the recent TCA meeting.\nThe post FreightTech innovations unveiled at TCA: tail lights to TMS extensions appeared first on FreightWaves.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 63
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "MATS Is Three Weeks Away – Here Is Why Small Carriers Can’t Afford to Skip It",
-    "content": "There is no show like it in this industry. The Mid-America Trucking Show — MATS — returns to the Kentucky Exposition Center in Louisville from March 26 through March 28, 2026, and if you operate a small trucking company, an owner-operator business, o...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 62
   }
 ]
