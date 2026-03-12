@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-12",
+    "time": "21:31",
+    "category": "Port Status",
+    "title": "New month, near record for LA port volumes",
+    "content": "The top U.S. container port saw near-record volume in February as continued consumer resilience outpaced middling economic indicators.\nThe post New month, near record for LA port volumes appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "21:31",
+    "category": "Logistics Technology",
+    "title": "David Bassett, founder of all-cargo airline Amerijet, dies at 77",
+    "content": "David Bassett, who started Amerijet shortly after Fred Smith founded FedEx, has died.\nThe post David Bassett, founder of all-cargo airline Amerijet, dies at 77 appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "20:33",
     "category": "Port Status",
     "title": "ID Logistics reports robust 2025 revenue growth",
@@ -1922,31 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 66
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "The real barrier to driverless trucks is no longer software",
-    "content": "The future of driverless trucking lies through not software but on how to produce them at scale. That’s according to newly released research by Telemetry, a communications and research firm heavily invested in the space. FreightWaves spoke with Sam A...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 65
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "The Non-Domiciled CDL Crackdown Has Arrived – 13,000 Drivers Out, a National Rule A Few Days Away",
-    "content": "The deadline everyone in trucking has been watching finally arrived. On March 6, 2026, approximately 13,000 non-domiciled commercial driver’s licenses were cancelled in California — not by a clean resolution, not by a negotiated agreement between the...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 64
   }
 ]
