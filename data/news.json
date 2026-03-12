@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-03-12",
+    "time": "22:24",
+    "category": "Port Status",
+    "title": "Rotterdam identifies investment barriers slowing Hydrogen import terminal development",
+    "content": "The Port of Rotterdam Authority has completed a market consultation aimed at understanding why investment decisions for hydrogen carrier import terminals remain stalled, despite multiple companies having advanced plans in place. The findings reveal a...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "21:31",
     "category": "Port Status",
     "title": "New month, near record for LA port volumes",
@@ -1935,18 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 67
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "EXCLUSIVE: Rail merger critics should “quit looking backward,” says Union Pacific CEO",
-    "content": "Union Pacific CEO Jim Vena responded to negative reaction to the proposed rail merger with Norfolk Southern, saying critics should look past history — and his own numbers — to see how the transcontinental tie-up will reshape the U.S. supply chain for...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 66
   }
 ]
