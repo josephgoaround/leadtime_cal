@@ -1,6 +1,97 @@
 [
   {
     "date": "2026-03-12",
+    "time": "17:04",
+    "category": "Liner News",
+    "title": "Golden Energy seals $28m PSV sale",
+    "content": "Norwegian offshore vessel owner Golden Energy Offshore Services (GEOS) has offloaded another one of its platform supply vessels. The company said in a stock exchange filing it has sealed a deal to sell the PSV Energy Passion for $28m, with delivery e...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 157
+  },
+  {
+    "date": "2026-03-12",
+    "time": "17:04",
+    "category": "Liner News",
+    "title": "How Panama issue crystallizes the geopolitical balance",
+    "content": "Washington forced China out of Balboa and Cristóbal. Beijing has weaponised commercial flows, summoned the world&#8217;s two largest carriers, and positioned itself to extract a better deal on 41 ports it never had to fight for.\nThe post How Panama i...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 156
+  },
+  {
+    "date": "2026-03-12",
+    "time": "17:04",
+    "category": "Liner News",
+    "title": "CMA CGM applies PSS from China to West Africa",
+    "content": "CMA CGM will introduce new Peak Season Surcharges (PSS) for shipments from China to several West African destinations starting 15 March 2026, until further notice. Nigeria and South Range The surcharge will apply to cargo moving to Nigeria, Angola, C...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 155
+  },
+  {
+    "date": "2026-03-12",
+    "time": "17:04",
+    "category": "Logistics Technology",
+    "title": "The Federal Government Just Proposed Pell Grants for CDL Schools – Here Is Why the Details Matter More Than the Headline",
+    "content": "The headline writes itself and the industry groups are celebrating: Pell Grants are coming to CDL schools. The American Trucking Associations called it a move that would &#8220;dismantle financial barriers that prevent students from low-income househ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 154
+  },
+  {
+    "date": "2026-03-12",
+    "time": "17:04",
+    "category": "Liner News",
+    "title": "Trump admin probes foreign manufacturing production, capacity",
+    "content": "The Section 301 investigation covers several countries, including China and Mexico, alleging their production rates are &ldquo;untethered&rdquo; from domestic and global demand.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "17:04",
+    "category": "Liner News",
+    "title": "US Considers Easing Jones Act to Tame Spiraling Fuel Prices",
+    "content": "The Trump administration plans to waive a century-old maritime law that requires American ships be used to transport goods between US ports as it seeks to blunt surging oil and gasoline prices, according to people familiar with the matter.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "17:04",
+    "category": "Liner News",
+    "title": "Norway Bars Its Ships From Hormuz as Attacks on Merchant Vessels Escalate",
+    "content": "Norway Bars Its Ships From Hormuz as Attacks on Merchant Vessels Escalate Norway has moved to prohibit its merchant fleet from entering the Strait of Hormuz, marking one of the...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "15:58",
     "category": "Logistics Technology",
     "title": "Explainer: Hormuz and the end of a legal fiction",
@@ -1857,97 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 50
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "As Trump tariff refund process takes shape, importers remain uncertain",
-    "content": "Shippers face legal risks, unclear timelines and system gaps as they navigate a potentially complex rollout of tariff refund procedures",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 49
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "Urban Outfitters builds out second phase of automation in Kansas facility",
-    "content": "The distribution center, which supports its Nuuly rental brand, will accelerate its digital business and deliver expected gains in delivery and logistics.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 48
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Sustainability",
-    "title": "Campbell’s promotes supply chain head Cassandra Green to CSCO",
-    "content": "Green steps into a top leadership role focused on logistics and planning, procurement, manufacturing and food safety and quality.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Sustainability",
-      "SCM_Expert"
-    ],
-    "id": 47
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "General Mills taps interim CSCO for top supply chain post",
-    "content": "Company veteran Jonathan Ness will oversee global supply chain operations and report directly to the CEO.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 46
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "Costco to flow tariff refunds, ‘if and when’ received, back to customers",
-    "content": "The retailer, which sued the Trump administration over now-defunct tariffs, is well positioned to navigate a still uncertain refund process, CEO Ron Vachris said.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 45
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "De minimis: Case aiming to revive exemption can proceed, court rules",
-    "content": "The lawsuit, which challenged the Trump administration&rsquo;s elimination of the trade tool, was paused until the Supreme Court ruled on the president&rsquo;s tariff authority.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 44
-  },
-  {
-    "id": 1,
-    "date": "2026-03-09",
-    "time": "14:20",
-    "category": "Liner News",
-    "title": "글로벌 선사, 아시아-유럽 노선 운임 인상 발표",
-    "content": "주요 컨테이너 선사들이 다가오는 2분기를 기점으로 아시아-유럽 항로의 기본 운임(GRI) 인상을 예고했습니다. 수에즈 운하 통행 불안 지속에 따른 우회 항로 운영 비용 증가가 주요 원인으로 분석됩니다.",
-    "author": "LeadTime Intel Team",
-    "tags": [
-      "운임인상",
-      "수에즈운하",
-      "Liner"
-    ]
   }
 ]
