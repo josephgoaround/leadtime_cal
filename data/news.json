@@ -1,6 +1,58 @@
 [
   {
     "date": "2026-03-12",
+    "time": "07:45",
+    "category": "Liner News",
+    "title": "SLB reduces operations in Middle East amid regional crisis",
+    "content": "Houston-based oilfield services giant SLB has begun curtailing operations in the Middle East due to the ongoing crisis in the region. SLB said that travel to and transit through the region have been suspended, and that it has begun to demobilise oper...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 154
+  },
+  {
+    "date": "2026-03-12",
+    "time": "07:45",
+    "category": "Liner News",
+    "title": "Poland’s PGE takes full control of Baltic Sea offshore wind project",
+    "content": "German utility RWE has sold its stake in the Baltic II offshore wind farm to Polska Grupa Energetyczna (PGE). As a result of the transaction, PGE has become the sole owner of the Baltic II offshore wind development project in the Polish Baltic Sea. T...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "07:45",
+    "category": "Liner News",
+    "title": "Shadow VLCCs change names in quick succession",
+    "content": "Two VLCC sales sealed in short succession show an interesting pattern. A 20-year-old VLCC has changed its name three times in one year. A ship now named Keegan, before Haishen, before that Merd, while from 2005 until its sale a year ago, it proudly s...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "07:45",
+    "category": "Liner News",
+    "title": "MSC revamps Asia–North Europe network",
+    "content": "MSC Mediterranean Shipping Company has announced enhancements to its Asia–Northern Europe service network, introducing updated rotations and improved connectivity across three key routes: Griffin, Condor and Silk. The network upgrade is designed to s...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "06:54",
     "category": "Liner News",
     "title": "Second Gulf of Mexico auction under Trump bill draws weaker industry interest",
@@ -1899,57 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 37
-  },
-  {
-    "date": "2026-03-10",
-    "time": "20:40",
-    "category": "Liner News",
-    "title": "The Last Hitch 5 Financial Moves Every Mariner Should Make Before Going Shoreside",
-    "content": "There’s a moment every mariner thinks about, even if they haven’t lived it yet. The last bag packed. The last safety briefing. The last time you walk down the gangway......",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 38
-  },
-  {
-    "date": "2026-03-10",
-    "time": "22:33",
-    "category": "Liner News",
-    "title": "Behind Closed Doors, U.S. Navy Says Hormuz Escorts Are Too Dangerous—for Now",
-    "content": "The U.S. Navy has refused near-daily requests from the shipping industry for military escorts through the Strait of Hormuz since the start of the war on Iran, saying the risk of attacks is too high fo...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 39
-  },
-  {
-    "date": "2026-03-10",
-    "time": "22:33",
-    "category": "Liner News",
-    "title": "Coast Guard Responding to Large Barge Fire in Delaware Bay",
-    "content": "The U.S. Coast Guard and multiple partner agencies are responding to a barge fire in Delaware Bay on Tuesday after a tug reported that the vessel it was towing had caught fire.......",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 40
-  },
-  {
-    "date": "2026-03-10",
-    "time": "22:33",
-    "category": "Liner News",
-    "title": "U.S. Maritime Administrator Carmel Warns U.S. Must Rebuild Entire Maritime ‘System,’ Not Just Shipyards",
-    "content": "U.S. Maritime Administrator Stephen Carmel warned Tuesday that rebuilding American maritime power will require far more than simply expanding shipyard capacity, arguing that the United States must reb...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 41
   }
 ]
