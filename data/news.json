@@ -1,6 +1,45 @@
 [
   {
     "date": "2026-03-12",
+    "time": "08:40",
+    "category": "Liner News",
+    "title": "New pilot scheme to protect Bangladesh shipbreaking workers",
+    "content": "The International Labour Organization (ILO) has launched a pilot employment injury scheme (EIS) in collaboration with BIMCO to strengthen the protection and rights of workers at ship recycling yards in Bangladesh, the world’s biggest ship recycling n...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "08:40",
+    "category": "Liner News",
+    "title": "Middle East latest: Inferno at sea and shore",
+    "content": "Attacks are escalating across the Gulf with tankers torched, a containership struck, and Omani fuel tanks ablaze. Iranian groups set two product tankers alight (pictured) late Wednesday into Thursday as attacks on commercial shipping and energy infra...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "08:40",
+    "category": "Port Status",
+    "title": "CNC reopens Middle East import and export bookings",
+    "content": "CNC, part of the CMA CGM Group, has reopened import and export bookings across the Middle East with immediate effect. The reopening applies to shipments to and from Iraq, Kuwait, Qatar, Bahrain, Saudi Arabia, and the United Arab Emirates. Multimodal ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "07:45",
     "category": "Liner News",
     "title": "SLB reduces operations in Middle East amid regional crisis",
@@ -1912,44 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 34
-  },
-  {
-    "date": "2026-03-10",
-    "time": "18:57",
-    "category": "Port Status",
-    "title": "Report: U.S. Intelligence Sees Signs of Iran Mine Threat Emerging in Hormuz",
-    "content": "U.S. intelligence agencies have detected indications that Iran may be preparing to deploy naval mines in the Strait of Hormuz shipping lanes, according to a report by CBS News citing......",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Port",
-      "GlobalFeed"
-    ],
-    "id": 35
-  },
-  {
-    "date": "2026-03-10",
-    "time": "18:57",
-    "category": "Logistics Technology",
-    "title": "Energy Secretary Deletes Post Claiming U.S. Navy Escorted Oil Tanker Through Strait of Hormuz",
-    "content": "U.S. Energy Secretary&#160;Chris Wright&#160;has deleted a social media post claiming that the&#160;United States Navy&#160;successfully escorted an oil tanker through the&#160;Strait of Hormuz, raisi...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 36
-  },
-  {
-    "date": "2026-03-10",
-    "time": "18:57",
-    "category": "Liner News",
-    "title": "Royal Navy Sends Missile Destroyer HMS Dragon to Eastern Mediterranean",
-    "content": "The HMS Dragon departed the Royal Navy&#8217;s base in Portsmouth, England on Tuesday bound for the Eastern Mediterranean as the United Kingdom bolsters its military presence in response to escalating...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 37
   }
 ]
