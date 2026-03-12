@@ -1,6 +1,58 @@
 [
   {
     "date": "2026-03-12",
+    "time": "12:57",
+    "category": "Liner News",
+    "title": "Maersk updates ECS Surcharge from ECSA to Red Sea and Oman",
+    "content": "A.P. Moller – Maersk has announced an adjustment to its Emergency Contingency Surcharge (ECS) for shipments from East Coast South America to the Middle East Red Sea region and Salalah, Oman. The revised surcharge will take effect from 15 March 2026 u...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 154
+  },
+  {
+    "date": "2026-03-12",
+    "time": "12:57",
+    "category": "Logistics Technology",
+    "title": "Hapag-Lloyd container vessel hit by projectile fragments near Strait of Hormuz",
+    "content": "A Hapag-Lloyd container ship, Source Blessing, was struck by projectile fragments near the Strait of Hormuz. The vessel caught fire. The crew evacuated safely. Hapag-Lloyd had time-chartered the ship to Maersk. German shipping company Hapag-Lloyd say...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "12:57",
+    "category": "Logistics Technology",
+    "title": "Amazon partner airline ATI, pilots agree on provisional 4-year contract",
+    "content": "A major provider of outsourced air cargo airlift for Amazon has reached a preliminary labor agreement with unionized pilots. \nThe post Amazon partner airline ATI, pilots agree on provisional 4-year contract appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "12:57",
+    "category": "Liner News",
+    "title": "Military logistics: new challenges in identity verification",
+    "content": "Discover emerging identity verification gaps in military logistics and their national security implications.\nThe post Military logistics: new challenges in identity verification appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "11:30",
     "category": "Logistics Technology",
     "title": "Explainer: How Hormuz was reallocated",
@@ -1899,57 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 19
-  },
-  {
-    "date": "2026-03-09",
-    "time": "19:00",
-    "category": "Logistics Technology",
-    "title": "Trump’s Greenland Hospital Ship Now Sailing Up West Coast After Panama Canal Transit",
-    "content": "The U.S. Navy hospital ship USNS Mercy is currently sailing north along the West Coast off Mexico after transiting the Panama Canal last week, according to the latest Automatic Identification System (...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 20
-  },
-  {
-    "date": "2026-03-09",
-    "time": "19:00",
-    "category": "Logistics Technology",
-    "title": "Tariff Uncertainty to Keep U.S. Container Imports Below 2025 Levels, NRF Says",
-    "content": "U.S. containerized imports are expected to remain below last year’s levels through the first half of 2026 as tariff uncertainty continues to weigh on trade flows, according to the latest Global Port T...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 21
-  },
-  {
-    "date": "2026-03-09",
-    "time": "19:00",
-    "category": "Liner News",
-    "title": "‘Critical’ Threat Persists in Hormuz as Attacks and GPS Jamming Shake Shipping",
-    "content": "Commercial shipping through the Strait of Hormuz has fallen to near-zero levels as the maritime security crisis gripping the Middle East continues, even as attacks on vessels temporarily paused over.....",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 22
-  },
-  {
-    "date": "2026-03-09",
-    "time": "22:34",
-    "category": "Liner News",
-    "title": "Oil Surges to Highest Since 2022 as Hormuz Crisis Roils Energy Markets",
-    "content": "Oil prices surged to more than $119 a barrel on Monday, hitting levels not seen since mid-2022, as some major producers cut supplies and fears of prolonged shipping disruptions gripped the market due ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 23
   }
 ]
