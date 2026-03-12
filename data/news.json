@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-03-12",
+    "time": "05:50",
+    "category": "Liner News",
+    "title": "Bunker prices skyrocket in Week 11 on Middle East Crisis",
+    "content": "Global bunker fuel prices surged by approximately 30–35% over the past week, driven by escalating tensions between the United States and Iran and the effective closure of the Strait of Hormuz, a critical global oil transit chokepoint. The disruption ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 150
+  },
+  {
+    "date": "2026-03-12",
     "time": "04:46",
     "category": "Logistics Technology",
     "title": "CMA CGM raises FAK rates from Asia to Mediterranean and North Africa",
