@@ -1,6 +1,84 @@
 [
   {
     "date": "2026-03-12",
+    "time": "14:05",
+    "category": "Liner News",
+    "title": "Greek capesize specialist Seanergy grows newbuild programme to five ships",
+    "content": "US-listed Greek bulker owner Seanergy Maritime is stepping up its fleet renewal drive, adding two Japanese capesize newbuildings while offloading an older vessel. The company said it has agreed to acquire a 181,500 dwt scrubber-fitted capesize under ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 156
+  },
+  {
+    "date": "2026-03-12",
+    "time": "14:05",
+    "category": "Logistics Technology",
+    "title": "ONE implements temporary empty container return rules in the Middle East",
+    "content": "Ocean Network Express (ONE) is introducing temporary rules for empty container returns. This follows disruptions in the Persian Gulf and the Strait of Hormuz. The measures protect vessels, crew, and cargo. They apply to all import shipments into UAE,...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 155
+  },
+  {
+    "date": "2026-03-12",
+    "time": "14:05",
+    "category": "Logistics Technology",
+    "title": "BackOps raises $26M to automate global supply chains with AI",
+    "content": "San Francisco-based software company BackOps announced it has raised $26 million in Series A funding to develop its AI-native operating system for global supply chains.\nThe post BackOps raises $26M to automate global supply chains with AI appeared fi...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 154
+  },
+  {
+    "date": "2026-03-12",
+    "time": "14:05",
+    "category": "Liner News",
+    "title": "Best Buy counters memory shortage with inventory, vendor tweaks",
+    "content": "The electronics retailer is pursuing product configurations that minimize price pressures as the AI boom squeezes supply.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "14:05",
+    "category": "Liner News",
+    "title": "US Hormuz Escorts May Start by End of the Month, Wright Says",
+    "content": "The US Navy could start escorting tankers through the Strait of Hormuz by the end of this month, Energy Secretary Chris Wright said. \n\nWright said on CNBC on Thursday US military assets were currently focused on destroying Iran’s offensive capabiliti...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "14:05",
+    "category": "Liner News",
+    "title": "Indian Source Says Iran to Allow India-Flagged Tankers Through Hormuz as First Tanker Arrives",
+    "content": "Iran will allow Indian-flagged tankers to transit the Strait of Hormuz, a conduit for 40% of the South Asian nation's crude imports, an Indian government source said on Thursday, but an Iranian source outside the country denied any such deal was reac...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "12:57",
     "category": "Liner News",
     "title": "Maersk updates ECS Surcharge from ECSA to Red Sea and Oman",
@@ -1873,83 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 13
-  },
-  {
-    "date": "2026-03-09",
-    "time": "10:41",
-    "category": "Logistics Technology",
-    "title": "US Oil Posts Biggest Weekly Gain Ever As Iran War Rages On",
-    "content": "By&#160;Bloomberg News Mar 6, 2026(Bloomberg) &#8211;US oil posted the biggest weekly gain on record as the war in Iran upends critical energy market flows, with shipping through the Strait of......",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 14
-  },
-  {
-    "date": "2026-03-09",
-    "time": "10:41",
-    "category": "Logistics Technology",
-    "title": "Iran’s IRGC Challenges Trump To Have US Vessels Escort Tankers In Strait Of Hormuz",
-    "content": "March 7(Reuters) &#8211; A spokesperson for Iran’s Revolutionary Guards challenged U.S. President Donald Trump to deploy U.S. naval vessels to escort oil tankers through the Strait of Hormuz, Iranian ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 15
-  },
-  {
-    "date": "2026-03-09",
-    "time": "13:15",
-    "category": "Liner News",
-    "title": "Oil Prices Hit Highest Since 2022 at More Than $119 a Barrel on Iran War",
-    "content": "Oil prices surged to more than $119 a barrel on Monday, hitting levels not seen since mid-2022, as some major producers cut supplies and fears of prolonged shipping disruptions gripped the market due ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 16
-  },
-  {
-    "date": "2026-03-09",
-    "time": "13:15",
-    "category": "Logistics Technology",
-    "title": "Greek Oil Tanker Exits Strait of Hormuz With Its Signal Off",
-    "content": "A ship hauling a million barrels of Saudi crude sailed through the Strait of Hormuz in recent days, one of the first big tankers to leave the Persian Gulf since traffic through the chokepoint all but ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 17
-  },
-  {
-    "date": "2026-03-09",
-    "time": "15:05",
-    "category": "Logistics Technology",
-    "title": "ABS and HD Hyundai Launch Nuclear-Powered Mega Containership Study",
-    "content": "The push to bring nuclear energy back into commercial shipping is gaining momentum as the American Bureau of Shipping (ABS) and South Korea’s HD Hyundai shipbuilding group launch a new effort to study...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 18
-  },
-  {
-    "date": "2026-03-09",
-    "time": "17:00",
-    "category": "Liner News",
-    "title": "Trump Tells Ships to ‘Show Some Guts’ in Hormuz as Seafarer Death Toll Rises",
-    "content": "President Donald Trump urged commercial vessels to continue sailing through the Strait of Hormuz despite escalating attacks on merchant shipping, saying shipowners should not be deterred by security r...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 19
   }
 ]
