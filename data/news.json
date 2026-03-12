@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-12",
+    "time": "19:41",
+    "category": "Liner News",
+    "title": "Cool Carriers takes delivery of first snow-class reefer vessel",
+    "content": "Cool Carriers has taken delivery of Snow Flower, the first vessel in its next-generation Snow-class refrigerated carrier fleet. The ship was delivered on 4 March by Kitanihon Shipbuilding in Japan. New Generation Reefer Fleet The company will operate...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "19:41",
+    "category": "Port Status",
+    "title": "Purported Iran threat to attack California with drones ‘not credible’: LA port chief ",
+    "content": "The threat of a drone attack on California by Iran that prompted a warning by the FBI was ‘not credible,’ according to a Los Angeles port executive.\nThe post Purported Iran threat to attack California with drones ‘not credible’: LA port chief  appear...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "18:52",
     "category": "Port Status",
     "title": "YILPORT Holding upgrades port equipment with 19 Konecranes lift trucks",
@@ -1922,31 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 62
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "Strait of Hormuz concerns: diesel benchmark sets a record gain",
-    "content": "The price used to set diesel surcharges gained more in a week than it ever has in its 30+ year history.\nThe post Strait of Hormuz concerns: diesel benchmark sets a record gain appeared first on FreightWaves.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 61
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "Freight broker Fura announces 5th acquisition",
-    "content": "Third-party logistics provider Fura announced it has acquired fellow Texas-based broker Barton Logistics.\nThe post Freight broker Fura announces 5th acquisition appeared first on FreightWaves.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 60
   }
 ]
