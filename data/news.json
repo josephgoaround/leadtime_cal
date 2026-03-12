@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-12",
+    "time": "06:54",
+    "category": "Liner News",
+    "title": "Second Gulf of Mexico auction under Trump bill draws weaker industry interest",
+    "content": "The second offshore oil and gas lease sale under Donald Trump’s One Big Beautiful Bill Act passed much more quietly, with far less interest than the previous one. The so-called Big Beautiful Gulf 2 or BBG2 generated $46.9 in high bids. The sale inclu...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "06:54",
+    "category": "Liner News",
+    "title": "Equinor signs bio-methanol supply deal with Wallenius Wilhelmsen",
+    "content": "Equinor has signed a two-year bio-methanol supply agreement with shipping and vehicle logistics company Wallenius Wilhelmsen to support the shift to lower-emission marine fuels. The fuel will power Wallenius Wilhelmsen’s upcoming dual-fuel methanol v...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "05:50",
     "category": "Liner News",
     "title": "Bunker prices skyrocket in Week 11 on Middle East Crisis",
@@ -1925,31 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 41
-  },
-  {
-    "date": "2026-03-10",
-    "time": "22:33",
-    "category": "Logistics Technology",
-    "title": "Trump Warns Iran Over Hormuz Mines, Claims U.S. Strikes on Mine-Laying Vessels",
-    "content": "U.S. President&#160;Donald J. Trump&#160;warned Iran to remove any naval mines from the Strait of Hormuz and claimed U.S. forces have already struck vessels suspected of mine-laying activity after med...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 42
-  },
-  {
-    "date": "2026-03-11",
-    "time": "02:29",
-    "category": "Liner News",
-    "title": "Electronic Fog of War: GPS Spoofing Distorts Ship Traffic Near Hormuz",
-    "content": "Satellite navigation interference detected near the United Arab Emirates coast is creating the appearance of vessels sailing in straight lines toward the Strait of Hormuz—even though the ships are not...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 43
   }
 ]
