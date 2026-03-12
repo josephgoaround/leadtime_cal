@@ -1,6 +1,45 @@
 [
   {
     "date": "2026-03-12",
+    "time": "09:41",
+    "category": "Liner News",
+    "title": "DP World posts record revenue",
+    "content": "DP World reported record financial results for 2025, with revenue rising 22% to US$ 24.4 billion and adjusted EBITDA growing 18 percent to US$ 6.4 billion, representing a margin of 26.3 percent. Profits for the year increased 32.2% to US$ 1.96 billio...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "09:41",
+    "category": "Liner News",
+    "title": "How the Hormuz disruption emerges as a convergence event",
+    "content": "Hormuz transits have collapsed by 97%, while UNCTAD&#8217;s new data confirms is not a crisis it is a convergence.\nThe post How the Hormuz disruption emerges as a convergence event appeared first on Container News.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "09:41",
+    "category": "Liner News",
+    "title": "Russia Pushes Icebreakers to 270 Days at Sea as Sanctions Slow Arctic Fleet Renewal",
+    "content": "Russia will push its nuclear-powered icebreakers to sea for up to 270 days a year, increasing workloads as an ageing fleet, sanctions-related delays and unpredictable ice conditions strain Moscow’s ability to escort cargo along the Northern Sea Route...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "08:40",
     "category": "Liner News",
     "title": "New pilot scheme to protect Bangladesh shipbreaking workers",
@@ -1912,44 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 31
-  },
-  {
-    "date": "2026-03-10",
-    "time": "16:59",
-    "category": "Logistics Technology",
-    "title": "Strait of Hormuz Remains Shut to Almost All Non-Iran-Linked Ships",
-    "content": "The Strait of Hormuz remains effectively closed to almost all but Iran-linked traffic with the conflict in the Middle East now in its second week. ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 32
-  },
-  {
-    "date": "2026-03-10",
-    "time": "16:59",
-    "category": "Logistics Technology",
-    "title": "Container Shipping Diversions Surge 360% Amid Hormuz Closure",
-    "content": "The effective closure of the Strait of Hormuz is now rippling through global container supply chains, with new data showing a dramatic surge in cargo diversions as carriers scramble to......",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 33
-  },
-  {
-    "date": "2026-03-10",
-    "time": "16:59",
-    "category": "Liner News",
-    "title": "ONE Moves Closer to Controlling Stake in World’s Largest Ship Lessor Seaspan",
-    "content": "Ocean Network Express (ONE) is deepening its relationship with the world’s largest containership leasing platform, announcing plans to increase its ownership stake in Poseidon Corp., the parent compan...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 34
   }
 ]
