@@ -1,6 +1,58 @@
 [
   {
     "date": "2026-03-12",
+    "time": "10:37",
+    "category": "Liner News",
+    "title": "Salt trade seasoned with strong Egyptian flows",
+    "content": "Global seaborne shipments of salt have started 2026 strongly, with rising exports from Egypt pushing cargo volumes to the highest levels seen in years, according to analysis from Ursa Shipbrokers. Data compiled from vessel tracking provider AXSMarine...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 154
+  },
+  {
+    "date": "2026-03-12",
+    "time": "10:37",
+    "category": "Liner News",
+    "title": "Respect the guts that power global trade",
+    "content": "Captain Akee Sharma, CEO and founder at Sailor&#8217;s Cart, takes umbrage with president Trump’s call this week for ships to have the “guts” to cross the Strait of Hormuz. I’ve stayed quiet on geopolitics for a long time because in a better part of ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "10:37",
+    "category": "Liner News",
+    "title": "Himalaya Shipping lands premium index-linked charter",
+    "content": "Oslo-listed dry bulk owner Himalaya Shipping has secured a new charter deal for one of its large dual-fuel bulkers as the vessel prepares to roll off its current employment. The company said the 2023-built newcastlemax Mount Matterhorn has been fixed...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "10:37",
+    "category": "Port Status",
+    "title": "MSC signs 45-year terminal deal at Snake Island Port",
+    "content": "MSC has signed a 45-year sub-concession agreement with Nigerdock to develop and operate a new container terminal at Snake Island Port. The project will cover 30 hectares and is expected to be completed by 2028. The terminal will feature a 910-meter q...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "09:41",
     "category": "Liner News",
     "title": "DP World posts record revenue",
@@ -1899,57 +1951,5 @@
       "GlobalFeed"
     ],
     "id": 27
-  },
-  {
-    "date": "2026-03-10",
-    "time": "14:55",
-    "category": "Port Status",
-    "title": "Jet Fuel Shock Looms on U.S. West Coast as Asian Exports Dry Up",
-    "content": "Energy export data shows South Korean jet fuel exports to the United States West Coast is dropping as countries around the world are holding onto the energy for its own self-preservation....",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Port",
-      "GlobalFeed"
-    ],
-    "id": 28
-  },
-  {
-    "date": "2026-03-10",
-    "time": "14:55",
-    "category": "Liner News",
-    "title": "Qatar Wants to Bolster Security Partnership with US After Iran’s Strikes",
-    "content": "Qatar wants to strengthen its defense partnership with the United States in the wake of Iranian air strikes on Qatari territory, the foreign ministry spokesperson said on Tuesday, even as it sees the ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 29
-  },
-  {
-    "date": "2026-03-10",
-    "time": "16:59",
-    "category": "Logistics Technology",
-    "title": "Opinion: Waiving the Jones Act Won’t Lower Gas Prices—Tanker Markets Prove It",
-    "content": "Claims that waiving the Jones Act would lower U.S. gasoline prices ignore a key reality: global tanker freight markets. Current Worldscale rates suggest foreign-flag tankers would likely deliver fuel ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "GlobalFeed"
-    ],
-    "id": 30
-  },
-  {
-    "date": "2026-03-10",
-    "time": "16:59",
-    "category": "Liner News",
-    "title": "Hormuz Disruptions Threaten Energy Markets, Fertilizer Trade, and Vulnerable Economies, UNCTAD Warns",
-    "content": "Disruptions to shipping in the Strait of Hormuz are raising alarm across global energy, shipping, and agricultural markets, with the potential to hit developing economies particularly hard, according ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "GlobalFeed"
-    ],
-    "id": 31
   }
 ]
