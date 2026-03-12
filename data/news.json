@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-12",
+    "time": "23:27",
+    "category": "Port Status",
+    "title": "Port of Sagunto secures new vehicle terminal concession",
+    "content": "The Board of Directors of the Port Authority of Valencia has granted a ten-year administrative concession to Valencia Terminal Europa for the operation of a vehicle and ro-ro cargo terminal at the Port of Sagunto. The terminal, representing an invest...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "23:27",
+    "category": "Liner News",
+    "title": "The Freight Market Is Sending Two Completely Different Signals Right Now – Here Is How to Read Both of Them",
+    "content": "The freight market is improving. That part is true. Spot rates on the Sonar National Truckload Index climbed from around $2.60 per mile in mid-January to nearly $2.82 by February — a 20-cent jump that had carriers posting on social media for the firs...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "22:24",
     "category": "Port Status",
     "title": "Rotterdam identifies investment barriers slowing Hydrogen import terminal development",
@@ -1922,31 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 69
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "Iran war leads largest shipping line to terminate Mideast Gulf voyages, levy $800 charge",
-    "content": "The world’s largest container shipping line in an unusual move is diverting all cargo destined for the Arabian Gulf region to safe ports, and charging shippers $800 for move. \nThe post Iran war leads largest shipping line to terminate Mideast Gulf vo...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 68
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "PlusAI unveils major upgrade to autonomous trucking platform",
-    "content": "PlusAI released SuperDrive 6.0, adding night driving and construction-zone handling to autonomous trucking software. Trucks are already hauling loads in Texas, with 24/7 operations now in reach.\nThe post PlusAI unveils major upgrade to autonomous tru...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 67
   }
 ]
