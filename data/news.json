@@ -1,6 +1,136 @@
 [
   {
     "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Port Status",
+    "title": "YILPORT Holding upgrades port equipment with 19 Konecranes lift trucks",
+    "content": "YILPORT Holding has upgraded its port equipment fleet with 19 new lift trucks from Konecranes across terminals in Ghana, El Salvador, and Portugal. The delivery includes five reach stackers, five empty container handlers, and nine forklifts. The equi...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 160
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Liner News",
+    "title": "FedEx offers reusable packaging for closed-loop shipping",
+    "content": "FedEx is giving B2B shippers the option to use reusable boxes in distribution networks with predictable returns.\nThe post FedEx offers reusable packaging for closed-loop shipping appeared first on FreightWaves.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 159
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Sustainability",
+    "title": "Campbell’s promotes supply chain head Cassandra Green to CSCO",
+    "content": "Green steps into a top leadership role focused on logistics and planning, procurement, manufacturing and food safety and quality.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Sustainability",
+      "SCM_Expert"
+    ],
+    "id": 158
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Logistics Technology",
+    "title": "General Mills taps interim CSCO for top supply chain post",
+    "content": "Company veteran Jonathan Ness will oversee global supply chain operations and report directly to the CEO.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 157
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Liner News",
+    "title": "Costco to flow tariff refunds, ‘if and when’ received, back to customers",
+    "content": "The retailer, which sued the Trump administration over now-defunct tariffs, is well positioned to navigate a still uncertain refund process, CEO Ron Vachris said.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 156
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Logistics Technology",
+    "title": "De minimis: Case aiming to revive exemption can proceed, court rules",
+    "content": "The lawsuit, which challenged the Trump administration&rsquo;s elimination of the trade tool, was paused until the Supreme Court ruled on the president&rsquo;s tariff authority.",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 155
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Liner News",
+    "title": "IEA Warns: Hormuz Crisis Triggering Largest Oil Supply Disruption in History",
+    "content": "The escalating Middle East conflict has triggered what the International Energy Agency (IEA) says could become the largest supply disruption in the history of the global oil market, as tanker traffic through the...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 154
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Logistics Technology",
+    "title": "U.S. Shipping Interests Say Jones Act Waiver Would Do Little to Lower Gasoline Prices",
+    "content": "As the Trump administration considers temporarily waiving the Merchant Marine Act of 1920, commonly know as the Jones Act, to address surging fuel prices during the Middle East conflict, U.S. shipping interests...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 153
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Port Status",
+    "title": "Gulf Ship Attacks Show No Pattern of Western Targeting as Strikes Spread Beyond Hormuz",
+    "content": "The maritime security environment across the Persian Gulf, Strait of Hormuz, and Gulf of Oman remains at a “CRITICAL” threat level, according to the latest advisory issued Thursday by the Joint...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Port",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-12",
+    "time": "18:52",
+    "category": "Liner News",
+    "title": "U.S. Coast Guard Debunks Tankers Registering For U.S. Compliance",
+    "content": "The U.S. Coast Guard is quashing the latest rumor on tankers looking to reposition to the Atlantic and Pacific trades instead of staying in the Middle East.\n\nEarly on Thursday, in some tanker circles, the was chatter of tanker owners looking to regis...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-12",
     "time": "17:04",
     "category": "Liner News",
     "title": "Golden Energy seals $28m PSV sale",
@@ -1818,135 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 60
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "How Moving Mission-Critical Tech Requires a Different Approach to Freight Logistics",
-    "content": "Werner’s Jaime Jones explains how AI GPUs, semiconductor wafers, and data center hardware are transforming freight logistics. Shippers are demanding new levels of real-time visibility, engineered transit plans, and carrier-shipper collaboration that ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 59
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "Congress Wants to Put Driverless 80,000-Pound Trucks on the Road – Should Small Carriers Be Worried",
-    "content": "A bill moving through the House of Representatives right now would establish the first federal framework for putting fully autonomous heavy-duty trucks on public roads. The SELF DRIVE Act of 2026 — formally H.R. 7390, introduced February 5 by Rep. Bo...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 58
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "Amazon defrauded: guilty plea in $3M+ fraud involving trailers",
-    "content": "A Connecticut man has pleaded guilty to charges of wire fraud in connection with a scheme to defraud Amazon by fraudulently making claims for trailer movements that didn’t actually take place. Ameer Nasir, 25, pleaded guilty last week in U.S. Distric...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 57
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "Two Things You Can Control Right Now When Fuel Is Trying to Break You",
-    "content": "Diesel is approaching $5 a gallon and the geopolitical situation driving it is not showing signs of a quick resolution. You cannot control what crude does on the futures market. You cannot control what’s happening in the Strait of Hormuz. You cannot ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 56
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "If You Can’t Defend the Hire, You Can’t Defend the Fleet – What Driver File SOPs Mean in the New Era of Compliance",
-    "content": "Most small carriers do not lose in hiring. They lose in what happens after the handshake — the documentation that didn’t get collected, the employer verification that never got followed up on, the drug test that cleared but nobody logged into the rig...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 55
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Port Status",
-    "title": "Latest deal bolsters Redwood’s managed transportation offering",
-    "content": "Redwood Logistics has acquired Stridas, a managed transportation provider, marking its second acquisition in a week.\nThe post Latest deal bolsters Redwood’s managed transportation offering appeared first on FreightWaves.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Port",
-      "SCM_Expert"
-    ],
-    "id": 54
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "Turning logistics data into a massive competitive advantage",
-    "content": "The newly released Gartner&reg; Market Guide for FAP Providers highlights the rising use of AI to accelerate the audit process. However, the conversation must evolve.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 53
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "Manufacturers’ biggest challenge in adopting AI is preparing their systems for it, expert says",
-    "content": "Companies that can adapt their physical environment and workflows are set to benefit the most from the technology.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 52
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "UPS’ future is less e-commerce, more SMB, B2B and healthcare",
-    "content": "The carrier is pursuing growth in high-value verticals as major customer Amazon pulls shorter-distance shipments into its own network.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 51
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "Iran conflict tests 2026 air cargo outlook",
-    "content": "The U.S. air freight market faces vulnerability as some Middle East corridors are critical for pharmaceuticals and retail volumes, Chief Airfreight Officer Niall van de Wouw said.",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 50
   }
 ]
