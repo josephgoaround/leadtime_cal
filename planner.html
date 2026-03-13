@@ -44,7 +44,7 @@
                     <button id="simulate-load-btn" class="w-full mt-8 bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest">Run Simulation</button>
                 </div>
                 <div class="bg-indigo-900 p-8 rounded-[2.5rem] text-white shadow-2xl">
-                    <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-4">Volume Utilization</p>
+                    <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-4">Space Utilization</p>
                     <div class="flex items-baseline gap-2 mb-2">
                         <span id="vol-util" class="text-5xl font-black">0%</span>
                     </div>
@@ -60,6 +60,16 @@
                     <div id="canvas-container" class="w-full h-full rounded-[2.5rem] bg-slate-900 overflow-hidden relative">
                         <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center flex-col text-slate-500">
                             <p class="text-xs font-bold uppercase tracking-widest">Initializing 3D Engine...</p>
+                        </div>
+                        <!-- Usage Guide Overlay -->
+                        <div class="absolute bottom-6 left-6 z-10 bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-slate-700 text-white pointer-events-none">
+                            <p class="text-[10px] font-black text-indigo-400 uppercase mb-2">3D Control Guide</p>
+                            <ul class="space-y-1 text-[10px] font-medium text-slate-300">
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Rotate: Left Click + Drag</li>
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Zoom: Scroll Wheel</li>
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Pan: Right Click + Drag</li>
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Emergency items are packed near the door</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
