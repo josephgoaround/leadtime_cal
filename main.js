@@ -134,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
           modeSelect = document.getElementById('transport-mode'), 
           hscodeSelect = document.getElementById('hscode'), 
           summaryContainer = document.getElementById('summary-container'),
-          feedContainer = document.getElementById('feed-container'),
           riskList = document.getElementById('risk-summary-list');
     const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
 
@@ -155,24 +154,46 @@ document.addEventListener('DOMContentLoaded', () => {
             activeRisks = data.active_risks || [];
             if (riskList) {
                 riskList.innerHTML = activeRisks.length > 0 
-                    ? activeRisks.map(r => `<li>⚠️ ${r.label} (+${r.delay}d)</li>`).join('')
-                    : '<li>✅ No major disruptions</li>';
+                    ? activeRisks.map(r => `<li class="flex items-center gap-2 text-red-400"><span class="w-1.5 h-1.5 bg-red-500 rounded-full"></span>⚠️ ${r.label} (+${r.delay}d)</li>`).join('')
+                    : '<li class="text-indigo-300">✅ No major infrastructure disruptions</li>';
             }
             
-            // Draw Risk Circles
             riskZones.forEach(zone => {
                 const isActive = activeRisks.some(r => r.label.includes(zone.name) || (zone.risk && r.label.includes(zone.risk.split('/')[0])));
                 if (isActive) {
-                    L.circle(zone.center, {
-                        color: '#ef4444',
-                        fillColor: '#ef4444',
-                        fillOpacity: 0.2,
-                        radius: zone.radius
-                    }).addTo(map).bindPopup(`<b>${zone.name} Risk Zone</b><br>High delay expected.`);
+                    L.circle(zone.center, { color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.2, radius: zone.radius }).addTo(map).bindPopup(`<b>${zone.name} Risk Zone</b><br>High delay expected.`);
                 }
             });
+        } catch (e) { console.error("Failed to load maritime data", e); }
+    }
+
+    async function loadNewsPreview() {
+        const miniFeed = document.getElementById('news-mini-feed');
+        if (!miniFeed) return;
+        try {
+            const url = `https://raw.githubusercontent.com/josephgoaround/leadtime_cal/news-data/data/news.json?t=${Date.now()}`;
+            const res = await fetch(url);
+            const news = await res.json();
+            const latest = news.slice(0, 3);
+            
+            miniFeed.innerHTML = latest.map(item => `
+                <div class="expert-card p-6 flex flex-col justify-between hover:border-indigo-200 cursor-pointer transition-all" onclick="window.location.href='news.html'">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-[8px] font-black text-indigo-600 uppercase tracking-widest px-2 py-1 bg-indigo-50 rounded border border-indigo-100">${item.category}</span>
+                            <span class="text-[8px] font-black text-slate-300 uppercase">${item.time}</span>
+                        </div>
+                        <h4 class="text-md font-black text-slate-800 mb-2 leading-tight tracking-tight">${item.title}</h4>
+                        <p class="text-[11px] text-slate-500 line-clamp-3 font-medium leading-relaxed">${item.content}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-50 flex items-center justify-between">
+                        <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Expert: ${item.author}</span>
+                        <span class="text-indigo-600 text-[10px] font-black">→</span>
+                    </div>
+                </div>
+            `).join('');
         } catch (e) {
-            console.error("Failed to load maritime data", e);
+            miniFeed.innerHTML = '<p class="col-span-3 text-center text-slate-400 text-[10px] font-black uppercase tracking-widest py-12">Intelligence stream temporarily unavailable</p>';
         }
     }
 
@@ -202,35 +223,24 @@ document.addEventListener('DOMContentLoaded', () => {
         let distances = {}, previous = {}, nodes = new Set();
         Object.keys(seaNodes).forEach(node => { distances[node] = Infinity; nodes.add(node); });
         distances[start] = 0;
-        
         while (nodes.size > 0) {
             let closest = Array.from(nodes).reduce((min, n) => distances[n] < distances[min] ? n : min);
             if (closest === end || distances[closest] === Infinity) break;
             nodes.delete(closest);
-            
             seaEdges.forEach(([u, v]) => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
-                
                 let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]);
-                
-                // Add node-based delays and risk-based delays to the "cost" of the edge
                 let nodeDelay = (nodeDelays[neighbor] || 0);
-                
-                // Check for risk zone delays
                 activeRisks.forEach(risk => {
-                    const zone = riskZones.find(z => risk.label.includes(z.name) || (z.risk && risk.label.includes(z.risk.split('/')[0])));
-                    if (zone && zone.nodes.includes(neighbor)) {
-                        nodeDelay += risk.delay;
-                    }
+                    const zone = riskZones.find(z => risk.label.includes(z.name) || (z.risk && r.label.includes(z.risk.split('/')[0])));
+                    if (zone && zone.nodes.includes(neighbor)) nodeDelay += risk.delay;
                 });
-
-                let alt = distances[closest] + d + (nodeDelay * 500); // weight delay heavily (1 day ~ 500km)
+                let alt = distances[closest] + d + (nodeDelay * 500); 
                 if (alt < distances[neighbor]) { distances[neighbor] = alt; previous[neighbor] = closest; }
             });
         }
-        
         let path = [], curr = end, totalDelay = 0;
         while (curr) { 
             path.unshift(seaNodes[curr]); 
@@ -247,65 +257,49 @@ document.addEventListener('DOMContentLoaded', () => {
     async function calculateAndDisplay() {
         const oId = originSelect.value, dId = destinationSelect.value;
         if(!oId || !dId || oId === dId) return;
-        
         const o = hubs[oId], d = hubs[dId];
         let totalDist = 0, routePath = [], addedDelay = 0;
-
         if (modeSelect.value === 'sea') {
             const result = findMaritimePath(o.exit, d.exit);
             const rawPath = [o.coords].concat(result.path).concat([d.coords]);
             routePath = rawPath;
             addedDelay = result.totalDelay;
-            for (let i = 0; i < rawPath.length - 1; i++) {
-                totalDist += getDistHaversine(rawPath[i], rawPath[i+1]);
-            }
+            for (let i = 0; i < rawPath.length - 1; i++) { totalDist += getDistHaversine(rawPath[i], rawPath[i+1]); }
         } else {
             routePath = [o.coords, d.coords];
             totalDist = getDistHaversine(o.coords, d.coords);
         }
-
         const cargoDelay = hscodeSelect.value === 'rf' ? 3 : 1;
         const transitDays = Math.round(modeSelect.value === 'sea' ? (totalDist / 750) + 7 + cargoDelay + addedDelay : (totalDist / 8500) + 2);
         const co2 = Math.round(modeSelect.value === 'sea' ? totalDist * 0.012 : totalDist * 0.48);
-        
         const eta = new Date(); eta.setDate(eta.getDate() + transitDays);
         const symbols = { USD: "$", KRW: "₩", EUR: "€" };
         const currency = localStorage.getItem('selectedCurrency') || 'USD';
 
         summaryContainer.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in" id="analysis-results">
-                <div class="p-6 bg-indigo-50 rounded-[2rem] border border-indigo-100 shadow-sm text-center">
-                    <p class="text-[10px] font-black text-indigo-600 uppercase mb-1">Total Lead Time</p>
-                    <p class="text-3xl font-black text-indigo-900">${transitDays} Days</p>
-                    <p class="text-[9px] font-bold text-indigo-400 mt-1">Estimated ETA: ${eta.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                <div class="p-8 bg-indigo-50 rounded-[2.5rem] border border-indigo-100 shadow-sm text-center">
+                    <p class="text-[10px] font-black text-indigo-600 uppercase mb-2 tracking-widest">Total Lead Time</p>
+                    <p class="text-4xl font-black text-indigo-900 leading-none">${transitDays} Days</p>
+                    <p class="text-[9px] font-bold text-indigo-400 mt-2">EST. ETA: ${eta.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                 </div>
-                <div class="p-6 bg-green-50 rounded-[2rem] border border-green-100 shadow-sm text-center">
-                    <p class="text-[10px] font-black text-green-600 uppercase mb-1">Expert Cost Projection</p>
-                    <p class="text-3xl font-black text-green-900 leading-none"><span class="text-sm mr-1">${symbols[currency]}</span>${Math.round(modeSelect.value === 'sea' ? 1350 + (totalDist * 0.11) + (addedDelay * 100) : 4900 + (totalDist * 2.1)).toLocaleString()}</p>
-                    <p class="text-[9px] font-bold text-green-400 mt-1 uppercase">Fuel & Risk Adjusted</p>
+                <div class="p-8 bg-green-50 rounded-[2.5rem] border border-green-100 shadow-sm text-center">
+                    <p class="text-[10px] font-black text-green-600 uppercase mb-2 tracking-widest">Expert Cost Projection</p>
+                    <p class="text-4xl font-black text-green-900 leading-none"><span class="text-sm mr-1 font-black">${symbols[currency]}</span>${Math.round(modeSelect.value === 'sea' ? 1350 + (totalDist * 0.11) + (addedDelay * 100) : 4900 + (totalDist * 2.1)).toLocaleString()}</p>
+                    <p class="text-[9px] font-bold text-green-400 mt-2 uppercase">Fuel & Risk Adjusted</p>
                 </div>
-                <div class="p-6 bg-slate-900 rounded-[2rem] text-white text-center">
-                    <p class="text-[10px] font-black text-indigo-300 uppercase mb-1">Carbon (CO2)</p>
-                    <p class="text-3xl font-black text-white">${co2.toLocaleString()} <span class="text-xs">kg/ton</span></p>
-                    <p class="text-[9px] font-bold text-slate-400 mt-1 uppercase">Sustainability Impact</p>
+                <div class="p-8 bg-slate-900 rounded-[2.5rem] text-white text-center">
+                    <p class="text-[10px] font-black text-indigo-300 uppercase mb-2 tracking-widest">Carbon Impact</p>
+                    <p class="text-4xl font-black text-white leading-none">${co2.toLocaleString()} <span class="text-xs">kg</span></p>
+                    <p class="text-[9px] font-bold text-slate-400 mt-2 uppercase">Sustainability Metric</p>
                 </div>
             </div>`;
         
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
-        
-        // Redraw risk zones after clearing markers
         riskZones.forEach(zone => {
             const isActive = activeRisks.some(r => r.label.includes(zone.name) || (zone.risk && r.label.includes(zone.risk.split('/')[0])));
-            if (isActive) {
-                L.circle(zone.center, {
-                    color: '#ef4444',
-                    fillColor: '#ef4444',
-                    fillOpacity: 0.2,
-                    radius: zone.radius
-                }).addTo(map);
-            }
+            if (isActive) { L.circle(zone.center, { color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.2, radius: zone.radius }).addTo(map); }
         });
-
         L.polyline(routePath, { color: modeSelect.value === 'sea' ? '#4f46e5' : '#f59e0b', weight: 4 }).addTo(map);
         L.marker(routePath[0]).addTo(map); L.marker(routePath[routePath.length - 1]).addTo(map);
         map.fitBounds(L.polyline(routePath).getBounds(), { padding: [30, 30] });
@@ -317,5 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(document.getElementById('shipping-form')) document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
     
     loadMaritimeData();
+    loadNewsPreview();
     populate();
 });

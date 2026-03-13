@@ -6,78 +6,100 @@
     <title>LeadTime Intelligence | Global Logistics Pathfinder</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css?v=1.2">
 </head>
-<body class="bg-gray-50 font-sans text-gray-900">
+<body class="bg-slate-50 font-sans text-slate-900">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-[3000] shadow-sm">
-        <div class="container mx-auto px-4 max-w-6xl flex justify-between items-center py-4">
-            <div class="flex items-center gap-8">
-                <a href="index.html" class="block">
-                    <h1 class="logo-brand text-xl md:text-2xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
-                </a>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a href="index.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">Analyzer</a>
-                    <a href="planner.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">3D Load Planner</a>
-                    <a href="news.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">Logistics News</a>
-                    <a href="about.html" class="text-sm font-bold text-gray-600 hover:text-indigo-600 transition-colors pb-1">About</a>
-                </nav>
-            </div>
+    <main-header active="analyzer"></main-header>
+
+    <main class="container mx-auto px-4 max-w-7xl mt-12">
+        <!-- Hero Section for AdSense Appeal -->
+        <div class="mb-12 text-center max-w-3xl mx-auto">
+            <h2 class="text-5xl font-black text-slate-900 tracking-tighter mb-4 leading-none">Global Supply Chain <span class="text-indigo-600">Optimization</span></h2>
+            <p class="text-slate-500 font-medium text-lg">Harnessing real-time maritime data to calculate precise lead-times and mitigate transit risks across the global highway.</p>
         </div>
-    </header>
 
-    <main class="container mx-auto px-4 max-w-6xl mt-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
             <div class="lg:col-span-4 flex flex-col gap-6">
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-100 border border-slate-100">
-                    <h3 class="text-xl font-black text-slate-800 mb-8 flex items-center gap-2">Shipment Config</h3>
+                <div class="expert-card p-8">
+                    <h3 class="text-xl font-black text-slate-800 mb-8 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.382V6.618a2 2 0 011.553-1.96L9 2m0 18l5-2.5m-5 2.5V4m5 13.5V4m0 13.5l5.447 2.724A2 2 0 0021 18.382V9.618a2 2 0 00-1.553-1.96L15 7m0 10.5V4M9 2L15 7"></path></svg>
+                        Shipment Config
+                    </h3>
                     <form id="shipping-form" class="space-y-6">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Mode</label>
-                                <select id="transport-mode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold">
-                                    <option value="sea">🚢 Sea</option>
-                                    <option value="air">✈️ Air</option>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Transport Mode</label>
+                                <select id="transport-mode" class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold">
+                                    <option value="sea">🚢 Sea Freight</option>
+                                    <option value="air">✈️ Air Cargo</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Departure Date</label>
-                                <input type="date" id="departure-date" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">ETD Schedule</label>
+                                <input type="date" id="departure-date" class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold">
                             </div>
                         </div>
                         <div class="space-y-4">
-                            <input type="text" id="origin-search" placeholder="Search Origin..." class="w-full py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold">
-                            <select id="origin" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold"></select>
-                            <input type="text" id="dest-search" placeholder="Search Destination..." class="w-full py-2 px-4 bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold">
-                            <select id="destination" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold"></select>
-                            <select id="hscode" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold">
-                                <option value="general">📦 General</option>
-                                <option value="rf">❄️ Reefer</option>
-                            </select>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Origin Hub</label>
+                                <input type="text" id="origin-search" placeholder="Search port or city..." class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold mb-2">
+                                <select id="origin" class="w-full py-3 px-4 bg-white border border-slate-200 rounded-xl text-sm font-bold"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Destination Hub</label>
+                                <input type="text" id="dest-search" placeholder="Search port or city..." class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold mb-2">
+                                <select id="destination" class="w-full py-3 px-4 bg-white border border-slate-200 rounded-xl text-sm font-bold"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Cargo Category</label>
+                                <select id="hscode" class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold">
+                                    <option value="general">📦 General Merchandise</option>
+                                    <option value="rf">❄️ Perishable (Reefer)</option>
+                                </select>
+                            </div>
                         </div>
-                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest">Run Analysis</button>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest hover:bg-indigo-700 transition-all">Calculate Lead-Time</button>
                     </form>
                 </div>
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Active Risks</h4>
-                    <ul id="risk-summary-list" class="text-[11px] font-bold text-red-600 space-y-2"></ul>
+                <div class="expert-card p-6 bg-indigo-900 text-white border-none">
+                    <h4 class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-4">Risk Intelligence</h4>
+                    <ul id="risk-summary-list" class="text-[11px] font-bold space-y-3">
+                        <li class="flex items-center gap-2 text-indigo-200 uppercase tracking-tighter italic">Initializing risk engine...</li>
+                    </ul>
                 </div>
             </div>
 
-            <div class="lg:col-span-8 space-y-6">
-                <div class="bg-white p-3 rounded-[2.5rem] shadow-2xl border border-slate-100 h-[450px]">
+            <div class="lg:col-span-8 space-y-8">
+                <div class="expert-card p-4 h-[500px] overflow-hidden">
                     <div id="map" class="w-full h-full rounded-[2rem]"></div>
                 </div>
                 <div id="summary-container" class="animate-fade-in min-h-[180px]">
-                    <div class="text-center py-10 bg-white rounded-[2rem] border-2 border-dashed border-slate-100 text-slate-400 font-bold uppercase tracking-widest text-xs">Waiting for Analysis...</div>
+                    <div class="text-center py-12 expert-card border-dashed border-2 flex flex-col items-center justify-center text-slate-400">
+                        <svg class="w-12 h-12 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <p class="font-black uppercase tracking-widest text-xs">Awaiting Analysis Parameters</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <section id="feed-container" class="mb-20"></section>
+
+        <!-- Professional SCM Feed Section -->
+        <section id="feed-container" class="mb-20">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-2xl font-black text-slate-800 tracking-tighter">Market <span class="text-indigo-600">Intelligence</span></h3>
+                <a href="news.html" class="text-xs font-black text-indigo-600 uppercase tracking-widest hover:underline">View Full Archive →</a>
+            </div>
+            <div id="news-mini-feed" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Data populated by JS -->
+            </div>
+        </section>
     </main>
 
+    <main-footer></main-footer>
+    <cookie-banner></cookie-banner>
+
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="main.js?v=1.1"></script>
+    <script src="components.js?v=1.2"></script>
+    <script src="main.js?v=1.2"></script>
 </body>
 </html>

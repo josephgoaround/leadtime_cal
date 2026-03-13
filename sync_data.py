@@ -1,6 +1,7 @@
 import json
 import re
 import os
+import random
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -9,15 +10,15 @@ from datetime import datetime
 RSS_FEEDS = [
     "https://gcaptain.com/feed/",
     "https://www.shippingazette.com/rss/news.xml",
-    "https://www.joc.com/feed/news",
     "https://www.supplychaindive.com/feeds/news/",
     "https://www.freightwaves.com/feed",
     "https://www.logisticsmgmt.com/rss/all",
     "https://www.worldcargonews.com/feed/",
-    "https://www.supplychain-mechanics.com/feed/",
     "https://container-news.com/feed/",
     "https://splash247.com/feed/"
 ]
+
+EXPERTS = ["Marcus Vane", "Elena Rossi", "Kaito Tanaka"]
 
 # Define Risk Keywords and their Impact (SCM Expert Tuning)
 RISK_RULES = [
@@ -54,7 +55,7 @@ def fetch_and_analyze_risks():
                     if description:
                         description = re.sub('<[^<]+?>', '', description)
                         description = description.replace('&nbsp;', ' ').strip()
-                        description = description[:250] + "..." if len(description) > 250 else description
+                        description = description[:350] + "..." if len(description) > 350 else description
                     
                     # Analyze for specific risks
                     for rule in RISK_RULES:
@@ -88,7 +89,7 @@ def fetch_and_analyze_risks():
                         "category": category,
                         "title": title,
                         "content": description if description else title,
-                        "author": "Global Intelligence Bot",
+                        "author": random.choice(EXPERTS),
                         "tags": [category.split()[0], "SCM_Expert"]
                     })
         except Exception as e:
@@ -122,12 +123,16 @@ if __name__ == "__main__":
 
     existing_titles = set(item['title'] for item in existing_news)
     new_count = 0
+    
+    # ONLY TAKE ONE NEW ITEM PER RUN (As requested: 2 hours 1 article)
     for item in new_feed_items:
         if item['title'] not in existing_titles:
+            # Found the latest new item
             item['id'] = len(existing_news) + 1
             existing_news.insert(0, item) # Insert at beginning
             existing_titles.add(item['title'])
-            new_count += 1
+            new_count = 1
+            break # STOP AFTER ONE ARTICLE
 
     # Keep only the last 150 items
     existing_news = existing_news[:150]

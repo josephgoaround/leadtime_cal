@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | LeadTime Intelligence</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.2">
+</head>
+<body class="bg-slate-50 font-sans text-slate-900">
+
+    <main-header></main-header>
+
+    <main class="container mx-auto px-4 max-w-4xl py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-black text-slate-900 tracking-tighter mb-4 leading-none">Contact our <span class="text-indigo-600">Experts</span></h2>
+            <p class="text-slate-500 font-medium text-lg">Have a specific logistics challenge? Reach out to our analytical team.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-2">
+                <div class="expert-card p-10 bg-white">
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Full Name</label>
+                                <input type="text" class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Corporate Email</label>
+                                <input type="email" class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Inquiry Type</label>
+                            <select class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold">
+                                <option>Logistics Analysis Inquiry</option>
+                                <option>3D Planner Partnership</option>
+                                <option>Data Feed Integration</option>
+                                <option>General Support</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Message</label>
+                            <textarea rows="5" class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest hover:bg-indigo-700 transition-all">Submit Inquiry</button>
+                    </form>
+                </div>
+            </div>
+            <div class="space-y-8">
+                <div class="expert-card p-8 bg-slate-900 text-white border-none">
+                    <h4 class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-4">Direct Channels</h4>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[9px] font-black text-slate-500 uppercase mb-1">Global Support</p>
+                            <p class="text-sm font-bold">support@leadtime-intel.com</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-black text-slate-500 uppercase mb-1">Media Relations</p>
+                            <p class="text-sm font-bold">press@leadtime-intel.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="expert-card p-8 bg-white">
+                    <h4 class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-4">Operating Hours</h4>
+                    <p class="text-sm font-bold text-slate-800">24/7 Global Intelligence Monitoring</p>
+                    <p class="text-xs text-slate-500 font-medium mt-2">Core team active: 08:00 - 18:00 GMT</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main-footer></main-footer>
+    <script src="components.js?v=1.2"></script>
+</body>
+</html>

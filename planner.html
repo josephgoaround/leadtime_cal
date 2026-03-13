@@ -5,70 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Container Load Planner | LeadTime Intelligence</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
 
-    <header class="bg-white/80 border-b border-slate-200 sticky top-0 z-[3000] backdrop-blur-md">
-        <div class="container mx-auto px-4 max-w-7xl flex justify-between items-center py-4">
-            <div class="flex items-center gap-8">
-                <a href="index.html" class="block">
-                    <h1 class="logo-brand text-xl font-extrabold tracking-tight text-slate-800">LeadTime<span class="text-indigo-600">Intelligence</span></h1>
-                </a>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a href="index.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">Analyzer</a>
-                    <a href="planner.html" class="text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 pb-1">3D Load Planner</a>
-                    <a href="news.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">Logistics News</a>
-                    <a href="about.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">About</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <main-header active="planner"></main-header>
 
-    <main class="container mx-auto px-4 max-w-7xl py-8">
+    <main class="container mx-auto px-4 max-w-7xl py-12">
+        <div class="mb-12 text-center max-w-3xl mx-auto">
+            <h2 class="text-5xl font-black text-slate-900 tracking-tighter mb-4 leading-none">3D Load <span class="text-indigo-600">Architect</span></h2>
+            <p class="text-slate-500 font-medium text-lg">Professional grade volumetric optimization for container loading. Minimize wasted space and ensure structural integrity.</p>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
-                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100">
-                    <h2 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2">Container Config</h2>
-                    <select id="container-type" class="w-full py-3 px-4 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold mb-6">
-                        <option value="20ft">20ft Standard</option>
-                        <option value="40ft">40ft Standard</option>
-                        <option value="40hc">40ft High Cube</option>
+                <div class="expert-card p-8">
+                    <h2 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2">
+                         <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                         Container Config
+                    </h2>
+                    <select id="container-type" class="w-full py-3 px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold mb-6">
+                        <option value="20ft">20ft Standard (GP)</option>
+                        <option value="40ft">40ft Standard (GP)</option>
+                        <option value="40hc">40ft High Cube (HC)</option>
                     </select>
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-black text-slate-800 uppercase">Cargo List</h3>
-                        <button id="add-cargo-btn" class="text-[10px] font-black bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full">+ Add Item</button>
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inventory List</h3>
+                        <button id="add-cargo-btn" class="text-[10px] font-black bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full uppercase tracking-widest hover:bg-indigo-100 transition-all">+ Add Cargo</button>
                     </div>
-                    <div id="cargo-items" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
-                    <button id="simulate-load-btn" class="w-full mt-8 bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest">Run Simulation</button>
+                    <div id="cargo-items" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    <button id="simulate-load-btn" class="w-full mt-8 bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-xs tracking-widest hover:bg-indigo-700 transition-all">Generate 3D Layout</button>
                 </div>
-                <div class="bg-indigo-900 p-8 rounded-[2.5rem] text-white shadow-2xl">
-                    <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-4">Space Utilization</p>
+                <div class="expert-card p-8 bg-slate-900 text-white border-none shadow-indigo-200 shadow-2xl">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-4">Space Utilization</p>
                     <div class="flex items-baseline gap-2 mb-2">
-                        <span id="vol-util" class="text-5xl font-black">0%</span>
+                        <span id="vol-util" class="text-6xl font-black">0%</span>
                     </div>
-                    <div class="flex justify-between text-[10px] font-black text-indigo-300 uppercase">
+                    <div class="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest mt-4">
                         <span>Packed Units</span>
-                        <span id="packed-count">0/0</span>
+                        <span id="packed-count" class="text-indigo-400">0/0</span>
                     </div>
                 </div>
             </div>
 
             <div class="lg:col-span-8">
-                <div class="bg-white p-4 rounded-[3rem] shadow-2xl border border-slate-100 h-[700px] relative">
-                    <div id="canvas-container" class="w-full h-full rounded-[2.5rem] bg-slate-900 overflow-hidden relative">
-                        <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center flex-col text-slate-500">
-                            <p class="text-xs font-bold uppercase tracking-widest">Initializing 3D Engine...</p>
+                <div class="expert-card p-4 h-[700px] relative overflow-hidden">
+                    <div id="canvas-container" class="w-full h-full rounded-[2rem] bg-slate-900 overflow-hidden relative">
+                        <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center flex-col text-slate-600">
+                            <div class="animate-pulse flex flex-col items-center">
+                                <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                <p class="text-[10px] font-black uppercase tracking-widest">Warming Up 3D Engines...</p>
+                            </div>
                         </div>
                         <!-- Usage Guide Overlay -->
-                        <div class="absolute bottom-6 left-6 z-10 bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-slate-700 text-white pointer-events-none">
-                            <p class="text-[10px] font-black text-indigo-400 uppercase mb-2">3D Control Guide</p>
-                            <ul class="space-y-1 text-[10px] font-medium text-slate-300">
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Rotate: Left Click + Drag</li>
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Zoom: Scroll Wheel</li>
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Pan: Right Click + Drag</li>
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span>Emergency items are packed near the door</li>
+                        <div class="absolute bottom-6 left-6 z-10 bg-slate-900/90 backdrop-blur-md p-6 rounded-3xl border border-slate-800 text-white pointer-events-none shadow-2xl">
+                            <p class="text-[10px] font-black text-indigo-400 uppercase mb-3 tracking-widest">Viewport Interaction</p>
+                            <ul class="space-y-2 text-[10px] font-bold text-slate-400 uppercase tracking-tight">
+                                <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-lg shadow-indigo-500/50"></span>Orbit View: Left Click + Drag</li>
+                                <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-lg shadow-indigo-500/50"></span>Precision Zoom: Scroll Wheel</li>
+                                <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-lg shadow-indigo-500/50"></span>Translate View: Right Click + Drag</li>
+                                <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 text-indigo-400">★</span>Priority items packed at door entry</li>
                             </ul>
                         </div>
                     </div>
@@ -77,8 +73,12 @@
         </div>
     </main>
 
+    <main-footer></main-footer>
+    <cookie-banner></cookie-banner>
+
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="container3d.js?v=1.1"></script>
+    <script src="components.js?v=1.2"></script>
+    <script src="container3d.js?v=1.2"></script>
 </body>
 </html>
