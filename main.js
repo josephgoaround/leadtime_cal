@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // 2. CORE ENGINE
+    let activeRisks = [];
     const map = L.map('map', { worldCopyJump: true }).setView([20, 0], 2);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri', maxZoom: 18 }).addTo(map);
 
@@ -133,8 +134,24 @@ document.addEventListener('DOMContentLoaded', () => {
           modeSelect = document.getElementById('transport-mode'), 
           hscodeSelect = document.getElementById('hscode'), 
           summaryContainer = document.getElementById('summary-container'),
-          feedContainer = document.getElementById('feed-container');
+          feedContainer = document.getElementById('feed-container'),
+          riskList = document.getElementById('risk-summary-list');
     const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
+
+    async function loadMaritimeData() {
+        try {
+            const res = await fetch('data/maritime_data.json');
+            const data = await res.json();
+            activeRisks = data.active_risks || [];
+            if (riskList) {
+                riskList.innerHTML = activeRisks.length > 0 
+                    ? activeRisks.map(r => `<li>⚠️ ${r.label} (+${r.delay}d)</li>`).join('')
+                    : '<li>✅ No major disruptions</li>';
+            }
+        } catch (e) {
+            console.error("Failed to load maritime data", e);
+        }
+    }
 
     function populate(filterO = '', filterD = '') {
         const mode = modeSelect.value;
@@ -239,5 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(destSearch) destSearch.oninput = (e) => populate(originSearch.value, e.target.value);
     if(document.getElementById('shipping-form')) document.getElementById('shipping-form').onsubmit = (e) => { e.preventDefault(); calculateAndDisplay(); };
     
+    loadMaritimeData();
     populate();
 });
