@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-03-13",
+    "time": "01:58",
+    "category": "Liner News",
+    "title": "Sea-Intelligence: Hormuz closure potentially traps 204,000 TEU",
+    "content": "In issue 755 of the Sunday Spotlight, Sea‑Intelligence conducted a network stress test of the de facto closure of the Strait of Hormuz on February 28. The objective was to quantify the amount of deep-sea vessel capacity that was intended to leave the...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
     "date": "2026-03-12",
     "time": "23:27",
     "category": "Port Status",
@@ -1935,18 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 70
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "HMM declares deviation for Middle East shipments",
-    "content": "HMM has announced a deviation for cargo linked to the Middle East region due to the deteriorating security situation around the Strait of Hormuz and nearby waters. The carrier said the outbreak of war and escalating hostilities in the area, combined ...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 69
   }
 ]
