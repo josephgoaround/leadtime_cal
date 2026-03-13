@@ -1,6 +1,32 @@
 [
   {
     "date": "2026-03-13",
+    "time": "05:48",
+    "category": "Logistics Technology",
+    "title": "Gebrüder Weiss sustains growth momentum",
+    "content": "Gebrüder Weiss closed 2025 with net revenues of US$ 3.17 billion, demonstrating resilience in a difficult operating environment characterised by subdued economic conditions across its core Central European markets. The company maintained an equity ra...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Logistics",
+      "SCM_Expert"
+    ],
+    "id": 152
+  },
+  {
+    "date": "2026-03-13",
+    "time": "05:48",
+    "category": "Liner News",
+    "title": "U.S. Eases Sanctions for Russian Oil Cargoes Already at Sea as Hormuz Crisis Hits Supply",
+    "content": "The U.S. Treasury Department has issued a new sanctions wind-down authorization allowing certain Russian oil cargoes already at sea to complete their voyages, as global energy markets struggle with disruptions...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-13",
     "time": "04:19",
     "category": "Liner News",
     "title": "Brunswick harbor dredging advances to restore channel depth",
@@ -1922,31 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 73
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Logistics Technology",
-    "title": "Carrier Transicold helps TITAN Containers switch to low-GWP refrigerants",
-    "content": "Carrier Transicold has secured an order from TITAN Containers in Netherlands for new container refrigeration units using low-global warming potential (GWP) refrigerants. The order includes OptimaLINE™ units designed for the R-1234yf refrigerant and N...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Logistics",
-      "SCM_Expert"
-    ],
-    "id": 72
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Sustainability",
-    "title": "DP World launches carbon inset trial for ocean freight in Europe",
-    "content": "DP World has launched Insetify, a carbon inset trial for ocean freight forwarding customers in Belgium, Portugal, and Sweden. The program will start April 1, 2026. It aims to reduce customers’ Scope 3 emissions across key European trade lanes. Carbon...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Sustainability",
-      "SCM_Expert"
-    ],
-    "id": 71
   }
 ]
