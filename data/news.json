@@ -1,6 +1,19 @@
 [
   {
     "date": "2026-03-13",
+    "time": "04:19",
+    "category": "Liner News",
+    "title": "Brunswick harbor dredging advances to restore channel depth",
+    "content": "Maintenance dredging is underway in the inner and outer harbor of the Port of Brunswick, with operations targeting the restoration of the channel to its federally authorised depth. The work, funded by the federal government and carried out by the US ...",
+    "author": "Global Intelligence Bot",
+    "tags": [
+      "Liner",
+      "SCM_Expert"
+    ],
+    "id": 151
+  },
+  {
+    "date": "2026-03-13",
     "time": "01:58",
     "category": "Liner News",
     "title": "Sea-Intelligence: Hormuz closure potentially traps 204,000 TEU",
@@ -1935,18 +1948,5 @@
       "SCM_Expert"
     ],
     "id": 71
-  },
-  {
-    "date": "2026-03-11",
-    "time": "08:39",
-    "category": "Liner News",
-    "title": "From corridors to system: China’s maritime strategy enters a new dimension",
-    "content": "A landmark dataset and two years of Red Sea crisis have exposed a fundamental shift in how Beijing deploys port power no longer along routes, but across a self-reinforcing global network. That composure is the clearest evidence yet of a structural tr...",
-    "author": "Global Intelligence Bot",
-    "tags": [
-      "Liner",
-      "SCM_Expert"
-    ],
-    "id": 70
   }
 ]
