@@ -27,9 +27,20 @@
     </header>
 
     <main class="container mx-auto px-4 max-w-6xl py-12">
-        <div class="mb-12 text-center">
+        <div class="mb-12 text-center relative">
             <h2 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4">Logistics Risk & News</h2>
-            <p class="text-slate-500 font-medium text-lg max-w-2xl mx-auto">Real-time updates on global maritime bottlenecks and SCM intelligence.</p>
+            <p class="text-slate-500 font-medium text-lg max-w-2xl mx-auto mb-6">Real-time updates on global maritime bottlenecks and SCM intelligence.</p>
+            
+            <div class="flex items-center justify-center gap-4">
+                <div class="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-slate-100 shadow-sm">
+                    <span id="live-indicator" class="w-2 h-2 bg-slate-300 rounded-full"></span>
+                    <span id="live-status" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live: OFF</span>
+                    <button id="live-toggle" class="ml-2 w-8 h-4 bg-slate-200 rounded-full relative transition-colors">
+                        <span class="absolute left-1 top-1 w-2 h-2 bg-white rounded-full transition-all" id="toggle-knob"></span>
+                    </button>
+                </div>
+                <div class="text-[9px] font-bold text-slate-300 uppercase tracking-widest" id="last-sync-time">Last Sync: --:--</div>
+            </div>
         </div>
 
         <div id="category-filters" class="flex flex-wrap justify-center gap-3 mb-12">

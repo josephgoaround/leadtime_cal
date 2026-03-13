@@ -1,24 +1,53 @@
 document.addEventListener('DOMContentLoaded', () => {
     const newsContainer = document.getElementById('news-items');
     const filterBtns = document.querySelectorAll('.filter-btn');
+    const liveToggle = document.getElementById('live-toggle');
+    const toggleKnob = document.getElementById('toggle-knob');
+    const liveStatus = document.getElementById('live-status');
+    const liveIndicator = document.getElementById('live-indicator');
+    const lastSyncEl = document.getElementById('last-sync-time');
+    
     let allNews = [];
+    let isLive = false;
+    let refreshInterval = null;
+    let currentCategory = 'all';
 
-    async function fetchNews() {
+    async function fetchNews(isAuto = false) {
         if (!newsContainer) return;
         try {
-            const response = await fetch('data/news.json');
+            // Using a separate branch for data to avoid main branch clutter
+            const url = `https://raw.githubusercontent.com/josephgoaround/leadtime_cal/news-data/data/news.json?t=${Date.now()}`;
+            const response = await fetch(url);
             allNews = await response.json();
             allNews.sort((a, b) => new Date(`${b.date} ${b.time}`) - new Date(`${a.date} ${a.time}`));
-            renderNews('all');
+            renderNews(currentCategory);
+            
+            const now = new Date();
+            lastSyncEl.innerText = `Last Sync: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            if (isAuto) {
+                liveIndicator.classList.add('animate-ping');
+                setTimeout(() => liveIndicator.classList.remove('animate-ping'), 2000);
+            }
         } catch (error) {
             console.error('Failed to fetch news:', error);
-            newsContainer.innerHTML = '<p class="text-center py-20 text-red-500 font-bold">Failed to load news.</p>';
+            // Fallback to local data if branch doesn't exist yet
+            if (!isAuto) {
+                try {
+                   const response = await fetch('data/news.json');
+                   allNews = await response.json();
+                   renderNews(currentCategory);
+                } catch(e) {
+                   newsContainer.innerHTML = '<p class="text-center py-20 text-red-500 font-bold">Failed to load news.</p>';
+                }
+            }
         }
     }
 
     function renderNews(categoryFilter) {
         if (!newsContainer) return;
         newsContainer.innerHTML = '';
+        currentCategory = categoryFilter;
         const filtered = categoryFilter === 'all' ? allNews : allNews.filter(n => n.category === categoryFilter);
 
         if (filtered.length === 0) {
@@ -40,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             grouped[date].forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'news-card bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm mb-8';
+                card.className = 'news-card bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm mb-8 animate-fade-in';
                 card.innerHTML = `
                     <div class="flex items-center justify-between mb-4">
                         <span class="px-3 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full">${item.category}</span>
@@ -55,6 +84,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    function toggleLive() {
+        isLive = !isLive;
+        if (isLive) {
+            liveToggle.classList.replace('bg-slate-200', 'bg-green-500');
+            toggleKnob.style.transform = 'translateX(16px)';
+            liveStatus.innerText = 'Live: ON';
+            liveStatus.classList.replace('text-slate-400', 'text-green-600');
+            liveIndicator.classList.replace('bg-slate-300', 'bg-green-500');
+            
+            // Start interval (every 5 minutes to catch the 2-hour server update eventually)
+            refreshInterval = setInterval(() => fetchNews(true), 300000); 
+            fetchNews(true);
+        } else {
+            liveToggle.classList.replace('bg-green-500', 'bg-slate-200');
+            toggleKnob.style.transform = 'translateX(0px)';
+            liveStatus.innerText = 'Live: OFF';
+            liveStatus.classList.replace('text-green-600', 'text-slate-400');
+            liveIndicator.classList.replace('bg-green-500', 'bg-slate-300');
+            
+            clearInterval(refreshInterval);
+        }
+    }
+
+    if (liveToggle) liveToggle.onclick = toggleLive;
 
     filterBtns.forEach(btn => {
         btn.onclick = () => {

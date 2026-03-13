@@ -2,8 +2,8 @@ name: Maritime News Sync Automation
 
 on:
   schedule:
-    # Runs every 1 hour for high-frequency SCM updates
-    - cron: '0 * * * *'
+    # Runs every 2 hours for automated SCM updates
+    - cron: '0 */2 * * *'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -24,10 +24,24 @@ jobs:
       - name: Run sync script
         run: python sync_data.py
 
-      - name: Commit and push changes
+      - name: Push Data to Separate Branch (No Main Clutter)
         run: |
           git config --global user.name 'GitHub Action Bot'
           git config --global user.email 'action@github.com'
-          git add data/maritime_data.json data/news.json
-          git commit -m "chore: automated global SCM & logistics intelligence sync [skip ci]" || echo "No changes to commit"
-          git push
+          
+          # Create a temp directory to hold the data
+          mkdir temp_data
+          cp data/maritime_data.json temp_data/
+          cp data/news.json temp_data/
+          
+          # Switch to an orphan branch for data
+          git checkout --orphan news-data
+          git rm -rf .
+          
+          # Move data back
+          mkdir data
+          cp temp_data/* data/
+          
+          git add data/
+          git commit -m "chore: automated global SCM update $(date +'%Y-%m-%d %H:%M')"
+          git push origin news-data --force
