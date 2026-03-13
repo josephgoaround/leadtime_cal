@@ -138,6 +138,16 @@ document.addEventListener('DOMContentLoaded', () => {
           riskList = document.getElementById('risk-summary-list');
     const originSearch = document.getElementById('origin-search'), destSearch = document.getElementById('dest-search');
 
+    const nodeDelays = {
+        "suez_s": 1, "suez_n": 1, "panama_e": 2, "panama_w": 2, "malacca_mid": 0.5
+    };
+
+    const riskZones = [
+        { name: "Red Sea", center: [20, 38], radius: 800000, nodes: ["red_sea_1", "red_sea_2", "red_sea_3", "bab_el_mandeb", "suez_s"], risk: "Suez/Red Sea Rerouting" },
+        { name: "Panama", center: [9.1, -79.7], radius: 400000, nodes: ["panama_e", "panama_w"], risk: "Panama Canal Restriction" },
+        { name: "Hormuz", center: [26.5, 56.5], radius: 300000, nodes: ["hormuz_strait", "jebel_ali_gate"], risk: "Strait of Hormuz Alert" }
+    ];
+
     async function loadMaritimeData() {
         try {
             const res = await fetch('data/maritime_data.json');
@@ -148,6 +158,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? activeRisks.map(r => `<li>⚠️ ${r.label} (+${r.delay}d)</li>`).join('')
                     : '<li>✅ No major disruptions</li>';
             }
+            
+            // Draw Risk Circles
+            riskZones.forEach(zone => {
+                const isActive = activeRisks.some(r => r.label.includes(zone.name) || (zone.risk && r.label.includes(zone.risk.split('/')[0])));
+                if (isActive) {
+                    L.circle(zone.center, {
+                        color: '#ef4444',
+                        fillColor: '#ef4444',
+                        fillOpacity: 0.2,
+                        radius: zone.radius
+                    }).addTo(map).bindPopup(`<b>${zone.name} Risk Zone</b><br>High delay expected.`);
+                }
+            });
         } catch (e) {
             console.error("Failed to load maritime data", e);
         }
@@ -155,9 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function populate(filterO = '', filterD = '') {
         const mode = modeSelect.value;
-        const curO = originSelect.value, curD = destinationSelect.value;
-        const updateSelect = (select, filter) => {
-            const currentVal = select.value;
+        const currentValO = originSelect.value, currentValD = destinationSelect.value;
+        const updateSelect = (select, filter, currentVal) => {
             select.innerHTML = '';
             Object.entries(hubs)
                 .filter(([id, h]) => h.type === mode && (h.name.toLowerCase().includes(filter.toLowerCase()) || h.country.toLowerCase().includes(filter.toLowerCase())))
@@ -165,8 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .forEach(([id,h]) => { select.add(new Option(`${h.name} (${h.country})`, id)); });
             if(currentVal && hubs[currentVal] && hubs[currentVal].type === mode) select.value = currentVal;
         };
-        updateSelect(originSelect, filterO);
-        updateSelect(destinationSelect, filterD);
+        updateSelect(originSelect, filterO, currentValO);
+        updateSelect(destinationSelect, filterD, currentValD);
     }
 
     function getDistHaversine(c1, c2) {
@@ -176,26 +198,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function findMaritimePath(start, end) {
-        if (!seaNodes[start] || !seaNodes[end]) return [];
+        if (!seaNodes[start] || !seaNodes[end]) return { path: [], delay: 0 };
         let distances = {}, previous = {}, nodes = new Set();
         Object.keys(seaNodes).forEach(node => { distances[node] = Infinity; nodes.add(node); });
         distances[start] = 0;
+        
         while (nodes.size > 0) {
             let closest = Array.from(nodes).reduce((min, n) => distances[n] < distances[min] ? n : min);
             if (closest === end || distances[closest] === Infinity) break;
             nodes.delete(closest);
+            
             seaEdges.forEach(([u, v]) => {
                 if (u !== closest && v !== closest) return;
                 let neighbor = u === closest ? v : u;
                 if (!nodes.has(neighbor)) return;
+                
                 let d = getDistHaversine(seaNodes[closest], seaNodes[neighbor]);
-                let alt = distances[closest] + d;
+                
+                // Add node-based delays and risk-based delays to the "cost" of the edge
+                let nodeDelay = (nodeDelays[neighbor] || 0);
+                
+                // Check for risk zone delays
+                activeRisks.forEach(risk => {
+                    const zone = riskZones.find(z => risk.label.includes(z.name) || (z.risk && risk.label.includes(z.risk.split('/')[0])));
+                    if (zone && zone.nodes.includes(neighbor)) {
+                        nodeDelay += risk.delay;
+                    }
+                });
+
+                let alt = distances[closest] + d + (nodeDelay * 500); // weight delay heavily (1 day ~ 500km)
                 if (alt < distances[neighbor]) { distances[neighbor] = alt; previous[neighbor] = closest; }
             });
         }
-        let path = [], curr = end;
-        while (curr) { path.unshift(seaNodes[curr]); curr = previous[curr]; }
-        return path;
+        
+        let path = [], curr = end, totalDelay = 0;
+        while (curr) { 
+            path.unshift(seaNodes[curr]); 
+            totalDelay += (nodeDelays[curr] || 0);
+            activeRisks.forEach(risk => {
+                const zone = riskZones.find(z => risk.label.includes(z.name) || (z.risk && risk.label.includes(z.risk.split('/')[0])));
+                if (zone && zone.nodes.includes(curr)) totalDelay += risk.delay;
+            });
+            curr = previous[curr]; 
+        }
+        return { path, totalDelay };
     }
 
     async function calculateAndDisplay() {
@@ -203,12 +249,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!oId || !dId || oId === dId) return;
         
         const o = hubs[oId], d = hubs[dId];
-        let totalDist = 0, routePath = [];
+        let totalDist = 0, routePath = [], addedDelay = 0;
 
         if (modeSelect.value === 'sea') {
-            const maritimeNodes = findMaritimePath(o.exit, d.exit);
-            const rawPath = [o.coords].concat(maritimeNodes).concat([d.coords]);
+            const result = findMaritimePath(o.exit, d.exit);
+            const rawPath = [o.coords].concat(result.path).concat([d.coords]);
             routePath = rawPath;
+            addedDelay = result.totalDelay;
             for (let i = 0; i < rawPath.length - 1; i++) {
                 totalDist += getDistHaversine(rawPath[i], rawPath[i+1]);
             }
@@ -218,8 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const cargoDelay = hscodeSelect.value === 'rf' ? 3 : 1;
-        const riskDelay = activeRisks.reduce((sum, r) => sum + r.delay, 0);
-        const transitDays = Math.round(modeSelect.value === 'sea' ? (totalDist / 750) + 7 + cargoDelay + riskDelay : (totalDist / 8500) + 2);
+        const transitDays = Math.round(modeSelect.value === 'sea' ? (totalDist / 750) + 7 + cargoDelay + addedDelay : (totalDist / 8500) + 2);
         const co2 = Math.round(modeSelect.value === 'sea' ? totalDist * 0.012 : totalDist * 0.48);
         
         const eta = new Date(); eta.setDate(eta.getDate() + transitDays);
@@ -235,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="p-6 bg-green-50 rounded-[2rem] border border-green-100 shadow-sm text-center">
                     <p class="text-[10px] font-black text-green-600 uppercase mb-1">Expert Cost Projection</p>
-                    <p class="text-3xl font-black text-green-900 leading-none"><span class="text-sm mr-1">${symbols[currency]}</span>${Math.round(modeSelect.value === 'sea' ? 1350 + (totalDist * 0.11) : 4900 + (totalDist * 2.1)).toLocaleString()}</p>
+                    <p class="text-3xl font-black text-green-900 leading-none"><span class="text-sm mr-1">${symbols[currency]}</span>${Math.round(modeSelect.value === 'sea' ? 1350 + (totalDist * 0.11) + (addedDelay * 100) : 4900 + (totalDist * 2.1)).toLocaleString()}</p>
                     <p class="text-[9px] font-bold text-green-400 mt-1 uppercase">Fuel & Risk Adjusted</p>
                 </div>
                 <div class="p-6 bg-slate-900 rounded-[2rem] text-white text-center">
@@ -246,6 +292,20 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
         
         map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
+        
+        // Redraw risk zones after clearing markers
+        riskZones.forEach(zone => {
+            const isActive = activeRisks.some(r => r.label.includes(zone.name) || (zone.risk && r.label.includes(zone.risk.split('/')[0])));
+            if (isActive) {
+                L.circle(zone.center, {
+                    color: '#ef4444',
+                    fillColor: '#ef4444',
+                    fillOpacity: 0.2,
+                    radius: zone.radius
+                }).addTo(map);
+            }
+        });
+
         L.polyline(routePath, { color: modeSelect.value === 'sea' ? '#4f46e5' : '#f59e0b', weight: 4 }).addTo(map);
         L.marker(routePath[0]).addTo(map); L.marker(routePath[routePath.length - 1]).addTo(map);
         map.fitBounds(L.polyline(routePath).getBounds(), { padding: [30, 30] });

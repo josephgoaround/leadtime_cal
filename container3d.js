@@ -19,13 +19,24 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="absolute -top-2 -right-2 w-6 h-6 bg-white shadow-md rounded-full text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center border border-slate-100" onclick="this.parentElement.remove()">×</button>
             <div class="flex items-center justify-between gap-2">
                 <input type="text" class="flex-1 text-[11px] font-bold bg-transparent border-b border-slate-200 outline-none" value="Item ${id+1}" id="c-name-${id}">
+                <div class="flex gap-2">
+                    <label class="flex items-center gap-1 cursor-pointer">
+                        <input type="checkbox" class="w-3 h-3 rounded" id="c-emg-${id}">
+                        <span class="text-[9px] font-black text-red-500 uppercase">Emergency</span>
+                    </label>
+                    <label class="flex items-center gap-1 cursor-pointer">
+                        <input type="checkbox" class="w-3 h-3 rounded" id="c-shr-${id}">
+                        <span class="text-[9px] font-black text-indigo-500 uppercase">Shoring</span>
+                    </label>
+                </div>
             </div>
-            <div class="grid grid-cols-5 gap-2">
+            <div class="grid grid-cols-6 gap-2">
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">L</p><input type="number" value="120" class="w-full p-2 bg-white rounded-lg text-xs font-bold" id="c-l-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">W</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold" id="c-w-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">H</p><input type="number" value="100" class="w-full p-2 bg-white rounded-lg text-xs font-bold" id="c-h-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">QTY</p><input type="number" value="5" class="w-full p-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black" id="c-q-${id}"></div>
                 <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">Wt</p><input type="number" value="500" class="w-full p-2 bg-white rounded-lg text-xs font-bold" id="c-wt-${id}"></div>
+                <div class="space-y-1"><p class="text-[8px] font-black text-slate-400 uppercase">Stack</p><input type="number" value="2" class="w-full p-2 bg-white rounded-lg text-xs font-bold" id="c-stk-${id}"></div>
             </div>`;
         cargoContainer.appendChild(div);
     }
@@ -95,13 +106,36 @@ document.addEventListener('DOMContentLoaded', () => {
         floor.position.y = -H/2;
         containerBox.add(floor);
 
+        // Door Indicator (at the back X+)
+        const doorGeo = new THREE.PlaneGeometry(W, H);
+        const door = new THREE.Mesh(doorGeo, new THREE.MeshPhongMaterial({ color: 0x4f46e5, side: THREE.DoubleSide, transparent: true, opacity: 0.3 }));
+        door.rotation.y = Math.PI / 2;
+        door.position.set(L/2, 0, 0);
+        containerBox.add(door);
+
         containerBox.position.set(0, H/2, 0);
         scene.add(containerBox);
     }
 
-    function addBox(x, y, z, l, h, w, color, contL, contW, contH) {
-        const mesh = new THREE.Mesh(new THREE.BoxGeometry(l, h, w), new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 0.9, roughness: 0.4 }));
+    function addBox(x, y, z, l, h, w, color, contL, contW, contH, isShoring = false) {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(l, h, w), new THREE.MeshStandardMaterial({ 
+            color: color, 
+            transparent: true, 
+            opacity: 0.9, 
+            roughness: 0.4,
+            emissive: isShoring ? 0x4f46e5 : 0x000000,
+            emissiveIntensity: isShoring ? 0.2 : 0
+        }));
         mesh.position.set(-contL/2 + x + l/2, y + h/2, -contW/2 + z + w/2);
+        
+        if (isShoring) {
+            const wireframe = new THREE.LineSegments(
+                new THREE.EdgesGeometry(new THREE.BoxGeometry(l, h, w)),
+                new THREE.LineBasicMaterial({ color: 0x4f46e5, linewidth: 2 })
+            );
+            mesh.add(wireframe);
+        }
+
         scene.add(mesh);
         cargoMeshes.push(mesh);
     }
@@ -121,19 +155,40 @@ document.addEventListener('DOMContentLoaded', () => {
             const h = parseFloat(row.querySelector('[id^="c-h-"]').value) || 0;
             const q = parseInt(row.querySelector('[id^="c-q-"]').value) || 0;
             const wt = parseFloat(row.querySelector('[id^="c-wt-"]').value) || 0;
+            const emg = row.querySelector('[id^="c-emg-"]').checked;
+            const shr = row.querySelector('[id^="c-shr-"]').checked;
+            const stk = parseInt(row.querySelector('[id^="c-stk-"]').value) || 1;
+
             if(l>0 && w>0 && h>0 && q>0) {
-                for(let j=0; j<q; j++) items.push({ l, w, h, weight: wt, color: colors[i % colors.length] });
+                for(let j=0; j<q; j++) {
+                    items.push({ 
+                        l, w, h, 
+                        weight: wt, 
+                        color: colors[i % colors.length], 
+                        emergency: emg,
+                        shoring: shr,
+                        maxStack: stk
+                    });
+                }
             }
         });
 
-        items.sort((a,b) => b.weight - a.weight);
+        // Priority: 
+        // 1. Emergency items LAST (to be near the door at the end of X)
+        // 2. Heavy items FIRST (to be at the bottom)
+        items.sort((a,b) => {
+            if (a.emergency !== b.emergency) return a.emergency ? 1 : -1;
+            return b.weight - a.weight;
+        });
 
         let x=0, y=0, z=0, maxH=0, rowW=0, packed=0;
         items.forEach(item => {
+            // Very basic packing logic with stacking support
             if(x + item.l > L) { x=0; z += rowW; rowW=0; }
             if(z + item.w > W) { z=0; x=0; y += maxH; maxH=0; }
+            
             if(y + item.h <= H) {
-                addBox(x, y, z, item.l, item.h, item.w, item.color, L, W, H);
+                addBox(x, y, z, item.l, item.h, item.w, item.color, L, W, H, item.shoring);
                 x += item.l;
                 rowW = Math.max(rowW, item.w);
                 maxH = Math.max(maxH, item.h);
