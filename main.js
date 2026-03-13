@@ -295,14 +295,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>`;
         
-        map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker) map.removeLayer(l); });
+        map.eachLayer(l => { if (l instanceof L.Polyline || l instanceof L.Marker || l instanceof L.CircleMarker || l instanceof L.Circle) map.removeLayer(l); });
+        
+        // Redraw risk zones
         riskZones.forEach(zone => {
             const isActive = activeRisks.some(r => r.label.includes(zone.name) || (zone.risk && r.label.includes(zone.risk.split('/')[0])));
-            if (isActive) { L.circle(zone.center, { color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.2, radius: zone.radius }).addTo(map); }
+            if (isActive) { 
+                L.circle(zone.center, { color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.1, radius: zone.radius }).addTo(map)
+                 .bindPopup(`<b>${zone.name} High Risk Area</b><br>Expect transit delays.`);
+            }
         });
-        L.polyline(routePath, { color: modeSelect.value === 'sea' ? '#4f46e5' : '#f59e0b', weight: 4 }).addTo(map);
-        L.marker(routePath[0]).addTo(map); L.marker(routePath[routePath.length - 1]).addTo(map);
-        map.fitBounds(L.polyline(routePath).getBounds(), { padding: [30, 30] });
+
+        const routeColor = modeSelect.value === 'sea' ? '#4f46e5' : '#f59e0b';
+        L.polyline(routePath, { color: routeColor, weight: 4, dashArray: modeSelect.value === 'sea' ? '1, 10' : null, opacity: 0.6 }).addTo(map);
+        
+        // Add detailed markers for all nodes along the path
+        routePath.forEach((coord, idx) => {
+            if (idx === 0 || idx === routePath.length - 1) {
+                const marker = L.marker(coord).addTo(map);
+                const hubName = idx === 0 ? o.name : d.name;
+                marker.bindPopup(`<b>${hubName}</b><br>${idx === 0 ? 'Origin Hub' : 'Destination Hub'}`).openPopup();
+            } else {
+                L.circleMarker(coord, { radius: 3, color: routeColor, fillColor: routeColor, fillOpacity: 1, weight: 1 }).addTo(map);
+            }
+        });
+
+        map.fitBounds(L.polyline(routePath).getBounds(), { padding: [50, 50] });
     }
 
     if(modeSelect) modeSelect.onchange = () => populate();
