@@ -1,0 +1,131 @@
+{
+  "last_updated": "2026-03-15 10:22:28",
+  "active_risks": [
+    {
+      "label": "Strait of Hormuz Alert",
+      "delay": 5,
+      "cost": 800,
+      "source_news": "Indian Sailors Stranded Off Iran Just Want To Go Home"
+    },
+    {
+      "label": "Panama Canal Restriction",
+      "delay": 6,
+      "cost": 700,
+      "source_news": "BP Wins OK For First New Gulf Project Since Deepwater Horizon Tragedy"
+    },
+    {
+      "label": "Port Labor Action",
+      "delay": 4,
+      "cost": 400,
+      "source_news": "Trump Warns Iran’s Oil Lifeline at Risk After Major U.S. Strike on Kharg Island"
+    },
+    {
+      "label": "Suez/Red Sea Rerouting",
+      "delay": 12,
+      "cost": 1500,
+      "source_news": "Supertankers Build Up in Red Sea as Saudi Arabia Races to Bypass Hormuz"
+    }
+  ],
+  "alerts": [
+    {
+      "msg": "Why Does The Port Of Fujairah Matter To The Oil Market?",
+      "url": "https://gcaptain.com/why-does-the-port-of-fujairah-matter-to-the-oil-market/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Indian Sailors Stranded Off Iran Just Want To Go Home",
+      "url": "https://gcaptain.com/indian-sailors-stranded-off-iran-just-want-to-go-home/",
+      "time": "10:22"
+    },
+    {
+      "msg": "UAE’s Fujairah Port Stops Some Oil Loading Operations After Drone Attack",
+      "url": "https://gcaptain.com/uaes-port-stops-some-oil-loading-operations-after-drone-attack/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Oil Drillers Resort To Trucks As Key California Pipeline Idled",
+      "url": "https://gcaptain.com/oil-drillers-resort-to-trucks-as-key-california-pipeline-idled/",
+      "time": "10:22"
+    },
+    {
+      "msg": "BP Wins OK For First New Gulf Project Since Deepwater Horizon Tragedy",
+      "url": "https://gcaptain.com/bp-wins-ok-for-first-new-gulf-project-since-deepwater-horizon-tragedy/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Trump Calls for Allied Warships to Secure Strait of Hormuz",
+      "url": "https://gcaptain.com/trump-calls-for-allied-warships-to-secure-strait-of-hormuz/",
+      "time": "10:22"
+    },
+    {
+      "msg": "India’s Tanker Escape: Rare Hormuz Passage Signals New Political Reality for Global Shipping",
+      "url": "https://gcaptain.com/indias-tanker-escape-rare-hormuz-passage-signals-new-political-reality-for-global-shipping/",
+      "time": "10:22"
+    },
+    {
+      "msg": "U.S. Boosts LNG Exports From Plaquemines as Hormuz Crisis Threatens Global Gas Supply",
+      "url": "https://gcaptain.com/u-s-boosts-lng-exports-from-plaquemines-as-hormuz-crisis-threatens-global-gas-supply/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Trump Warns Iran’s Oil Lifeline at Risk After Major U.S. Strike on Kharg Island",
+      "url": "https://gcaptain.com/trump-warns-irans-oil-lifeline-at-risk-after-major-u-s-strike-on-kharg-island/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Lured by Profits, Some Shipowners Brave Mines and Missiles to Sneak Oil Past Iran",
+      "url": "https://gcaptain.com/lured-by-profits-some-shipowners-brave-mines-and-missiles-to-sneak-oil-past-iran/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Middle East Conflict Dampens Fears of Container Sector Overcapacity",
+      "url": "https://gcaptain.com/middle-east-conflict-dampens-fears-of-container-sector-overcapacity/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Supertankers Build Up in Red Sea as Saudi Arabia Races to Bypass Hormuz",
+      "url": "https://gcaptain.com/supertankers-build-up-in-red-sea-as-saudi-arabia-races-to-bypass-hormuz/",
+      "time": "10:22"
+    },
+    {
+      "msg": "US opens forced-labor probe into 60 trading partners",
+      "url": "https://www.supplychaindive.com/news/us-opens-forced-labor-probe-into-60-countries/814713/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Trump’s temporary 10% tariff faces further legal scrutiny",
+      "url": "https://www.supplychaindive.com/news/trump-tariffs-lawsuit-court-of-international-trade-burlap-barrell-basic-fun/814597/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Ongoing tariffs, Iran war weigh on aluminum prices",
+      "url": "https://www.supplychaindive.com/news/aluminum-steel-tinplate-tariffs-midwest-premium-2026/814102/",
+      "time": "10:22"
+    },
+    {
+      "msg": "CBP is working on 4-step tariff refund process",
+      "url": "https://www.supplychaindive.com/news/trump-tariff-refund-cbp-progress/814622/",
+      "time": "10:22"
+    },
+    {
+      "msg": "FedEx, UPS up fuel fees, levy Middle East surcharges amid Iran war",
+      "url": "https://www.supplychaindive.com/news/ups-fuel-surcharge-table-increase-2026/814187/",
+      "time": "10:22"
+    },
+    {
+      "msg": "USITC probes USMCA auto rules’ impact on industry competitiveness",
+      "url": "https://www.supplychaindive.com/news/usitc-usmca-auto-rules-impact-on-industry/814392/",
+      "time": "10:22"
+    },
+    {
+      "msg": "How Mars, Meta, Patagonia and L’Oréal are tackling scope 3 emissions: GreenBiz26",
+      "url": "https://www.supplychaindive.com/news/mars-meta-patagonia-loreal-scope-3-emissions-data-decarbonization-greenbiz26/813810/",
+      "time": "10:22"
+    },
+    {
+      "msg": "Best Buy counters memory shortage with inventory, vendor tweaks",
+      "url": "https://www.supplychaindive.com/news/best-buy-computer-memory-shortage-impact-AI/814114/",
+      "time": "10:22"
+    }
+  ]
+}
